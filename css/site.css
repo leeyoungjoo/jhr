@@ -259,3 +259,8 @@ body:not(.is-admin) .admin-only{display:none!important}
 .brand-txt b{font-weight:900}
 .nav-links a{font-weight:700}
 .quote p{font-weight:700}
+/* 상단 로고 글씨 크게 */
+.brand-txt b{font-size:23px;letter-spacing:-.02em}
+.brand-txt span{font-size:12.5px;margin-top:2px}
+@media (max-width:860px){.brand-txt b{font-size:21px}}
+@media (max-width:400px){.brand-txt b{font-size:19px}}
