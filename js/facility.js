@@ -273,7 +273,7 @@ function openSheet(n){
   const rooms=liveRooms(F), i=rooms.indexOf(rm), prev=rooms[(i-1+rooms.length)%rooms.length], next=rooms[(i+1)%rooms.length];
   const sh=document.getElementById('sheet');
   sh.innerHTML=`<div class="photo" id="galPhoto" style="background:${CAT[rm.cat].color}"><div id="galSlide" style="width:100%;height:100%;display:grid;place-items:center"></div>${photos.length>1?'<button class="gal-btn gal-prev" type="button" aria-label="이전 사진">‹</button><button class="gal-btn gal-next" type="button" aria-label="다음 사진">›</button><span class="gal-count" id="galCount"></span>':''}<span class="tag">${F.fl} · ${dispN(F,rm)}</span><button class="sheet-close" type="button" aria-label="닫기">×</button></div>
-  ${photos.length>1?`<div class="thumbs" id="galThumbs">${photos.slice(0,photos.length>12?11:12).map((p,k)=>`<button class="thumb" type="button" data-k="${k}" aria-label="사진 ${k+1}">${p?`<img src="${esc(p)}" alt="" loading="lazy">`:k+1}</button>`).join('')}${photos.length>12?`<button class="thumb more" type="button" data-more="11" aria-label="사진 ${photos.length-11}장 더 보기"><span>+${photos.length-11}</span></button>`:''}</div>`:''}
+  ${photos.length>1?`<div class="tcar" id="galThumbs"><button class="tcar-btn prev" type="button" aria-label="이전 사진들">‹</button><div class="tcar-vp"><div class="tcar-track">${photos.map((p,k)=>`<button class="thumb" type="button" data-k="${k}" aria-label="사진 ${k+1}">${p?`<img src="${esc(p)}" alt="" loading="lazy">`:k+1}</button>`).join('')}</div></div><button class="tcar-btn next" type="button" aria-label="다음 사진들">›</button></div>`:''}
   <div class="sheet-body"><div class="title-row"><div><h3 id="sheetTitle" class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3>${origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}${rm.renamed?' · 전시 기간 명칭':''}</div>`:''}</div>${EDIT.can?'<button class="edit-btn" type="button" id="editBtn">정보 수정</button>':''}</div>
   <span class="chip">${CAT[rm.cat].label}</span>
   <p>${esc(I.more)}</p>
@@ -286,13 +286,30 @@ function openSheet(n){
     gp.classList.toggle('has-img',!!p);
     document.getElementById('galSlide').innerHTML=p?`<button class="gal-zoom" type="button" aria-label="${esc(I.name)} 사진 ${pi+1} 크게 보기"><img src="${esc(p)}" alt="${esc(I.name)} 사진 ${pi+1}"></button>`:`${ph}사진 ${pi+1} 준비 중입니다</div>`;
     const c=document.getElementById('galCount');if(c)c.textContent=`${pi+1} / ${photos.length}`;
-    sh.querySelectorAll('.thumb').forEach(t=>t.setAttribute('aria-current',+t.dataset.k===pi?'true':'false'));};
+    sh.querySelectorAll('.thumb').forEach(t=>t.setAttribute('aria-current',+t.dataset.k===pi?'true':'false'));
+    if(window.tcarFollow)tcarFollow(pi);};
   const gp=document.getElementById('galPhoto');let sx=null,swiped=false;
   showPhoto(0);
   sh.querySelector('.gal-prev')?.addEventListener('click',()=>showPhoto(pi-1));
   sh.querySelector('.gal-next')?.addEventListener('click',()=>showPhoto(pi+1));
   sh.querySelectorAll('.thumb[data-k]').forEach(t=>t.addEventListener('click',()=>showPhoto(+t.dataset.k)));
-  sh.querySelector('.thumb.more')?.addEventListener('click',()=>{const list=photos.filter(Boolean);openLB(list,11,I.name)});
+  // 썸네일 회전목마: 한 화면에 N장, 양옆 원형 버튼으로 넘기고 끝에서는 처음으로 돌아감
+  const car=document.getElementById('galThumbs');
+  window.tcarFollow=null;
+  if(car){
+    const vp=car.querySelector('.tcar-vp'), track=car.querySelector('.tcar-track'), thumbs=[...track.children], n=thumbs.length, GAP=10;
+    let per=4, start=0, step=0;
+    const layout=()=>{const W=vp.clientWidth; if(!W)return; per=Math.max(3,Math.min(6,Math.round(W/104))); const w=(W-GAP*(per-1))/per; step=w+GAP;
+      thumbs.forEach(t=>{t.style.width=w+'px'}); car.classList.toggle('fits',n<=per); go(start,true)};
+    const go=(s,instant)=>{const max=Math.max(0,n-per); start=Math.max(0,Math.min(max,s));
+      track.style.transition=instant?'none':''; track.style.transform=`translateX(${-start*step}px)`};
+    car.querySelector('.prev').addEventListener('click',()=>go(start<=0?Math.max(0,n-per):start-per));
+    car.querySelector('.next').addEventListener('click',()=>go(start>=n-per?0:start+per));
+    window.tcarFollow=k=>{if(k<start)go(k);else if(k>=start+per)go(k-per+1)};
+    let tx=null;vp.addEventListener('pointerdown',e=>{tx=e.clientX});
+    vp.addEventListener('pointerup',e=>{if(tx===null)return;const dx=e.clientX-tx;tx=null;if(Math.abs(dx)>30){e.preventDefault();go(dx<0?(start>=n-per?0:start+per):(start<=0?Math.max(0,n-per):start-per))}});
+    requestAnimationFrame(layout); window.addEventListener('resize',layout);
+  }
   gp.addEventListener('pointerdown',e=>{sx=e.clientX;swiped=false});
   gp.addEventListener('click',e=>{if(!e.target.closest('.gal-zoom'))return;if(swiped){swiped=false;return}const list=photos.filter(Boolean);openLB(list,list.indexOf(photos[pi]),I.name)});
   gp.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>40){swiped=true;if(photos.length>1)showPhoto(pi+(dx<0?1:-1))}});
