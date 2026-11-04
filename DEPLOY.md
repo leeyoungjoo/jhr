@@ -1,7 +1,8 @@
 # 배포 정보
-- 사이트: https://jhr-zeta.vercel.app (Vercel 프로젝트 jhr)
+- 사이트: https://jeju-hre-exhibition.vercel.app (Vercel 프로젝트 jhr, 예전 주소 jhr-zeta.vercel.app도 계속 접속됨)
 - Supabase 프로젝트: jhr-facility-guide (서울, ref pewippwnvduaseyckfkv)
 - 관리자 계정: 아이디 ksgi (내부 이메일 ksgi@example.com) — 비밀번호 변경은 Supabase Authentication > Users
+- 보기 전용 계정: 아이디 ksgi-staff (내부 이메일 ksgi-staff@example.com) — 진행상황 공유 보기만 가능, 수정·글쓰기 불가
 
 ## 파일 구성
 - index.html — 사이트 전체(메인페이지 · 전시회 안내 · 시설안내 · 진행상황 공유), 주소 뒤 #/about, #/facility, #/news 로 이동

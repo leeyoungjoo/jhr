@@ -78,3 +78,22 @@ create policy "posts delete" on public.posts for delete to authenticated using (
 do $$ begin
   alter publication supabase_realtime add table public.posts;
 exception when duplicate_object then null; end $$;
+
+-- 6) 보기 전용 계정 (진행상황 공유 읽기만)
+create table if not exists public.viewers (email text primary key);
+alter table public.viewers enable row level security;
+create or replace function public.can_view() returns boolean language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.editors where lower(email) = lower(auth.jwt() ->> 'email'))
+      or exists (select 1 from public.viewers where lower(email) = lower(auth.jwt() ->> 'email'));
+$$;
+create or replace function public.my_role() returns text language sql stable security definer set search_path = public as $$
+  select case when exists (select 1 from public.editors where lower(email) = lower(auth.jwt() ->> 'email')) then 'editor'
+              when exists (select 1 from public.viewers where lower(email) = lower(auth.jwt() ->> 'email')) then 'viewer' end;
+$$;
+revoke execute on function public.can_view() from public, anon;
+revoke execute on function public.my_role() from public, anon;
+grant execute on function public.can_view() to authenticated;
+grant execute on function public.my_role() to authenticated;
+drop policy if exists "posts read" on public.posts;
+create policy "posts read" on public.posts for select to authenticated using ((select public.can_view()));
+insert into public.viewers (email) values ('ksgi-staff@example.com') on conflict do nothing;

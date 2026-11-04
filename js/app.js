@@ -8,7 +8,7 @@ const authStore={
   removeItem:k=>{try{localStorage.removeItem(k);sessionStorage.removeItem(k)}catch(e){}}
 };
 const SB=(window.supabase&&window.SUPABASE_URL)?window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY,{auth:{storage:authStore,persistSession:true,autoRefreshToken:true}}):null;
-let USER=null, POSTS=[], postsLoaded=false, authReady=!SB;
+let USER=null, POSTS=[], postsLoaded=false, authReady=!SB, CAN_VIEW=false;   // CAN_VIEW: 관리자 또는 보기 전용
 const TEAMS=['청년부 기획팀','대외섭외','도슨트','환경미화','실내안내','주차안내','방송/기록/의료'];
 const ALL='전체';
 let curTeam=(()=>{const t=ls.get('jhr-team');return t===ALL||TEAMS.includes(t)?t:ALL})();
@@ -20,7 +20,7 @@ function route(){
   let h=location.hash.replace(/^#\/?/,'');
   if(/^f[123]$/.test(h)){current=h;h='facility'}          // 예전 시설안내 링크(#f1 등) 호환
   if(!PAGES.includes(h))h='home';
-  if(h==='news'&&!EDIT.can){h='home';if(authReady&&location.hash.startsWith('#/news'))history.replaceState(null,'','#/')}   // 진행상황 공유는 관리자 전용
+  if(h==='news'&&!CAN_VIEW){h='home';if(authReady&&location.hash.startsWith('#/news'))history.replaceState(null,'','#/')}   // 진행상황 공유는 관리자 전용
   document.querySelectorAll('.page').forEach(p=>p.hidden=p.id!=='page-'+h);
   document.querySelectorAll('.nav-links a').forEach(a=>a.setAttribute('aria-current',a.dataset.page===h?'page':'false'));
   document.body.classList.remove('nav-open');
@@ -57,11 +57,12 @@ let sheetMode=null;   // 'login' | 'post' while those sheets are open
 function authUI(){
   const box=document.getElementById('navAuth');
   const note=document.getElementById('editNote'); if(note)note.hidden=!EDIT.can;
-  document.body.classList.toggle('is-admin',EDIT.can);
+  document.body.classList.toggle('is-admin',CAN_VIEW);
+  document.body.classList.toggle('is-editor',EDIT.can);
   if(!SB){box.innerHTML='';return}
   if(!USER){box.innerHTML='<button type="button" class="nav-login" id="loginBtn">관리자 로그인</button>';
     document.getElementById('loginBtn').onclick=e=>{lastFocus=e.currentTarget;openLogin()};}
-  else{box.innerHTML=`<span class="nav-user">${esc(USER.email.replace(/@example\.com$/,''))}${EDIT.can?' · 관리자':' · 권한 없음'}</span><button type="button" class="nav-login ghost" id="logoutBtn">로그아웃</button>`;
+  else{box.innerHTML=`<span class="nav-user">${esc(USER.email.replace(/@example\.com$/,''))}${EDIT.can?' · 관리자':CAN_VIEW?' · 보기 전용':' · 권한 없음'}</span><button type="button" class="nav-login ghost" id="logoutBtn">로그아웃</button>`;
     document.getElementById('logoutBtn').onclick=e=>{e.preventDefault();e.stopPropagation();logout()};}
   renderPosts();
 }
@@ -74,10 +75,10 @@ async function logout(){
   await refreshAuth(null);
 }
 async function refreshAuth(session){
-  USER=session?session.user:null; EDIT.can=false;
-  if(USER){const {data}=await SB.rpc('is_editor');EDIT.can=data===true;}
+  USER=session?session.user:null; EDIT.can=false; CAN_VIEW=false;
+  if(USER){const {data}=await SB.rpc('my_role');EDIT.can=data==='editor';CAN_VIEW=data==='editor'||data==='viewer';}
   authReady=true;
-  if(EDIT.can)loadPosts();else{POSTS=[];postsLoaded=false}
+  if(CAN_VIEW)loadPosts();else{POSTS=[];postsLoaded=false}
   authUI(); rerender(); route();
 }
 function openModal(html,mode){
@@ -132,7 +133,7 @@ async function uploadPhoto(key,file){
 const fmtDate=iso=>{const d=new Date(iso);return `${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}.`};
 const fmtBody=t=>esc(t).replace(/\n/g,'<br>');
 async function loadPosts(){
-  if(!SB||!EDIT.can)return;
+  if(!SB||!CAN_VIEW)return;
   const {data,error}=await SB.from('posts').select('*').order('pinned',{ascending:false}).order('created_at',{ascending:false}).limit(200);
   if(error)return; POSTS=data; postsLoaded=true; renderPosts();
 }
