@@ -268,3 +268,15 @@ body:not(.is-admin) .admin-only{display:none!important}
 #page-facility .room{cursor:pointer;transition:border-color .15s,transform .15s}
 #page-facility .room:hover{border-color:var(--brand);transform:translateY(-2px)}
 @media (prefers-reduced-motion:reduce){#page-facility .room{transition:none}#page-facility .room:hover{transform:none}}
+
+/* 관리자 로그인: 메뉴 안으로 (데스크톱은 메뉴 오른쪽 끝, 모바일은 햄버거 메뉴 안) */
+.nav-links{align-items:center}
+.nav-links .nav-auth{margin-left:14px}
+@media (max-width:860px){
+  .nav-links{align-items:stretch}
+  .nav-links .nav-auth{margin:8px 0 0;padding:12px 8px 2px;border-top:1px solid var(--line);order:0;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .nav-links .nav-auth:empty{display:none}
+  .nav-links .nav-user{display:inline}
+  .nav-links .nav-login{padding:10px 18px;font-size:14.5px}
+  .nav-toggle{margin-left:auto!important}
+}

@@ -16,10 +16,10 @@ const FLOORS = {
        desc:'인권교육 특별展의 메인 전시장입니다. 주제별 전시 패널과 체험 코너, 포토존을 차례로 둘러볼 수 있습니다.'},
       {n:2,name:'홀',orig:'301 홀',cat:'hall',r:[25.8,35,0,8.6],lr:[30,35,0,8.6],desc:'엘리베이터와 계단에서 내리면 바로 만나는 로비입니다. 전시관 입장 전 잠시 기다리는 공간으로 씁니다.'},
       {n:3,name:'유아실',orig:'302 유아실',cat:'rest',r:[25.8,29.2,12.6,16.6],d:[{s:'r',at:14.6}],desc:'영유아와 함께 온 관람객이 쉬거나 아이를 돌볼 수 있는 공간입니다.'},
-      {n:4,name:'무궁화실',orig:'304 무궁화실',cat:'staff',r:[30.4,32.6,12.6,18.6],d:[{s:'l',at:14.4}],desc:'운영 지원 공간입니다.'},
+      {n:4,name:'무궁화실',orig:'304 무궁화실',cat:'staff',off:true,r:[30.4,32.6,12.6,18.6],d:[{s:'l',at:14.4}],desc:'운영 지원 공간입니다.'},
       {n:5,name:'방송실',orig:'303A 방송실',cat:'staff',r:[25.8,29.2,8.6,12.6],d:[{s:'r',at:10.6}],desc:'전시관 음향·영상을 운영하는 관계자 공간입니다.'},
-      {n:6,name:'창고',orig:'306 창고',cat:'staff',r:[30.4,32.6,8.6,12.6],d:[{s:'l',at:10.6}],desc:'전시 물품 보관 공간입니다.'},
-      {n:7,name:'공조실',orig:'305 공조실',cat:'staff',r:[0,3.1,5.4,16.6],d:[{s:'b',at:1.6}],desc:'공조 설비 공간입니다. 관계자 외 출입을 제한합니다.',v:true},
+      {n:6,name:'창고',orig:'306 창고',cat:'staff',off:true,r:[30.4,32.6,8.6,12.6],d:[{s:'l',at:10.6}],desc:'전시 물품 보관 공간입니다.'},
+      {n:7,name:'공조실',orig:'305 공조실',cat:'staff',off:true,r:[0,3.1,5.4,16.6],d:[{s:'b',at:1.6}],desc:'공조 설비 공간입니다. 관계자 외 출입을 제한합니다.',v:true},
     ],
     corridor:{t:'',r:[29.2,30.4,8.6,16.6]},
     gates:[{t:'입구 ①',x:25.8,y:1.6,w:1.3,kind:'in'},{t:'입구 ②',x:25.8,y:4.2,w:2.2,kind:'in'},{t:'출구 ③',x:25.8,y:7,w:1.3,kind:'out'}],
@@ -35,10 +35,10 @@ const FLOORS = {
       {n:3,name:'활동실1',orig:'203 다목적실',renamed:true,cat:'activity',r:[24.6,32,12,18.6],d:[{s:'b',at:28.3}],desc:'체험 워크숍과 생각을 나누는 활동을 하는 공간입니다.'},
       {n:4,name:'활동실2',orig:'209 행복실',renamed:true,cat:'activity',r:[19.6,24.6,0,5.4],d:[{s:'t',at:22.1}],desc:'보드게임 등 놀이로 인권을 배우는 활동 공간입니다.'},
       {n:5,name:'홀',orig:'201 홀',cat:'hall',r:[24.6,35,0,12],desc:'계단과 엘리베이터 앞 로비입니다. 테이블 좌석이 있어 잠시 쉬어 갈 수 있습니다.'},
-      {n:6,name:'사자후실',orig:'206 사자후실',cat:'staff',r:[3.1,9,0,5.4],d:[{s:'t',at:6}],desc:'소모임실입니다.'},
+      {n:6,name:'사자후실',orig:'206 사자후실',cat:'staff',off:true,r:[3.1,9,0,5.4],d:[{s:'t',at:6}],desc:'소모임실입니다.'},
       {n:7,name:'희망실',orig:'207 희망실',cat:'staff',r:[9,14.4,0,5.4],d:[{s:'t',at:11.7}],desc:'소모임실입니다.'},
       {n:8,name:'지용실',orig:'208 지용실',cat:'staff',r:[14.4,19.6,0,5.4],d:[{s:'t',at:17}],desc:'소모임실입니다.'},
-      {n:9,name:'준비실',orig:'205A·205B 준비실',cat:'staff',r:[0,3.1,5.4,18.6],d:[{s:'r',at:7.2}],desc:'영상관1 운영을 위한 관계자 공간입니다.',v:true},
+      {n:9,name:'준비실',orig:'205A·205B 준비실',cat:'staff',off:true,r:[0,3.1,5.4,18.6],d:[{s:'r',at:7.2}],desc:'영상관1 운영을 위한 관계자 공간입니다.',v:true},
     ],
     corridor:{t:'복도',r:[3.1,24.6,5.4,9]},
     core:[
@@ -55,16 +55,16 @@ const FLOORS = {
       {n:5,name:'사무실',orig:'107 사무실',cat:'staff',r:[19.7,26.1,0,6],d:[{s:'t',at:24.4}],desc:'전시 운영진이 일하는 사무 공간입니다.'},
       {n:6,name:'보성회실',orig:'107 보성회실',cat:'staff',r:[29.3,32.9,12,16.2],d:[{s:'b',at:31.1}],desc:'관계자 공간입니다.'},
       {n:7,name:'화광회실',orig:'110A 화광회실',cat:'staff',r:[8.9,14.8,0,6],d:[{s:'t',at:11.8}],desc:'관계자 공간입니다.'},
-      {n:8,name:'칸나실',orig:'110 칸나실',cat:'staff',r:[2.6,8.9,0,6],d:[{s:'t',at:5.8}],desc:'관계자 공간입니다.'},
-      {n:9,name:'화락실',orig:'117 화락실',cat:'staff',r:[18,20.9,7.9,16],d:[{s:'b',at:19.4}],desc:'관계자 공간입니다.',v:true},
-      {n:10,name:'설비실',orig:'112 전기실 · 113 발전기실 · 114 보일러실',cat:'staff',r:[-0.8,18,8.2,16],d:[{s:'b',at:6},{s:'b',at:12.5}],desc:'전기·발전기·보일러 설비 공간입니다. 관계자 외 출입을 제한합니다.'},
-      {n:11,name:'창고',orig:'116 창고',cat:'staff',r:[35.8,39.3,0,3.5],d:[{s:'l',at:1.8}],desc:'물품 보관 공간입니다.'},
-      {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[34,39,-6.5,-1.5],d:[{s:'l',at:-4},{s:'t',at:36.5}],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
+      {n:8,name:'칸나실',orig:'110 칸나실',cat:'staff',off:true,r:[2.6,8.9,0,6],d:[{s:'t',at:5.8}],desc:'관계자 공간입니다.'},
+      {n:9,name:'화락실',orig:'117 화락실',cat:'staff',off:true,r:[18,20.9,7.9,16],d:[{s:'b',at:19.4}],desc:'관계자 공간입니다.',v:true},
+      {n:10,name:'설비실',orig:'112 전기실 · 113 발전기실 · 114 보일러실',cat:'staff',off:true,r:[-0.8,18,8.2,16],d:[{s:'b',at:6},{s:'b',at:12.5}],desc:'전기·발전기·보일러 설비 공간입니다. 관계자 외 출입을 제한합니다.'},
+      {n:11,name:'창고',orig:'116 창고',cat:'staff',off:true,r:[35.8,39.3,0,3.5],d:[{s:'l',at:1.8}],desc:'물품 보관 공간입니다.'},
+      {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[34,39,-6.5,-1.5],d:[{s:'b',at:36.5}],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
     ],
     corridor:{t:'복도',r:[-0.8,26.1,6,8.2]},
     core:[
-      {t:'계단',r:[-0.8,2.6,0,6]},{t:'계단',r:[35.8,39.3,6.2,11.3]},{t:'EV',r:[33,35.2,12.6,15.4]},
-      {t:'화장실(남)',r:[35.2,39.3,11.3,15]},{t:'화장실(여)',r:[35.2,39.3,15,18.5]}],
+      {t:'계단',r:[-0.8,2.6,0,6]},{t:'계단',r:[35.8,39.3,6.2,11.3]},{t:'EV',r:[33.5,35.9,12.6,15.4]},
+      {t:'화장실(남)',r:[36.4,39.3,11.3,15]},{t:'화장실(여)',r:[36.4,39.3,15,18.5]}],
     entrances:[
       {t:'주출입구',x:31,y:0,dir:'up',main:true},
       {t:'부출입구 1',x:-0.8,y:7.1,dir:'right',inside:true},
@@ -124,6 +124,9 @@ const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.
 const Y=y=>H-y;
 let current='f1';
 
+const origOf=rm=>rm.orig.replace(/\b\d{3}[A-Z]?(·\d{3}[A-Z]?)*\s*/g,'').replace(/\s*·\s*/g,' · ').trim();
+const liveRooms=F=>F.rooms.filter(r=>!r.off);
+const dispN=(F,rm)=>liveRooms(F).indexOf(rm)+1;
 function rectOf(r){return {x:r[0],y:Y(r[3]),w:r[1]-r[0],h:r[3]-r[2]}}
 function label(g,r,lines,size,vertical,dy=0){
   const b=rectOf(r), cx=b.x+b.w/2, cy=b.y+b.h/2+dy;
@@ -142,6 +145,8 @@ function draw(id){
   const defs=el('defs',{},svg);
   const pat=el('pattern',{id:'hatch',width:.9,height:.9,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs);
   el('line',{x1:0,y1:0,x2:0,y2:.9,stroke:'var(--plan-wall)','stroke-width':.22,opacity:.45},pat);
+  const pat2=el('pattern',{id:'hatchSel',width:.8,height:.8,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs);
+  el('line',{x1:0,y1:0,x2:0,y2:.8,stroke:'var(--sel)','stroke-width':.26,opacity:.75},pat2);
   const gB=el('g',{},svg);
   el('polygon',{points:F.outline.map(p=>p[0]+','+Y(p[1])).join(' '),fill:'var(--plan-bg)',stroke:'var(--plan-wall)','stroke-width':.35,'stroke-linejoin':'round'},gB);
   if(F.corridor){const b=rectOf(F.corridor.r);el('rect',{x:b.x,y:b.y,width:b.w,height:b.h,fill:'var(--bg)'},gB);label(gB,F.corridor.r,[F.corridor.t],.8)}
@@ -150,26 +155,32 @@ function draw(id){
   const rooms=[...F.rooms].sort((a,b)=>(a.cat==='hall'?-1:0)-(b.cat==='hall'?-1:0));
   rooms.forEach(rm=>{
     const b=rectOf(rm.r);
+    if(rm.off){   // 시설정보가 필요 없는 실: 흐리게만 표시
+      el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:'var(--c-off)',stroke:'var(--plan-wall)','stroke-width':.08,'stroke-opacity':.35,class:'room-off'},gR);
+      const sz=Math.min(b.w>4.5?1:.9,((rm.v?b.h:b.w)-0.8)/rm.name.length);
+      const t=label(gR,rm.lr||rm.r,[rm.name],sz,rm.v); t.style.fill='var(--off-label)'; t.setAttribute('font-weight',600);
+      return;
+    }
     const shape=el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12,class:'room-shape','data-n':rm.n,tabindex:0,role:'button','aria-label':info(id,rm).name+' 상세보기 열기'},gR);
     if(rm.outdoor){shape.setAttribute('stroke-dasharray','.5 .35');shape.setAttribute('stroke-width',.16);}
     const open=()=>{focusRoom(rm.n,true);lastFocus=shape;openSheet(rm.n)};
     shape.addEventListener('click',open);
     shape.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
     const big=b.w>8&&b.h>5, size=Math.min(big?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/info(id,rm).name.length);
-    label(gR,rm.lr||rm.r,rm.renamed&&(big||b.w>4.5)?[info(id,rm).name,'('+rm.orig.replace(/^[0-9A-Z]+\s/,'')+')']:[info(id,rm).name],size,rm.v,(!big&&!rm.v&&b.h<7)?.55:0);
+    label(gR,rm.lr||rm.r,rm.renamed&&(big||b.w>4.5)?[info(id,rm).name,'('+origOf(rm)+')']:[info(id,rm).name],size,rm.v,(!big&&!rm.v&&b.h<7)?.55:0);
     // number badge
     const bx=b.x+.95, by=b.y+.95;
     el('circle',{cx:bx,cy:by,r:.62,fill:'var(--surface)',stroke:'var(--plan-wall)','stroke-width':.08},gR);
-    const nt=el('text',{x:bx,y:by+.03,'text-anchor':'middle','dominant-baseline':'middle','font-size':.72,'font-weight':900},gR);nt.textContent=rm.n;
+    const nt=el('text',{x:bx,y:by+.03,'text-anchor':'middle','dominant-baseline':'middle','font-size':.72,'font-weight':900},gR);nt.textContent=dispN(F,rm);
   });
   const gC=el('g',{},svg);
   F.core.forEach(c=>{const b=rectOf(c.r);el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.4,fill:'var(--c-core)',stroke:'var(--plan-wall)','stroke-width':.1},gC);
-    label(gC,c.r,[c.t],c.t.length>4?.62:.85,c.v);
+    label(gC,c.r,[c.t],Math.min(c.t.length>4?.62:.85,((c.v?b.h:b.w)-.5)/c.t.length*1.05),c.v);
     if(c.t==='계단'){for(let i=1;i<6;i++){const yy=b.y+b.h*i/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35},gC)}}});
   const gD=el('g',{'pointer-events':'none'},svg);
   F.rooms.forEach(rm=>(rm.d||[]).forEach(d=>{const w=d.w||1.3,t=.42;let x,y,wd,ht;
     if(d.s==='b'||d.s==='t'){y=Y(d.s==='b'?rm.r[2]:rm.r[3]);x=d.at-w/2;wd=w;ht=t;y-=t/2}else{x=(d.s==='l'?rm.r[0]:rm.r[1])-t/2;y=Y(d.at)-w/2;wd=t;ht=w}
-    el('rect',{x,y,width:wd,height:ht,rx:.12,fill:'var(--door)',stroke:'var(--plan-bg)','stroke-width':.08},gD)}));
+    el('rect',{x,y,width:wd,height:ht,rx:.12,fill:'var(--door)',stroke:'var(--plan-bg)','stroke-width':.08,opacity:rm.off?.3:1},gD)}));
   (F.gates||[]).forEach(gt=>{const col=gt.kind==='in'?'var(--teal)':'var(--orange)',x=gt.x,y=Y(gt.y),w=gt.w,t=.6;
     el('rect',{x:x-t/2,y:y-w/2,width:t,height:w,rx:.15,fill:col},gD);
     const tw=gt.t.length*.62+.9, lx=x-.75-tw;
@@ -204,7 +215,7 @@ const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 let OV={}, EDIT={db:null,assets:null,can:false};
 function info(fid,rm){
   const F=FLOORS[fid], key=fid+'-'+rm.n, o=OV[key]||{};
-  const D=DETAIL[key]||{where:F.fl+' '+rm.orig.replace(/^[0-9A-Z·\s]+\s/,'')+' 위치',use:CAT[rm.cat].label,more:rm.desc+(rm.cat==='staff'?' 전시 기간에는 관계자만 이용합니다.':''),tips:[]};
+  const D=DETAIL[key]||{where:F.fl+' '+origOf(rm)+' 위치',use:CAT[rm.cat].label,more:rm.desc+(rm.cat==='staff'?' 전시 기간에는 관계자만 이용합니다.':''),tips:[]};
   const pick=(k,def)=>(typeof o[k]==='string'&&o[k].trim()!=='')?o[k]:def;
   return {name:pick('name',rm.name),desc:pick('desc',rm.desc),more:pick('more',D.more),where:pick('where',D.where),use:pick('use',D.use),
     tips:Array.isArray(o.tips)?o.tips:(D.tips||[]),photos:Array.isArray(o.photos)?o.photos:(D.photos||[])};
@@ -213,10 +224,10 @@ const photoUrl=p=>p;
 function renderRooms(id){
   const F=FLOORS[id], box=document.getElementById('rooms');
   box.innerHTML='';
-  F.rooms.forEach(rm=>{
+  liveRooms(F).forEach(rm=>{
     const I=info(id,rm);
     const d=document.createElement('article');d.className='room';d.id='room-'+rm.n;
-    d.innerHTML=`<div class="room-top"><span class="num" style="background:${CAT[rm.cat].color}">${rm.n}</span><div><h3 class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3><div class="orig">${esc(rm.orig)}</div></div></div><span class="chip">${CAT[rm.cat].label}</span><p>${esc(I.desc)}</p><button class="more-btn" type="button">자세히 보기 →</button>`;
+    d.innerHTML=`<div class="room-top"><span class="num" style="background:${CAT[rm.cat].color}">${dispN(F,rm)}</span><div><h3 class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3>${origOf(rm)&&origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}</div>`:''}</div></div><span class="chip">${CAT[rm.cat].label}</span><p>${esc(I.desc)}</p><button class="more-btn" type="button">자세히 보기 →</button>`;
     d.addEventListener('click',e=>{focusRoom(rm.n,true);lastFocus=d.querySelector('.more-btn');openSheet(rm.n)});
     box.appendChild(d);
   });
@@ -228,7 +239,7 @@ function focusRoom(n,noScroll){
   const card=document.getElementById('room-'+n); if(!card)return;
   card.classList.add('hl');
   const sh=document.querySelector(`.room-shape[data-n="${n}"]`);
-  if(sh){const h=sh.cloneNode(false);h.removeAttribute('tabindex');h.removeAttribute('role');h.removeAttribute('aria-label');h.setAttribute('class','hatch');h.setAttribute('fill','url(#hatch)');h.setAttribute('stroke','none');sh.after(h);}
+  if(sh){const h=sh.cloneNode(false);h.removeAttribute('tabindex');h.removeAttribute('role');h.removeAttribute('aria-label');h.setAttribute('class','hatch');h.setAttribute('fill','url(#hatchSel)');h.setAttribute('stroke','var(--sel)');h.setAttribute('stroke-width','.34');sh.after(h);}
   if(!noScroll)card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});
 }
 function show(id){
@@ -248,11 +259,11 @@ function openSheet(n){
   const I=info(current,rm);
   const photos=I.photos.length?I.photos.map(photoUrl):[null,null,null];
   let pi=0;
-  const rooms=F.rooms, i=rooms.indexOf(rm), prev=rooms[(i-1+rooms.length)%rooms.length], next=rooms[(i+1)%rooms.length];
+  const rooms=liveRooms(F), i=rooms.indexOf(rm), prev=rooms[(i-1+rooms.length)%rooms.length], next=rooms[(i+1)%rooms.length];
   const sh=document.getElementById('sheet');
-  sh.innerHTML=`<div class="photo" id="galPhoto" style="background:${CAT[rm.cat].color}"><div id="galSlide" style="width:100%;height:100%;display:grid;place-items:center"></div>${photos.length>1?'<button class="gal-btn gal-prev" type="button" aria-label="이전 사진">‹</button><button class="gal-btn gal-next" type="button" aria-label="다음 사진">›</button><span class="gal-count" id="galCount"></span>':''}<span class="tag">${F.fl} · ${rm.n}</span><button class="sheet-close" type="button" aria-label="닫기">×</button></div>
+  sh.innerHTML=`<div class="photo" id="galPhoto" style="background:${CAT[rm.cat].color}"><div id="galSlide" style="width:100%;height:100%;display:grid;place-items:center"></div>${photos.length>1?'<button class="gal-btn gal-prev" type="button" aria-label="이전 사진">‹</button><button class="gal-btn gal-next" type="button" aria-label="다음 사진">›</button><span class="gal-count" id="galCount"></span>':''}<span class="tag">${F.fl} · ${dispN(F,rm)}</span><button class="sheet-close" type="button" aria-label="닫기">×</button></div>
   ${photos.length>1?`<div class="thumbs" id="galThumbs">${photos.map((p,k)=>`<button class="thumb" type="button" data-k="${k}" aria-label="사진 ${k+1}">${p?`<img src="${esc(p)}" alt="">`:k+1}</button>`).join('')}</div>`:''}
-  <div class="sheet-body"><div class="title-row"><div><h3 id="sheetTitle" class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3><div class="orig">${esc(rm.orig)}${rm.renamed?' · 전시 기간 명칭':''}</div></div>${EDIT.can?'<button class="edit-btn" type="button" id="editBtn">정보 수정</button>':''}</div>
+  <div class="sheet-body"><div class="title-row"><div><h3 id="sheetTitle" class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3>${origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}${rm.renamed?' · 전시 기간 명칭':''}</div>`:''}</div>${EDIT.can?'<button class="edit-btn" type="button" id="editBtn">정보 수정</button>':''}</div>
   <span class="chip">${CAT[rm.cat].label}</span>
   <p>${esc(I.more)}</p>
   <dl class="facts"><dt>위치</dt><dd>${esc(I.where)}</dd><dt>용도</dt><dd>${esc(I.use)}</dd></dl>
@@ -288,7 +299,7 @@ function openEditor(rm){
   let photos=[...I.photos];
   const sh=document.getElementById('sheet');
   sh.innerHTML=`<div class="sheet-body edit">
-    <div class="title-row"><div><div class="eyebrow">시설 정보 수정</div><h3 id="sheetTitle">${esc(I.name)}</h3><div class="orig">${esc(rm.orig)}</div></div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
+    <div class="title-row"><div><div class="eyebrow">시설 정보 수정</div><h3 id="sheetTitle">${esc(I.name)}</h3>${origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}</div>`:''}</div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
     <label for="e-name">이름</label><input id="e-name" value="${esc(I.name)}" maxlength="40">
     <label for="e-desc">카드 설명 (짧게)</label><textarea id="e-desc" rows="2" maxlength="200">${esc(I.desc)}</textarea>
     <label for="e-more">자세한 설명</label><textarea id="e-more" rows="5" maxlength="2000">${esc(I.more)}</textarea>
