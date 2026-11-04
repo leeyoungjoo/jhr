@@ -264,3 +264,7 @@ body:not(.is-admin) .admin-only{display:none!important}
 .brand-txt span{font-size:12.5px;margin-top:2px}
 @media (max-width:860px){.brand-txt b{font-size:21px}}
 @media (max-width:400px){.brand-txt b{font-size:19px}}
+/* 시설 카드 전체 클릭 */
+#page-facility .room{cursor:pointer;transition:border-color .15s,transform .15s}
+#page-facility .room:hover{border-color:var(--brand);transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){#page-facility .room{transition:none}#page-facility .room:hover{transform:none}}

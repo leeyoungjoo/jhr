@@ -68,7 +68,7 @@ const FLOORS = {
     entrances:[
       {t:'주출입구',x:31,y:0,dir:'up',main:true},
       {t:'부출입구 1',x:-0.8,y:7.1,dir:'right'},
-      {t:'부출입구 2',x:23.9,y:16,dir:'down'}],
+      {t:'부출입구 2',x:23.9,y:16,dir:'down',align:'right'}],
     amen:['실외 휴게공간(인권도서전)','주출입구 · 부출입구 2곳','화장실(남·여)','엘리베이터 1대','계단 2곳','주차장 · 장애인 주차구역']}
 };
 
@@ -150,10 +150,11 @@ function draw(id){
   const rooms=[...F.rooms].sort((a,b)=>(a.cat==='hall'?-1:0)-(b.cat==='hall'?-1:0));
   rooms.forEach(rm=>{
     const b=rectOf(rm.r);
-    const shape=el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12,class:'room-shape','data-n':rm.n,tabindex:0,role:'button','aria-label':info(id,rm).name+' 설명 보기'},gR);
+    const shape=el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12,class:'room-shape','data-n':rm.n,tabindex:0,role:'button','aria-label':info(id,rm).name+' 상세보기 열기'},gR);
     if(rm.outdoor){shape.setAttribute('stroke-dasharray','.5 .35');shape.setAttribute('stroke-width',.16);}
-    shape.addEventListener('click',()=>focusRoom(rm.n));
-    shape.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();focusRoom(rm.n)}});
+    const open=()=>{focusRoom(rm.n,true);lastFocus=shape;openSheet(rm.n)};
+    shape.addEventListener('click',open);
+    shape.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
     const big=b.w>8&&b.h>5, size=Math.min(big?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/info(id,rm).name.length);
     label(gR,rm.lr||rm.r,rm.renamed&&(big||b.w>4.5)?[info(id,rm).name,'('+rm.orig.replace(/^[0-9A-Z]+\s/,'')+')']:[info(id,rm).name],size,rm.v,(!big&&!rm.v&&b.h<7)?.55:0);
     // number badge
@@ -171,21 +172,30 @@ function draw(id){
     el('rect',{x,y,width:wd,height:ht,rx:.12,fill:'var(--door)',stroke:'var(--plan-bg)','stroke-width':.08},gD)}));
   (F.gates||[]).forEach(gt=>{const col=gt.kind==='in'?'var(--teal)':'var(--orange)',x=gt.x,y=Y(gt.y),w=gt.w,t=.6;
     el('rect',{x:x-t/2,y:y-w/2,width:t,height:w,rx:.15,fill:col},gD);
-    const lx=x+.75, tw=gt.t.length*.62+.9;
+    const tw=gt.t.length*.62+.9, lx=x-.75-tw;
     el('rect',{x:lx,y:y-.62,width:tw,height:1.24,rx:.62,fill:col},gD);
     const ar=gt.kind==='in'?`${lx+.55},${y} ${lx+1.05},${y-.36} ${lx+1.05},${y+.36}`:`${lx+1.05},${y} ${lx+.55},${y-.36} ${lx+.55},${y+.36}`;
     el('polygon',{points:ar,fill:'#fff'},gD);
     const tx=el('text',{x:lx+1.3,y:y+.04,'dominant-baseline':'middle','font-size':.66,'font-weight':900},gD);tx.textContent=gt.t;tx.style.fill='#fff';});
   (F.entrances||[]).forEach(en=>{
-    const g=el('g',{transform:`translate(${en.x} ${Y(en.y)}) scale(1.3) translate(${-en.x} ${-Y(en.y)})`},svg), x=en.x, y=Y(en.y), col=en.main?'var(--orange)':'var(--teal)';
-    let pts, tx, ty, anchor='middle';
-    if(en.dir==='up'){pts=`${x-1},${y+2.4} ${x+1},${y+2.4} ${x+1},${y+1.2} ${x+1.8},${y+1.2} ${x},${y} ${x-1.8},${y+1.2} ${x-1},${y+1.2}`;tx=x;ty=y+3.3}
-    if(en.dir==='right'){pts=`${x-2.4},${y-1} ${x-2.4},${y+1} ${x-1.2},${y+1} ${x-1.2},${y+1.8} ${x},${y} ${x-1.2},${y-1.8} ${x-1.2},${y-1}`;tx=x-3.6;ty=y+2.6;}
-    if(en.dir==='down'){pts=`${x-1},${y-2.4} ${x+1},${y-2.4} ${x+1},${y-1.2} ${x+1.8},${y-1.2} ${x},${y} ${x-1.8},${y-1.2} ${x-1},${y-1.2}`;tx=x;ty=y-3}
-    el('polygon',{points:pts,fill:col},g);
-    const tw=en.t.length*.9+1;el('rect',{x:tx-tw/2,y:ty-.72,width:tw,height:1.44,rx:.72,fill:col},g);
-    const t=el('text',{x:tx,y:ty+.04,'text-anchor':anchor,'dominant-baseline':'middle','font-size':.82,'font-weight':900},g);t.textContent=en.t;t.style.fill='#fff';
+    const g=el('g',{'pointer-events':'none'},svg), x=en.x, y=Y(en.y), col=en.main?'var(--orange)':'var(--teal)';
+    const fs=en.main?.86:.78, h=en.main?1.6:1.4, tw=en.t.length*fs*.98+1.7, gap=.85, horiz=en.dir!=='right';
+    if(horiz)el('rect',{x:x-1.4,y:y-.36,width:2.8,height:.72,rx:.2,fill:col},g);else el('rect',{x:x-.36,y:y-1.4,width:.72,height:2.8,rx:.2,fill:col},g);
+    let px,py;   // pill top-left, placed outside the building
+    if(en.dir==='up'){px=x-tw/2;py=y+gap}
+    else if(en.dir==='down'){px=en.align==='right'?x+1.4-tw:x-tw/2;py=y-gap-h}
+    else {px=x-gap-tw;py=y-h/2}
+    el('rect',{x:px,y:py,width:tw,height:h,rx:h/2,fill:col},g);
+    const ax=px+.75, ay=py+h/2, a=.36;
+    const tri=en.dir==='up'?`${ax},${ay-a} ${ax-a},${ay+a*.8} ${ax+a},${ay+a*.8}`:en.dir==='down'?`${ax},${ay+a} ${ax-a},${ay-a*.8} ${ax+a},${ay-a*.8}`:`${ax+a},${ay} ${ax-a*.8},${ay-a} ${ax-a*.8},${ay+a}`;
+    el('polygon',{points:tri,fill:'#fff'},g);
+    const t=el('text',{x:px+1.35,y:ay+.05,'dominant-baseline':'middle','font-size':fs,'font-weight':900},g);t.textContent=en.t;t.style.fill='#fff';
   });
+  // fit the drawing to the box: tight viewBox around everything drawn
+  const bg=svg.firstElementChild; bg.remove();
+  try{const bb=svg.getBBox(); if(bb.width>0&&bb.height>0){const p=.7,vb=[bb.x-p,bb.y-p,bb.width+p*2,bb.height+p*2];
+    svg.setAttribute('viewBox',vb.map(v=>+v.toFixed(2)).join(' '));bg.setAttribute('x',vb[0]);bg.setAttribute('y',vb[1]);bg.setAttribute('width',vb[2]);bg.setAttribute('height',vb[3])}}catch(e){}
+  svg.insertBefore(bg,svg.firstChild);
   // north-ish marker: elevator call-out for upper floors
 }
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -206,8 +216,7 @@ function renderRooms(id){
     const I=info(id,rm);
     const d=document.createElement('article');d.className='room';d.id='room-'+rm.n;
     d.innerHTML=`<div class="room-top"><span class="num" style="background:${CAT[rm.cat].color}">${rm.n}</span><div><h3 class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3><div class="orig">${esc(rm.orig)}</div></div></div><span class="chip">${CAT[rm.cat].label}</span><p>${esc(I.desc)}</p><button class="more-btn" type="button">자세히 보기 →</button>`;
-    d.addEventListener('click',()=>focusRoom(rm.n,true));
-    d.querySelector('.more-btn').addEventListener('click',e=>{e.stopPropagation();focusRoom(rm.n,true);lastFocus=e.currentTarget;openSheet(rm.n)});
+    d.addEventListener('click',e=>{focusRoom(rm.n,true);lastFocus=d.querySelector('.more-btn');openSheet(rm.n)});
     box.appendChild(d);
   });
   document.getElementById('amen').innerHTML=F.amen.map(a=>`<div><b>·</b>${a}</div>`).join('');
@@ -345,11 +354,11 @@ function closeLB(){LB.open=false;LB.el.hidden=true;if(LB.back&&LB.back.focus)LB.
 
 // ---- floor directory (no URL hash; the site router owns the hash) ----
 function initFacility(){
-  const dir=document.getElementById('dir'); if(!dir||dir.dataset.ready)return; dir.dataset.ready='1';
+  const dir=document.getElementById('dir'); if(!dir)return; if(dir.dataset.ready){draw(current);return} dir.dataset.ready='1';
   ['f1','f2','f3'].forEach(id=>{const F=FLOORS[id];const b=document.createElement('button');b.className='floor-btn';b.dataset.id=id;b.type='button';b.setAttribute('role','tab');
     b.innerHTML=`<span class="fl">${F.fl}</span><span class="sum"><strong>${F.title.split(' · ').slice(1).join(' · ')}</strong><span class="s2">${F.summary}</span></span>`;
     b.addEventListener('click',()=>show(id));dir.appendChild(b)});
-  const note=document.createElement('div');note.className='note';note.textContent='층을 누르면 안내도가 바뀝니다. 안내도의 실을 누르면 아래 설명 카드를 찾아 주고, ‘자세히 보기’를 누르면 사진과 자세한 설명이 열립니다.';dir.appendChild(note);
+  const note=document.createElement('div');note.className='note';note.textContent='층을 누르면 안내도가 바뀝니다. 안내도의 실이나 아래 설명 카드를 누르면 사진과 자세한 설명이 바로 열립니다.';dir.appendChild(note);
   const en=document.createElement('div');en.className='edit-note';en.id='editNote';en.hidden=true;en.textContent='관리자로 로그인했습니다. ‘자세히 보기’에서 시설 정보를 수정할 수 있습니다.';dir.appendChild(en);
   show(current);
 }
