@@ -1,21 +1,14 @@
 html,body{margin:0}
 /* Layout: hotel-lobby directory — a floor stack on the left drives a simplified floor plan and the room list for that floor. */
 :root{
-  --bg:#FBF7EF; --surface:#FFFFFF; --ink:#24302D; --muted:#66706B; --line:#E3DCCD;
+  --bg:#F5EEE2; --surface:#FFFBF4; --ink:#24302D; --muted:#66706B; --line:#E3D8C5;
+  color-scheme:light;
   --orange:#E16824; --teal:#1A998E; --yellow:#F2B935; --green:#6FAF7E; --slate:#9AA39E;
   --c-exhibit:#F3A577; --c-video:#7FC7BE; --c-activity:#F7D77B; --c-rest:#B9DDB8; --c-staff:#E4E1D9; --c-core:#CFD8E3; --c-hall:#FFF1DE;
-  --plan-wall:#3B4743; --plan-bg:#FFFFFF; --label:#24302D; --door:#1F6F67;
+  --plan-wall:#3B4743; --plan-bg:#FFFDF8; --label:#24302D; --door:#1F6F67;
   --display:"Gothic A1","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#151B19; --surface:#1E2623; --ink:#ECEFEA; --muted:#A3ADA7; --line:#33403B;
-  --c-exhibit:#B8653C; --c-video:#2E7F76; --c-activity:#A88A34; --c-rest:#4E7F59; --c-staff:#3A423E; --c-core:#3B4757; --c-hall:#3A3226;
-  --plan-wall:#C9D3CE; --plan-bg:#1B2220; --label:#F4F6F2; --door:#5BC2B6; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#151B19; --surface:#1E2623; --ink:#ECEFEA; --muted:#A3ADA7; --line:#33403B;
-  --c-exhibit:#B8653C; --c-video:#2E7F76; --c-activity:#A88A34; --c-rest:#4E7F59; --c-staff:#3A423E; --c-core:#3B4757; --c-hall:#3A3226;
-  --plan-wall:#C9D3CE; --plan-bg:#1B2220; --label:#F4F6F2; --door:#5BC2B6; color-scheme:dark}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6}
 .wrap{max-width:1180px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;padding-bottom:22px;border-bottom:2px solid var(--ink)}
