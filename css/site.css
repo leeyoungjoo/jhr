@@ -330,3 +330,11 @@ body:not(.is-admin) .admin-only{display:none!important}
 .team-tabs[hidden]{display:none}
 .detail-nav .btn{background:var(--surface);color:var(--ink);border:1.5px solid var(--line);font-size:14px;padding:10px 18px}
 .detail-nav .btn:hover{border-color:var(--brand)}
+/* 게시판 폭 = 페이지 폭, 상세 화면 버튼 줄 */
+.news-list{max-width:none}
+.news-tools{max-width:none}
+.detail-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.detail-act{display:flex;gap:8px;margin-left:auto}
+.detail-nav .btn.brand{background:var(--brand);color:#fff;border-color:var(--brand)}
+.detail-nav .btn.danger{color:#C0392B}
+.detail-nav .btn.danger:hover{border-color:#C0392B}

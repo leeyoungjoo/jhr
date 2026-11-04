@@ -172,9 +172,8 @@ function postDetail(p){
     <h3>${esc(p.title)}</h3>
     <div class="views">조회 <b>${p.views||0}</b></div>
     <div class="post-body">${fmtBody(p.body||'')}</div>${gallery}
-    ${EDIT.can?`<div class="post-admin"><button type="button" class="link-btn" data-edit="${p.id}">수정</button><button type="button" class="link-btn danger" data-del="${p.id}">삭제</button></div>`:''}
   </article>
-  <div class="detail-nav"><a class="btn ghost" href="#/news">← 목록으로</a></div>`;
+  <div class="detail-nav"><a class="btn ghost" href="#/news">← 목록으로</a>${EDIT.can?`<div class="detail-act"><button type="button" class="btn ghost" data-edit="${p.id}">수정</button><button type="button" class="btn ghost danger" data-del="${p.id}">삭제</button><button type="button" class="btn brand" data-newpost>글쓰기</button></div>`:''}</div>`;
 }
 function renderPosts(){
   const list=document.getElementById('postList'), latest=document.getElementById('latestPosts');
@@ -207,7 +206,7 @@ document.addEventListener('click',e=>{
   if(ph){e.preventDefault();const p=POSTS.find(x=>x.id===ph.dataset.post);if(p)openLB(p.photos,+ph.dataset.k,p.title);return}
   const ed=e.target.closest('[data-edit]'); if(ed){lastFocus=ed;openPostEditor(POSTS.find(x=>x.id===ed.dataset.edit));return}
   const del=e.target.closest('[data-del]'); if(del){deletePost(del.dataset.del);return}
-  if(e.target.closest('#newPostBtn')){lastFocus=e.target.closest('#newPostBtn');openPostEditor(null)}
+  const nb=e.target.closest('#newPostBtn,[data-newpost]'); if(nb){lastFocus=nb;openPostEditor(null)}
 });
 async function deletePost(id){
   const p=POSTS.find(x=>x.id===id); if(!p)return;
