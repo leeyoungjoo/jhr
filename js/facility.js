@@ -68,7 +68,7 @@ const FLOORS = {
     entrances:[
       {t:'주출입구',x:31,y:0,dir:'up',main:true},
       {t:'부출입구 1',x:-0.8,y:7.1,dir:'right',inside:true},
-      {t:'부출입구 2',x:23.9,y:16,dir:'down',align:'right'}],
+      {t:'부출입구 2',x:25.6,y:17.25,dir:'right',len:1.9}],
     amen:['실외 휴게공간(인권도서전)','주출입구 · 부출입구 2곳','화장실(남·여)','엘리베이터 1대','계단 2곳','주차장 · 장애인 주차구역']}
 };
 
@@ -180,7 +180,8 @@ function draw(id){
   (F.entrances||[]).forEach(en=>{
     const g=el('g',{'pointer-events':'none'},svg), x=en.x, y=Y(en.y), col=en.main?'var(--orange)':'var(--teal)';
     const fs=en.main?.86:.78, h=en.main?1.6:1.4, tw=en.t.length*fs*.98+1.7, gap=.85, horiz=en.dir!=='right';
-    if(horiz)el('rect',{x:x-1.4,y:y-.36,width:2.8,height:.72,rx:.2,fill:col},g);else el('rect',{x:x-.36,y:y-1.4,width:.72,height:2.8,rx:.2,fill:col},g);
+    const L=en.len||2.8;
+    if(horiz)el('rect',{x:x-L/2,y:y-.36,width:L,height:.72,rx:.2,fill:col},g);else el('rect',{x:x-.36,y:y-L/2,width:.72,height:L,rx:.2,fill:col},g);
     let px,py;   // pill top-left, placed outside the building
     if(en.dir==='up'){px=x-tw/2;py=y+gap}
     else if(en.dir==='down'){px=en.align==='right'?x+1.4-tw:x-tw/2;py=y-gap-h}
