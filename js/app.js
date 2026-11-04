@@ -85,7 +85,6 @@ function openLogin(){
     <label for="l-email">아이디</label><input id="l-email" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" required>
     <label for="l-pw">비밀번호</label><input id="l-pw" type="password" autocomplete="current-password" required>
     <label class="check remember"><input type="checkbox" id="l-remember"> 아이디·비밀번호 기억하기</label>
-    <p class="remember-note">체크하면 이 기기에서 로그인 상태가 유지되어 다음에 다시 입력하지 않아도 됩니다. 공용 컴퓨터에서는 체크하지 마세요.</p>
     <div class="e-status" id="l-status" role="status"></div>
     <div class="e-actions"><button type="button" class="ghost" id="l-cancel">취소</button><button type="submit" class="primary" id="l-go">로그인</button></div></form>`,'login');
   sh.querySelector('.sheet-close').onclick=closeModal; document.getElementById('l-cancel').onclick=closeModal;

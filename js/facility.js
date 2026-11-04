@@ -300,7 +300,7 @@ function openSheet(n){
     const vp=car.querySelector('.tcar-vp'), track=car.querySelector('.tcar-track'), thumbs=[...track.children], n=thumbs.length, GAP=10;
     let per=4, start=0, step=0;
     const layout=()=>{const W=vp.clientWidth; if(!W)return; per=Math.max(3,Math.min(6,Math.round(W/104))); const w=(W-GAP*(per-1))/per; step=w+GAP;
-      thumbs.forEach(t=>{t.style.width=w+'px'}); car.classList.toggle('fits',n<=per); go(start,true)};
+      thumbs.forEach(t=>{t.style.width=w+'px';t.style.height=w+'px'}); car.classList.toggle('fits',n<=per); go(start,true)};
     const go=(s,instant)=>{const max=Math.max(0,n-per); start=Math.max(0,Math.min(max,s));
       track.style.transition=instant?'none':''; track.style.transform=`translateX(${-start*step}px)`};
     car.querySelector('.prev').addEventListener('click',()=>go(start<=0?Math.max(0,n-per):start-per));

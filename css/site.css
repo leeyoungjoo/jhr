@@ -304,3 +304,9 @@ body:not(.is-admin) .admin-only{display:none!important}
 .post.pinned .post-meta .team{background:#fff}
 /* 공지 글: 페이지 배경(베이지)과 구분되는 연노랑 + 왼쪽 주황 띠 */
 .post.pinned{background:#FFF5CF;border-color:#EFC94C;box-shadow:inset 5px 0 0 var(--brand)}
+
+/* iOS Safari: 비율 상자 안 사진이 꽉 차도록 (절대 위치로 채움) */
+.room-ph{position:relative;display:block}
+.room-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.room-ph span{position:absolute;inset:0;display:grid;place-items:center}
+.post-ph img{position:absolute;inset:0}
