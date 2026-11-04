@@ -16,7 +16,10 @@ function route(){
   if(h==='news'||h==='home')renderPosts();
   document.title=({home:'인권교육 특별展',about:'전시회 안내 · 인권교육 특별展',facility:'시설안내 · 인권교육 특별展',news:'진행상황 공유 · 인권교육 특별展'})[h];
   window.scrollTo({top:0,behavior:'auto'});
+  if(JUMP){const t=document.getElementById(JUMP);JUMP=null;if(t)requestAnimationFrame(()=>t.scrollIntoView({block:'start'}))}
 }
+let JUMP=null;
+document.addEventListener('click',e=>{const j=e.target.closest('[data-jump]');if(!j)return;JUMP=j.dataset.jump;if(location.hash===j.getAttribute('href')){e.preventDefault();route()}});
 window.addEventListener('hashchange',route);
 document.getElementById('navToggle').addEventListener('click',e=>{
   const open=!document.body.classList.contains('nav-open');

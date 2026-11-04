@@ -20,7 +20,6 @@
 <header class="site-nav">
   <div class="nav-in">
     <a class="brand" href="#/" aria-label="인권교육 특별展 메인페이지">
-      <span class="brand-mark" aria-hidden="true">人</span>
       <span class="brand-txt"><b>인권교육 특별展</b><span>변혁의 첫걸음, 인권교육의 힘</span></span>
     </a>
     <button class="nav-toggle" id="navToggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="navLinks"><span></span></button>
@@ -57,12 +56,26 @@
     </div>
   </section>
 
+  <section class="quote" aria-label="이케다 다이사쿠의 말">
+    <blockquote><p>한 사람의 위대한 인간혁명은<br>이윽고 한 나라의 숙명전환도 이루고<br>나아가 전 인류의 숙명전환도 가능케 한다.</p><footer>— 이케다 다이사쿠</footer></blockquote>
+  </section>
+
   <section class="sec" aria-labelledby="h-floors">
     <div class="sec-head"><div><div class="kicker">SPACES</div><h2 id="h-floors">층별로 만나는 인권</h2></div><a class="more-link" href="#/facility">시설안내 전체 보기 →</a></div>
     <div class="floors">
       <a class="floor-card" href="#/facility" data-floor="f3"><span class="fl">3F</span><h3>메인 전시관</h3><p>인권의 의미와 역사, 아동의 권리를 주제별 패널과 체험 코너, 포토존으로 만납니다.</p><span class="go">3층 안내 보기 →</span></a>
       <a class="floor-card" href="#/facility" data-floor="f2"><span class="fl">2F</span><h3>영상관 · 활동실</h3><p>인권 영상을 함께 보고, 워크숍과 보드게임으로 생각을 나눕니다.</p><span class="go">2층 안내 보기 →</span></a>
       <a class="floor-card" href="#/facility" data-floor="f1"><span class="fl">1F</span><h3>인권도서전 · 휴게</h3><p>주출입구 밖 실외 휴게공간에서 ‘한 사람을 소중히 도서전’이 열립니다.</p><span class="go">1층 안내 보기 →</span></a>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-themes-home">
+    <div class="sec-head"><div><div class="kicker">EXHIBITION</div><h2 id="h-themes-home">전시 주요내용</h2></div><a class="more-link" href="#/about">전시회 안내 보기 →</a></div>
+    <div class="themes">
+      <article class="theme t1"><span class="no">1</span><h3><em>인권이란</em> 무엇인가?</h3><p>모든 사람에게 갖춰진 인간 본연의 권리인 인권의 정의를 알고, 잔혹한 제2차 세계대전 이후 세계인권선언문이 탄생한 배경과 내용을 담고 있습니다.</p></article>
+      <article class="theme t2"><span class="no">2</span><h3><em>인권교육</em>이란?</h3><p>인권에 관한, 인권을 통한, 인권을 위한 교육을 통해 인권을 지키고, 변화를 일으키는 인권교육에 대해 알아봅니다.</p></article>
+      <article class="theme t3"><span class="no">3</span><h3><em>행동으로 이끄는</em> 인권교육</h3><p>인권교육이 개인과 집단의 가치, 신념 그리고 태도를 변화시켜 긍정적 행동으로 이어진 세계 각국의 사례를 소개합니다.</p></article>
+      <article class="theme t4"><span class="no">4</span><h3><em>인권교육을 위한</em> 지구적 운동</h3><p>인권에 대한 존중과 증진, 보호는 정부, 다양한 주체 그리고 우리 주변의 작은 실천에서부터 시작됩니다.</p></article>
     </div>
   </section>
 
@@ -86,7 +99,7 @@
     <div class="sec-head"><div><div class="kicker">VISIT</div><h2 id="h-visit">오시는 길</h2></div></div>
     <div class="visit">
       <div class="visit-card"><h3>한국SGI 서제주희망문화회관</h3><p>제주특별자치도 제주시 월광로 59<br>전시는 3층 전시실에서 열립니다. 주출입구로 들어와 엘리베이터를 이용해 주세요.</p>
-        <a class="btn outline" href="https://map.naver.com/p/search/%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%9B%94%EA%B4%91%EB%A1%9C%2059" target="_blank" rel="noopener">지도에서 보기</a></div>
+        <a class="btn outline" href="#/about" data-jump="h-map">약도 보기</a></div>
       <div class="visit-card"><h3>관람 문의</h3><p>064-901-1875<br>단체 관람은 미리 연락해 주시면 안내해 드립니다. 주차장과 장애인 주차구역이 있습니다.</p>
         <a class="btn outline" href="tel:0649011875">전화 걸기</a></div>
     </div>
@@ -105,8 +118,41 @@
           <p>이 전시는 유엔 인권최고대표사무소(OHCHR)의 후원을 받아 SGI와 HRE2020, NGO 인권교육과 학습실무그룹이 공동으로 기획한 인권교육 및 인권 학습에 관한 교육훈련 플랫폼입니다.</p>
           <p>인권교육 특별展은 ‘인권을 향한 탐구, 다름에 대한 이해’를 주제로, 누구나 일상에서 인권을 발견하고 함께 지켜 갈 수 있도록 전시와 영상, 체험 활동, 도서전을 한자리에 모았습니다.</p>
         </div>
+        <h2 class="mini-h" id="h-bg">전시배경</h2>
+        <div class="prose">
+          <p>인류는 제2차 세계대전 이후 전쟁의 참혹함과 인간의 존엄성이 철저하게 유린되는 아픔을 겪으면서, 인간이 인간답게 살 수 있는 세상을 위해서는 보편적이고 국제적인 기준이 필요했고, 1948년 UN은 ‘세계인권선언’을 채택, 선포하게 됩니다. 올해는 ‘세계인권선언’이 채택된 지 78주년이 되는 해입니다. 지금까지 ‘세계인권선언’이 호소하는 인권의 중요성은 각 국가, 국제기구, NGO(비정부기구) 등의 노력으로 그 가치와 정신이 지켜져 왔습니다.</p>
+          <p>하지만 진정한 ‘세계인권선언’의 가치를 지켜 가기 위해서는 모든 인권이 보호되는 사회가 되어야 하며, 그러한 사회가 되기 위해서는 ‘인권에 대한 교육’이 핵심 선결 과제라고 국제사회는 인식하기 시작했습니다. ‘2011년 UN 인권교육훈련선언’ 채택 5주년을 기념하여 제작된 이번 전시는 존엄, 평등, 그리고 평화를 촉진하고 인권침해와 남용을 예방하는 데 있어 인권교육의 중요성을 강조하고자 실시되었습니다.</p>
+        </div>
       </div>
       <div class="about-ph" role="img" aria-label="마주 보며 손뼉을 치려는 두 아이"></div>
+    </div>
+  </section>
+
+  <section class="stats" aria-labelledby="h-stats">
+    <div class="stats-in">
+      <div class="kicker">THE WORLD TODAY</div>
+      <h2 id="h-stats">숫자로 보는 세계의 인권</h2>
+      <p class="stats-sub">아는 만큼 보입니다. 지금 이 순간에도 세계 곳곳에서 기본적인 권리를 누리지 못하는 사람들이 있습니다.</p>
+      <div class="stat-grid">
+        <div class="stat"><span class="lbl">기아</span><b>8억 1천5백만 명</b><span class="ratio">9명 중 1명</span><p>건강하고 활발한 삶을 위한 식량을 충분히 공급받지 못하고 있습니다.</p></div>
+        <div class="stat"><span class="lbl">미성년 노동자</span><b>1억 5천2백만 명</b><p>어린 나이에 학업 대신 노동을 하고 있습니다.</p></div>
+        <div class="stat"><span class="lbl">여성 폭력</span><b>3명 중 1명</b><p>신체적 혹은 성적 폭력을 경험합니다.</p></div>
+        <div class="stat"><span class="lbl">난민</span><b>6천8백5십만 명</b><p>군사적 충돌 혹은 박해로 인해 거주지에서 강제로 추방됩니다.</p></div>
+        <div class="stat"><span class="lbl">국적 상실</span><b>1천만 명</b><p>국적이 거부되어 교육, 보건, 취업 및 이동의 자유가 제한됩니다.</p></div>
+        <div class="stat"><span class="lbl">이주로 인한 사망</span><b>매년 6천 명</b><p>여성, 남성, 아동이 이주 중에 목숨을 잃습니다.</p></div>
+        <div class="stat"><span class="lbl">학교 밖 아이들</span><b>6천3백만 명</b><span class="ratio">11명 중 1명</span><p>아이들이 학교에 다니지 못하고 있습니다.</p></div>
+        <div class="stat stat-cta"><b>변혁의 첫걸음</b><p>인권을 아는 것에서 변화가 시작됩니다. 3층 전시관에서 더 많은 이야기를 만나 보세요.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-themes">
+    <div class="sec-head"><div><div class="kicker">EXHIBITION</div><h2 id="h-themes">전시 주요내용</h2></div><p>3층 전시관에서 네 개의 주제로 인권과 인권교육을 만납니다.</p></div>
+    <div class="themes">
+      <article class="theme t1"><span class="no">1</span><h3><em>인권이란</em> 무엇인가?</h3><p>모든 사람에게 갖춰진 인간 본연의 권리인 인권의 정의를 알고, 잔혹한 제2차 세계대전 이후 세계인권선언문이 탄생한 배경과 내용을 담고 있습니다.</p></article>
+      <article class="theme t2"><span class="no">2</span><h3><em>인권교육</em>이란?</h3><p>인권에 관한, 인권을 통한, 인권을 위한 교육을 통해 인권을 지키고, 변화를 일으키는 인권교육에 대해 알아봅니다.</p></article>
+      <article class="theme t3"><span class="no">3</span><h3><em>행동으로 이끄는</em> 인권교육</h3><p>인권교육이 개인과 집단의 가치, 신념 그리고 태도를 변화시켜 긍정적 행동으로 이어진 세계 각국의 사례를 소개합니다.</p></article>
+      <article class="theme t4"><span class="no">4</span><h3><em>인권교육을 위한</em> 지구적 운동</h3><p>인권에 대한 존중과 증진, 보호는 정부, 다양한 주체 그리고 우리 주변의 작은 실천에서부터 시작됩니다.</p></article>
     </div>
   </section>
 
@@ -119,8 +165,27 @@
         <div class="chips"><span class="y">11/21(토)</span><span class="y">11/24(화)</span><span class="y">11/25(수)</span><span class="y">11/28(토)</span><span class="y">12/1(화)</span><span class="y">12/2(수)</span></div></dd>
       <dt>개막식</dt><dd><b>2026년 11월 20일(금) 11:00</b><span class="note">개막식 당일에는 일반관람을 실시하지 않습니다.</span></dd>
       <dt>장소</dt><dd><b>한국SGI 서제주희망문화회관 3층 전시실</b><span class="note">제주시 월광로 59 · T. 064-901-1875</span></dd>
-      <dt>관람료</dt><dd><b>무료</b></dd>
+      <dt>관람연령</dt><dd><b>전체관람가</b></dd>
+      <dt>입장료</dt><dd><b>무료</b></dd>
+      <dt>단체 및 관람문의</dt><dd><b>064-901-1875</b><span class="note">단체 관람은 미리 연락해 주시면 안내해 드립니다.</span></dd>
     </dl>
+  </section>
+
+  <section class="sec" aria-labelledby="h-map">
+    <div class="sec-head"><div><div class="kicker">LOCATION</div><h2 id="h-map">오시는 길</h2></div></div>
+    <div class="map-wrap">
+      <figure class="map-fig"><img src="assets/map.png" alt="약도: 한국SGI 서제주희망문화회관은 백록초등학교와 중흥S클래스 아파트 서쪽, 노형동 방향 큰길가에 있습니다" width="768" height="766" loading="lazy"><figcaption>약도 · 한국SGI 서제주희망문화회관</figcaption></figure>
+      <div class="map-info">
+        <h3>한국SGI 서제주희망문화회관</h3>
+        <p class="addr">제주특별자치도 제주시 월광로 59<br><span>3층 전시실</span></p>
+        <ul class="map-near"><li>백록초등학교 · 중흥S클래스 아파트 인근</li><li>방송통신대학교 제주지역대학, 노형초등학교 방면</li><li>주차장과 장애인 주차구역이 있습니다</li></ul>
+        <p class="tel">단체 및 관람문의 <a href="tel:0649011875">064-901-1875</a></p>
+        <div class="map-btns">
+          <a class="btn brand" href="https://map.naver.com/p/search/%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%9B%94%EA%B4%91%EB%A1%9C%2059" target="_blank" rel="noopener">네이버 지도</a>
+          <a class="btn outline" href="https://map.kakao.com/?q=%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%9B%94%EA%B4%91%EB%A1%9C%2059" target="_blank" rel="noopener">카카오맵</a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="sec" aria-labelledby="h-prog">
@@ -129,6 +194,16 @@
       <div class="prog"><div class="fl">3F · 전시관</div><h3>메인 전시</h3><p>인권의 의미와 역사, 아동의 권리를 다룬 패널을 주제별로 따라가며, 체험 코너와 포토존에서 직접 참여합니다.</p></div>
       <div class="prog"><div class="fl">2F · 영상관 · 활동실</div><h3>영상과 체험 활동</h3><p>영상관에서 인권 영상을 함께 보고, 활동실에서 워크숍과 보드게임으로 서로의 생각을 나눕니다.</p></div>
       <div class="prog"><div class="fl">1F · 실외 휴게공간</div><h3>한 사람을 소중히 도서전</h3><p>인권을 주제로 한 책을 자유롭게 펼쳐 보고, 잠시 앉아 쉬어 갈 수 있는 인권도서전입니다.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-host">
+    <div class="sec-head"><div><div class="kicker">HOSTS</div><h2 id="h-host">주최 소개</h2></div></div>
+    <div class="hosts">
+      <article class="host"><h3>Soka Gakkai International (SGI)</h3><p>공동체 기반의 불교 단체로 삶의 존엄성에 대한 존중을 중심으로 평화, 문화, 교육을 증진합니다. 192개국 및 지역의 SGI 회원들은 대승불교의 인도주의적 철학을 따릅니다. SGI는 이 밖에도 인권교육, 핵 군축, 성 평등, 지속 가능한 개발, 인도적 구호 등 여러 분야에서 여러 시민 사회 단체 및 정부 간 국제기구와 협력하고 있습니다.</p><a href="https://www.sokaglobal.org" target="_blank" rel="noopener">www.sokaglobal.org</a></article>
+      <article class="host"><h3>HRE 2020</h3><p>UN 인권교육훈련선언과 세계인권교육프로그램에 명시된 대로 국제적인 인권교육의 이행과 감시를 지원하고 강화하기 위한 세계 시민 사회 연합입니다. 시민 사회 및 정부, 국제기구와 협력하는 HRE 2020은 옹호 활동과 역량 강화, 자원 개발을 통해 인권교육을 증진하고 있습니다.</p></article>
+      <article class="host"><h3>NGO Working Group on Human Rights Education and Learning</h3><p>스위스 제네바의 NGO 인권 위원회에서 운영하는 실무 그룹입니다. UN의 기구, 특히 UN 인권이사회와 연계하여 네트워크 형성, 정보 공유, 조율 및 옹호 등을 통해 인권교육에 관한 전 세계 정책 입안에 비정부 기구의 참여를 확립하고자 노력합니다.</p><a href="https://ngowghrel.wordpress.com" target="_blank" rel="noopener">ngowghrel.wordpress.com</a></article>
+      <article class="host"><h3>Platform for Human Rights Education and Training</h3><p>지역을 넘어선 비공식 정부 간 조직으로, 인권교육과 훈련을 지원하고 있습니다. 브라질, 코스타리카, 이탈리아, 모로코, 필리핀, 세네갈, 슬로베니아, 스위스, 태국 등 UN 회원국이 참여하고 있습니다.</p></article>
     </div>
   </section>
 
