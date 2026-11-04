@@ -67,7 +67,7 @@ const FLOORS = {
       {t:'화장실(남)',r:[35.2,39.3,11.3,15]},{t:'화장실(여)',r:[35.2,39.3,15,18.5]}],
     entrances:[
       {t:'주출입구',x:31,y:0,dir:'up',main:true},
-      {t:'부출입구 1',x:-0.8,y:7.1,dir:'right'},
+      {t:'부출입구 1',x:-0.8,y:7.1,dir:'right',inside:true},
       {t:'부출입구 2',x:23.9,y:16,dir:'down',align:'right'}],
     amen:['실외 휴게공간(인권도서전)','주출입구 · 부출입구 2곳','화장실(남·여)','엘리베이터 1대','계단 2곳','주차장 · 장애인 주차구역']}
 };
@@ -184,7 +184,7 @@ function draw(id){
     let px,py;   // pill top-left, placed outside the building
     if(en.dir==='up'){px=x-tw/2;py=y+gap}
     else if(en.dir==='down'){px=en.align==='right'?x+1.4-tw:x-tw/2;py=y-gap-h}
-    else {px=x-gap-tw;py=y-h/2}
+    else {px=en.inside?x+gap:x-gap-tw;py=y-h/2}
     el('rect',{x:px,y:py,width:tw,height:h,rx:h/2,fill:col},g);
     const ax=px+.75, ay=py+h/2, a=.36;
     const tri=en.dir==='up'?`${ax},${ay-a} ${ax-a},${ay+a*.8} ${ax+a},${ay+a*.8}`:en.dir==='down'?`${ax},${ay+a} ${ax-a},${ay-a*.8} ${ax+a},${ay-a*.8}`:`${ax+a},${ay} ${ax-a*.8},${ay-a} ${ax-a*.8},${ay+a}`;
