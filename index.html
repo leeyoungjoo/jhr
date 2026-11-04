@@ -166,6 +166,22 @@ svg text{font-family:var(--display);fill:var(--label);pointer-events:none}
   .rooms{grid-template-columns:minmax(0,1fr)}
   .meta{font-size:13px}
 }
+
+/* photos: show the whole image, never cropped; tap opens full-size viewer */
+.photo.has-img{background:#151a19 !important}
+.photo img{object-fit:contain}
+.gal-zoom{all:unset;position:absolute;inset:0;display:block;cursor:zoom-in}
+.gal-zoom:focus-visible{outline:3px solid var(--orange);outline-offset:-3px}
+.lb{position:fixed;inset:0;z-index:90;background:rgba(8,10,10,.94);display:grid;place-items:center;touch-action:pan-y}
+.lb[hidden]{display:none}
+.lb-img{max-width:calc(100vw - 32px);max-height:calc(100dvh - 96px);object-fit:contain;display:block;border-radius:6px;user-select:none;-webkit-user-drag:none}
+.lb-close,.lb-nav{all:unset;cursor:pointer;position:absolute;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:24px;font-weight:700}
+.lb-close{right:max(14px,env(safe-area-inset-right,0px));top:max(14px,env(safe-area-inset-top,0px))}
+.lb-prev{left:max(14px,env(safe-area-inset-left,0px));top:50%;transform:translateY(-50%)}
+.lb-next{right:max(14px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%)}
+.lb-nav[hidden]{display:none}
+.lb-close:focus-visible,.lb-nav:focus-visible{outline:3px solid var(--orange)}
+.lb-count{position:absolute;bottom:max(18px,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -440,16 +456,18 @@ function openSheet(n){
 
   const ph=`<div class="ph"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="14" width="52" height="38" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="32" cy="33" r="10" fill="none" stroke="currentColor" stroke-width="3"/><rect x="22" y="8" width="20" height="8" rx="3" fill="currentColor"/></svg>`;
   const showPhoto=k=>{pi=(k+photos.length)%photos.length;const p=photos[pi];
-    document.getElementById('galSlide').innerHTML=p?`<img src="${esc(p)}" alt="${esc(I.name)} 사진 ${pi+1}">`:`${ph}사진 ${pi+1} 준비 중입니다</div>`;
+    gp.classList.toggle('has-img',!!p);
+    document.getElementById('galSlide').innerHTML=p?`<button class="gal-zoom" type="button" aria-label="${esc(I.name)} 사진 ${pi+1} 크게 보기"><img src="${esc(p)}" alt="${esc(I.name)} 사진 ${pi+1}"></button>`:`${ph}사진 ${pi+1} 준비 중입니다</div>`;
     const c=document.getElementById('galCount');if(c)c.textContent=`${pi+1} / ${photos.length}`;
     sh.querySelectorAll('.thumb').forEach(t=>t.setAttribute('aria-current',+t.dataset.k===pi?'true':'false'));};
+  const gp=document.getElementById('galPhoto');let sx=null,swiped=false;
   showPhoto(0);
   sh.querySelector('.gal-prev')?.addEventListener('click',()=>showPhoto(pi-1));
   sh.querySelector('.gal-next')?.addEventListener('click',()=>showPhoto(pi+1));
   sh.querySelectorAll('.thumb').forEach(t=>t.addEventListener('click',()=>showPhoto(+t.dataset.k)));
-  let sx=null;const gp=document.getElementById('galPhoto');
-  gp.addEventListener('pointerdown',e=>{sx=e.clientX});
-  gp.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>40&&photos.length>1)showPhoto(pi+(dx<0?1:-1))});
+  gp.addEventListener('pointerdown',e=>{sx=e.clientX;swiped=false});
+  gp.addEventListener('click',e=>{if(!e.target.closest('.gal-zoom'))return;if(swiped){swiped=false;return}const list=photos.filter(Boolean);openLB(list,list.indexOf(photos[pi]),I.name)});
+  gp.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>40){swiped=true;if(photos.length>1)showPhoto(pi+(dx<0?1:-1))}});
   sh.onkeydown=e=>{if(editing||e.target.closest('.sheet-nav'))return;if(e.key==='ArrowRight')showPhoto(pi+1);if(e.key==='ArrowLeft')showPhoto(pi-1)};
   sh.querySelector('.sheet-close').addEventListener('click',closeSheet);
   sh.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{const g=+b.dataset.go;focusRoom(g,true);openSheet(g)}));
@@ -514,7 +532,21 @@ function closeSheet(){
   if(lastFocus&&lastFocus.focus)lastFocus.focus(); lastFocus=null;
 }
 document.getElementById('sheetBg').addEventListener('click',e=>{if(e.target.id==='sheetBg'&&!editing)closeSheet()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheetN!==null&&!editing)closeSheet()});
+document.addEventListener('keydown',e=>{if(LB.open){if(e.key==='Escape')closeLB();if(e.key==='ArrowRight')lbGo(1);if(e.key==='ArrowLeft')lbGo(-1);e.stopPropagation();return}if(e.key==='Escape'&&sheetN!==null&&!editing)closeSheet()},true);
+// ---- full-size photo viewer ----
+const LB={open:false,list:[],i:0,name:'',back:null,el:null};
+(()=>{const d=document.createElement('div');d.className='lb';d.hidden=true;d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-label','사진 크게 보기');
+  d.innerHTML='<img class="lb-img" alt=""><button class="lb-close" type="button" aria-label="닫기">×</button><button class="lb-nav lb-prev" type="button" aria-label="이전 사진">‹</button><button class="lb-nav lb-next" type="button" aria-label="다음 사진">›</button><span class="lb-count"></span>';
+  document.body.appendChild(d);LB.el=d;
+  d.querySelector('.lb-close').onclick=closeLB;d.querySelector('.lb-prev').onclick=()=>lbGo(-1);d.querySelector('.lb-next').onclick=()=>lbGo(1);
+  let x0=null;d.addEventListener('pointerdown',e=>{x0=e.clientX});
+  d.addEventListener('pointerup',e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>40)lbGo(dx<0?1:-1);else if(e.target===d)closeLB()});})();
+function lbShow(){const im=LB.el.querySelector('.lb-img');im.src=LB.list[LB.i];im.alt=`${LB.name} 사진 ${LB.i+1}`;
+  const many=LB.list.length>1;LB.el.querySelector('.lb-count').textContent=many?`${LB.i+1} / ${LB.list.length}`:'';
+  LB.el.querySelectorAll('.lb-nav').forEach(b=>b.hidden=!many);}
+function lbGo(k){if(LB.list.length<2)return;LB.i=(LB.i+k+LB.list.length)%LB.list.length;lbShow()}
+function openLB(list,i,name){if(!list.length)return;LB.list=list;LB.i=Math.max(0,i);LB.name=name;LB.back=document.activeElement;LB.open=true;lbShow();LB.el.hidden=false;LB.el.querySelector('.lb-close').focus()}
+function closeLB(){LB.open=false;LB.el.hidden=true;if(LB.back&&LB.back.focus)LB.back.focus()}
 
 const dir=document.getElementById('dir');
 ['f1','f2','f3'].forEach(id=>{const F=FLOORS[id];const b=document.createElement('button');b.className='floor-btn';b.dataset.id=id;b.setAttribute('role','tab');
