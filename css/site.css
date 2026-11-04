@@ -310,3 +310,23 @@ body:not(.is-admin) .admin-only{display:none!important}
 .room-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .room-ph span{position:absolute;inset:0;display:grid;place-items:center}
 .post-ph img{position:absolute;inset:0}
+
+/* ---- 진행상황 공유: 목록 / 상세 ---- */
+.news-list{max-width:820px;display:flex;flex-direction:column;gap:10px}
+.post-row{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:16px 20px;min-width:0;transition:border-color .15s}
+.post-row:hover{border-color:var(--brand)}
+.post-row:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.post-row.pinned{background:#FFF5CF;border-color:#EFC94C;box-shadow:inset 5px 0 0 var(--brand)}
+.post-row.pinned .post-meta .team{background:#fff}
+.post-row .row-main{display:flex;align-items:baseline;gap:12px;min-width:0}
+.post-row h3{margin:0;flex:1;min-width:0;font-family:var(--display);font-weight:900;font-size:18px;line-height:1.35;letter-spacing:-.01em;overflow-wrap:anywhere}
+.post-row .views{flex:none;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.post-detail .views{font-size:12.5px;color:var(--muted);margin-top:-2px}
+.post-detail .views b{font-weight:700}
+.post-photos.all{grid-template-columns:1fr 1fr}
+.post-photos.all.n1{grid-template-columns:1fr}
+@media (max-width:560px){.post-photos.all{grid-template-columns:1fr}}
+.detail-nav{margin-top:16px}
+.team-tabs[hidden]{display:none}
+.detail-nav .btn{background:var(--surface);color:var(--ink);border:1.5px solid var(--line);font-size:14px;padding:10px 18px}
+.detail-nav .btn:hover{border-color:var(--brand)}

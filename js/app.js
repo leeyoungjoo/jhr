@@ -18,6 +18,7 @@ const teamOf=p=>TEAMS.includes(p.team)?p.team:TEAMS[0];
 const PAGES=['home','about','facility','news'];
 function route(){
   let h=location.hash.replace(/^#\/?/,'');
+  const dm=h.match(/^news\/([0-9a-f-]{36})$/i); POST_ID=dm?dm[1]:null; if(dm)h='news';   // 상세보기: #/news/<id>
   if(/^f[123]$/.test(h)){current=h;h='facility'}          // 예전 시설안내 링크(#f1 등) 호환
   if(!PAGES.includes(h))h='home';
   if(h==='news'&&!CAN_VIEW){h='home';if(authReady&&location.hash.startsWith('#/news'))history.replaceState(null,'','#/')}   // 진행상황 공유는 관리자 전용
@@ -27,11 +28,19 @@ function route(){
   document.getElementById('navToggle').setAttribute('aria-expanded','false');
   if(h==='facility')initFacility();
   if(h==='news'||h==='home')renderPosts();
+  if(h==='news'&&POST_ID)bumpView(POST_ID);
   document.title=({home:'인권교육 특별展',about:'전시회 안내 · 인권교육 특별展',facility:'시설안내 · 인권교육 특별展',news:'진행상황 공유 · 인권교육 특별展'})[h];
   window.scrollTo({top:0,behavior:'auto'});
   if(JUMP){const t=document.getElementById(JUMP);JUMP=null;if(t)requestAnimationFrame(()=>t.scrollIntoView({block:'start'}))}
 }
-let JUMP=null;
+let JUMP=null, POST_ID=null;
+const VIEWED=new Set();   // 한 번 연 글은 새로고침 전까지 조회수를 다시 올리지 않음
+async function bumpView(id){
+  if(!SB||!CAN_VIEW||VIEWED.has(id))return; VIEWED.add(id);
+  const {data,error}=await SB.rpc('bump_view',{pid:id});
+  if(error||data==null)return;
+  const p=POSTS.find(x=>x.id===id); if(p){p.views=data;const v=document.querySelector('.post-detail .views b');if(v)v.textContent=data}
+}
 document.addEventListener('click',e=>{const j=e.target.closest('[data-jump]');if(!j)return;JUMP=j.dataset.jump;if(location.hash===j.getAttribute('href')){e.preventDefault();route()}});
 window.addEventListener('hashchange',route);
 document.getElementById('navToggle').addEventListener('click',e=>{
@@ -148,16 +157,41 @@ function postCard(p,compact){
     ${!compact&&EDIT.can?`<div class="post-admin"><button type="button" class="link-btn" data-edit="${p.id}">수정</button><button type="button" class="link-btn danger" data-del="${p.id}">삭제</button></div>`:''}
   </article>`;
 }
+const metaHTML=p=>`<div class="post-meta"><span class="team">${esc(teamOf(p))}</span>${p.pinned?'<span class="pin">공지</span>':''}<time datetime="${esc(p.created_at)}">${fmtDate(p.created_at)}</time></div>`;
+function postRow(p){
+  return `<a class="post-row${p.pinned?' pinned':''}" href="#/news/${p.id}">
+    ${metaHTML(p)}
+    <div class="row-main"><h3>${esc(p.title)}</h3><span class="views" aria-label="조회수 ${p.views||0}">조회 ${p.views||0}</span></div>
+  </a>`;
+}
+function postDetail(p){
+  const ph=p.photos||[];
+  const gallery=ph.length?`<div class="post-photos all${ph.length===1?' n1':''}">${ph.map((u,k)=>`<button type="button" class="post-ph" data-post="${p.id}" data-k="${k}" aria-label="사진 ${k+1} 크게 보기"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('')}</div>`:'';
+  return `<article class="post post-detail${p.pinned?' pinned':''}">
+    ${metaHTML(p)}
+    <h3>${esc(p.title)}</h3>
+    <div class="views">조회 <b>${p.views||0}</b></div>
+    <div class="post-body">${fmtBody(p.body||'')}</div>${gallery}
+    ${EDIT.can?`<div class="post-admin"><button type="button" class="link-btn" data-edit="${p.id}">수정</button><button type="button" class="link-btn danger" data-del="${p.id}">삭제</button></div>`:''}
+  </article>
+  <div class="detail-nav"><a class="btn ghost" href="#/news">← 목록으로</a></div>`;
+}
 function renderPosts(){
   const list=document.getElementById('postList'), latest=document.getElementById('latestPosts');
-  const addBtn=document.getElementById('newPostBtn'); if(addBtn)addBtn.hidden=!EDIT.can;
+  const addBtn=document.getElementById('newPostBtn'); if(addBtn)addBtn.hidden=!EDIT.can||!!POST_ID;
   const tabs=document.getElementById('teamTabs');
+  if(tabs)tabs.hidden=!!POST_ID;
+  if(list&&POST_ID){
+    const p=POSTS.find(x=>x.id===POST_ID);
+    list.innerHTML=p?postDetail(p):!postsLoaded?'<p class="empty">불러오는 중…</p>':'<p class="empty">글을 찾을 수 없습니다. 삭제되었을 수 있습니다.</p><div class="detail-nav"><a class="btn ghost" href="#/news">← 목록으로</a></div>';
+    return;
+  }
   if(tabs){
     tabs.innerHTML=[ALL,...TEAMS].map(t=>{const n=t===ALL?POSTS.length:POSTS.filter(p=>teamOf(p)===t).length;return `<button type="button" role="tab" class="team-tab" data-team="${esc(t)}" aria-selected="${t===curTeam}">${esc(t)}${n?`<span class="cnt">${n}</span>`:''}</button>`}).join('');
   }
   if(list){
     const mine=curTeam===ALL?POSTS:POSTS.filter(p=>teamOf(p)===curTeam);
-    list.innerHTML=!SB?'<p class="empty">게시판을 불러올 수 없습니다.</p>':!postsLoaded?'<p class="empty">불러오는 중…</p>':mine.length?mine.map(p=>postCard(p,false)).join(''):`<p class="empty">${curTeam===ALL?'아직 올라온 소식이 없습니다.':esc(curTeam)+' 탭에 아직 올라온 소식이 없습니다.'}${EDIT.can?' 아래 ‘글쓰기’로 첫 소식을 올려 보세요.':''}</p>`;
+    list.innerHTML=!SB?'<p class="empty">게시판을 불러올 수 없습니다.</p>':!postsLoaded?'<p class="empty">불러오는 중…</p>':mine.length?mine.map(postRow).join(''):`<p class="empty">${curTeam===ALL?'아직 올라온 소식이 없습니다.':esc(curTeam)+' 탭에 아직 올라온 소식이 없습니다.'}${EDIT.can?' 아래 ‘글쓰기’로 첫 소식을 올려 보세요.':''}</p>`;
   }
   if(latest){
     const few=POSTS.slice(0,3);
@@ -180,7 +214,8 @@ async function deletePost(id){
   if(!confirm(`‘${p.title}’ 소식을 삭제할까요? 되돌릴 수 없습니다.`))return;
   const {error}=await SB.from('posts').delete().eq('id',id);
   if(error){alert('삭제하지 못했습니다. 다시 시도해 주세요.');return}
-  POSTS=POSTS.filter(x=>x.id!==id); renderPosts();
+  POSTS=POSTS.filter(x=>x.id!==id);
+  if(POST_ID===id)location.hash='#/news';else renderPosts();
 }
 function openPostEditor(post){
   let photos=post?[...(post.photos||[])]:[];

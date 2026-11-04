@@ -97,3 +97,16 @@ grant execute on function public.my_role() to authenticated;
 drop policy if exists "posts read" on public.posts;
 create policy "posts read" on public.posts for select to authenticated using ((select public.can_view()));
 insert into public.viewers (email) values ('ksgi-staff@example.com') on conflict do nothing;
+
+-- 진행상황 공유 조회수
+alter table public.posts add column if not exists views integer not null default 0;
+create or replace function public.bump_view(pid uuid) returns integer
+language plpgsql security definer set search_path=public as $$
+declare v integer;
+begin
+  if not public.can_view() then return null; end if;
+  update public.posts set views=views+1 where id=pid returning views into v;
+  return v;
+end $$;
+revoke all on function public.bump_view(uuid) from public, anon;
+grant execute on function public.bump_view(uuid) to authenticated;
