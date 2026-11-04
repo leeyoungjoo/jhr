@@ -302,3 +302,5 @@ body:not(.is-admin) .admin-only{display:none!important}
 /* 공지 글: 연한 배경 */
 .post.pinned{background:#FDEBDD;border-color:#F2B48C}
 .post.pinned .post-meta .team{background:#fff}
+/* 공지 글: 페이지 배경(베이지)과 구분되는 연노랑 + 왼쪽 주황 띠 */
+.post.pinned{background:#FFF5CF;border-color:#EFC94C;box-shadow:inset 5px 0 0 var(--brand)}
