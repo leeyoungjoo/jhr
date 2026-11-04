@@ -10,7 +10,8 @@ const authStore={
 const SB=(window.supabase&&window.SUPABASE_URL)?window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY,{auth:{storage:authStore,persistSession:true,autoRefreshToken:true}}):null;
 let USER=null, POSTS=[], postsLoaded=false, authReady=!SB;
 const TEAMS=['청년부 기획팀','대외섭외','도슨트','환경미화','실내안내','주차안내','방송/기록/의료'];
-let curTeam=(()=>{const t=ls.get('jhr-team');return TEAMS.includes(t)?t:TEAMS[0]})();
+const ALL='전체';
+let curTeam=(()=>{const t=ls.get('jhr-team');return t===ALL||TEAMS.includes(t)?t:ALL})();
 const teamOf=p=>TEAMS.includes(p.team)?p.team:TEAMS[0];
 
 // ---------- router ----------
@@ -144,11 +145,11 @@ function renderPosts(){
   const addBtn=document.getElementById('newPostBtn'); if(addBtn)addBtn.hidden=!EDIT.can;
   const tabs=document.getElementById('teamTabs');
   if(tabs){
-    tabs.innerHTML=TEAMS.map(t=>{const n=POSTS.filter(p=>teamOf(p)===t).length;return `<button type="button" role="tab" class="team-tab" data-team="${esc(t)}" aria-selected="${t===curTeam}">${esc(t)}${n?`<span class="cnt">${n}</span>`:''}</button>`}).join('');
+    tabs.innerHTML=[ALL,...TEAMS].map(t=>{const n=t===ALL?POSTS.length:POSTS.filter(p=>teamOf(p)===t).length;return `<button type="button" role="tab" class="team-tab" data-team="${esc(t)}" aria-selected="${t===curTeam}">${esc(t)}${n?`<span class="cnt">${n}</span>`:''}</button>`}).join('');
   }
   if(list){
-    const mine=POSTS.filter(p=>teamOf(p)===curTeam);
-    list.innerHTML=!SB?'<p class="empty">게시판을 불러올 수 없습니다.</p>':!postsLoaded?'<p class="empty">불러오는 중…</p>':mine.length?mine.map(p=>postCard(p,false)).join(''):`<p class="empty">${esc(curTeam)} 탭에 아직 올라온 소식이 없습니다.${EDIT.can?' 아래 ‘글쓰기’로 첫 소식을 올려 보세요.':''}</p>`;
+    const mine=curTeam===ALL?POSTS:POSTS.filter(p=>teamOf(p)===curTeam);
+    list.innerHTML=!SB?'<p class="empty">게시판을 불러올 수 없습니다.</p>':!postsLoaded?'<p class="empty">불러오는 중…</p>':mine.length?mine.map(p=>postCard(p,false)).join(''):`<p class="empty">${curTeam===ALL?'아직 올라온 소식이 없습니다.':esc(curTeam)+' 탭에 아직 올라온 소식이 없습니다.'}${EDIT.can?' 아래 ‘글쓰기’로 첫 소식을 올려 보세요.':''}</p>`;
   }
   if(latest){
     const few=POSTS.slice(0,3);
@@ -177,7 +178,7 @@ function openPostEditor(post){
   let photos=post?[...(post.photos||[])]:[];
   const sh=openModal(`<div class="sheet-body edit">
     <div class="title-row"><div><div class="eyebrow">진행상황 공유</div><h3 id="sheetTitle">${post?'글 수정':'글쓰기'}</h3></div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
-    <label for="p-team">팀</label><select id="p-team">${TEAMS.map(t=>`<option${t===(post?teamOf(post):curTeam)?' selected':''}>${esc(t)}</option>`).join('')}</select>
+    <label for="p-team">팀</label><select id="p-team">${TEAMS.map(t=>`<option${t===(post?teamOf(post):(curTeam===ALL?TEAMS[0]:curTeam))?' selected':''}>${esc(t)}</option>`).join('')}</select>
     <label for="p-title">제목</label><input id="p-title" maxlength="120" value="${esc(post?.title||'')}" placeholder="예) 3층 전시관 패널 설치를 마쳤습니다">
     <label for="p-body">내용</label><textarea id="p-body" rows="7" maxlength="5000" placeholder="진행 상황을 자유롭게 적어 주세요">${esc(post?.body||'')}</textarea>
     <label class="check"><input type="checkbox" id="p-pin" ${post?.pinned?'checked':''}> 맨 위에 고정 (공지)</label>
@@ -216,7 +217,7 @@ function openPostEditor(post){
     if(error){btn.disabled=false;st.textContent=error.code==='42501'||/row-level security/i.test(error.message||'')?'관리자만 올릴 수 있습니다. 다시 로그인해 주세요.':'저장하지 못했습니다. 잠시 후 다시 시도해 주세요.';return}
     POSTS=post?POSTS.map(x=>x.id===data.id?data:x):[data,...POSTS];
     POSTS.sort((a,b)=>(b.pinned-a.pinned)||(new Date(b.created_at)-new Date(a.created_at)));
-    curTeam=row.team; ls.set('jhr-team',curTeam);
+    if(curTeam!==ALL){curTeam=row.team; ls.set('jhr-team',curTeam);}
     closeModal(); renderPosts();
   };
   document.getElementById('p-title').focus();
