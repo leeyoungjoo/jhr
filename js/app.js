@@ -62,8 +62,16 @@ function authUI(){
   if(!USER){box.innerHTML='<button type="button" class="nav-login" id="loginBtn">관리자 로그인</button>';
     document.getElementById('loginBtn').onclick=e=>{lastFocus=e.currentTarget;openLogin()};}
   else{box.innerHTML=`<span class="nav-user">${esc(USER.email.replace(/@example\.com$/,''))}${EDIT.can?' · 관리자':' · 권한 없음'}</span><button type="button" class="nav-login ghost" id="logoutBtn">로그아웃</button>`;
-    document.getElementById('logoutBtn').onclick=async()=>{await SB.auth.signOut()};}
+    document.getElementById('logoutBtn').onclick=e=>{e.preventDefault();e.stopPropagation();logout()};}
   renderPosts();
+}
+// 로그아웃: 서버 응답을 기다리지 않고 이 기기의 로그인 정보를 바로 지움 (모바일·느린 네트워크에서도 확실히)
+async function logout(){
+  const btn=document.getElementById('logoutBtn'); if(btn){btn.disabled=true;btn.textContent='로그아웃 중…'}
+  try{await SB.auth.signOut({scope:'local'})}catch(e){}
+  try{for(const st of [localStorage,sessionStorage]){Object.keys(st).filter(k=>/^sb-.*-auth-token/.test(k)).forEach(k=>st.removeItem(k))}}catch(e){}
+  document.body.classList.remove('nav-open'); document.getElementById('navToggle')?.setAttribute('aria-expanded','false');
+  await refreshAuth(null);
 }
 async function refreshAuth(session){
   USER=session?session.user:null; EDIT.can=false;
