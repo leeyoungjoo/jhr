@@ -151,6 +151,21 @@ svg text{font-family:var(--display);fill:var(--label);pointer-events:none}
 .auth-bar{margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
 .link-btn{all:unset;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
 .link-btn:focus-visible{outline:3px solid var(--orange);border-radius:4px}
+
+/* mobile: everything fits the screen width — no sideways scrolling */
+@media (max-width:860px){
+  .dir{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;overflow:visible;padding-bottom:0}
+  .dir>.note,.dir>.edit-note,.dir>.auth-bar{grid-column:1/-1}
+  .floor-btn{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px}
+  .floor-btn .sum strong{font-size:13px;line-height:1.3;word-break:keep-all}
+  .floor-btn .s2{display:none}
+  .plan-box{overflow:visible}
+  .plan-box svg{min-width:0}
+  .panel{padding:14px}
+  .panel-head h2{font-size:21px}
+  .rooms{grid-template-columns:minmax(0,1fr)}
+  .meta{font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -308,7 +323,7 @@ const DETAIL = {
 const NS='http://www.w3.org/2000/svg', H=18.6;
 const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
 const Y=y=>H-y;
-let current='f3';
+let current='f1';
 
 function rectOf(r){return {x:r[0],y:Y(r[3]),w:r[1]-r[0],h:r[3]-r[2]}}
 function label(g,r,lines,size,vertical,dy=0){
@@ -396,7 +411,7 @@ function focusRoom(n,noScroll){
   if(!noScroll)card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});
 }
 function show(id){
-  if(!FLOORS[id])id='f3'; current=id; const F=FLOORS[id];
+  if(!FLOORS[id])id='f1'; current=id; const F=FLOORS[id];
   document.querySelectorAll('.floor-btn').forEach(b=>b.setAttribute('aria-selected',b.dataset.id===id?'true':'false'));
   document.getElementById('floorTitle').textContent=F.title;
   document.getElementById('floorSub').textContent=F.sub;
@@ -502,14 +517,14 @@ document.getElementById('sheetBg').addEventListener('click',e=>{if(e.target.id==
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheetN!==null&&!editing)closeSheet()});
 
 const dir=document.getElementById('dir');
-['f3','f2','f1'].forEach(id=>{const F=FLOORS[id];const b=document.createElement('button');b.className='floor-btn';b.dataset.id=id;b.setAttribute('role','tab');
-  b.innerHTML=`<span class="fl">${F.fl}</span><span class="sum"><strong>${F.title.split(' · ').slice(1).join(' · ')}</strong>${F.summary}</span>`;
+['f1','f2','f3'].forEach(id=>{const F=FLOORS[id];const b=document.createElement('button');b.className='floor-btn';b.dataset.id=id;b.setAttribute('role','tab');
+  b.innerHTML=`<span class="fl">${F.fl}</span><span class="sum"><strong>${F.title.split(' · ').slice(1).join(' · ')}</strong><span class="s2">${F.summary}</span></span>`;
   b.addEventListener('click',()=>{location.hash=id});dir.appendChild(b)});
 const note=document.createElement('div');note.className='note';note.textContent='층을 누르면 안내도가 바뀝니다. 안내도의 실을 누르면 아래 설명 카드를 찾아 주고, ‘자세히 보기’를 누르면 사진과 자세한 설명이 열립니다.';dir.appendChild(note);
 const en=document.createElement('div');en.className='edit-note';en.id='editNote';en.hidden=true;en.textContent='편집자로 로그인했습니다. ‘자세히 보기’에서 시설 정보를 수정할 수 있습니다.';dir.appendChild(en);
 const ab=document.createElement('div');ab.className='auth-bar';ab.id='authBar';dir.appendChild(ab);
 window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
-show(location.hash.slice(1)||'f3');
+show(location.hash.slice(1)||'f1');
 
 // ---- Supabase: shared edits for editors ----
 const SB=(window.supabase&&window.SUPABASE_URL)?window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY):null;
