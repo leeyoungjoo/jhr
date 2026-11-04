@@ -28,7 +28,7 @@
       <a href="#/" data-page="home">메인페이지</a>
       <a href="#/about" data-page="about">전시회 안내</a>
       <a href="#/facility" data-page="facility">시설안내</a>
-      <a href="#/news" data-page="news">진행상황 공유</a>
+      <a href="#/news" data-page="news" class="admin-only">진행상황 공유</a>
     </nav>
     <div class="nav-auth" id="navAuth"></div>
   </div>
@@ -90,7 +90,7 @@
     </div>
   </section>
 
-  <section class="sec" aria-labelledby="h-latest">
+  <section class="sec admin-only" aria-labelledby="h-latest">
     <div class="sec-head"><div><div class="kicker">NEWS</div><h2 id="h-latest">진행상황 공유</h2></div><a class="more-link" href="#/news">전체 소식 보기 →</a></div>
     <div class="post-grid" id="latestPosts"></div>
   </section>
@@ -173,7 +173,41 @@
   <section class="sec" aria-labelledby="h-map">
     <div class="sec-head"><div><div class="kicker">LOCATION</div><h2 id="h-map">오시는 길</h2></div></div>
     <div class="map-wrap">
-      <figure class="map-fig"><img src="assets/map.png" alt="약도: 한국SGI 서제주희망문화회관은 백록초등학교와 중흥S클래스 아파트 서쪽, 노형동 방향 큰길가에 있습니다" width="768" height="766" loading="lazy"><figcaption>약도 · 한국SGI 서제주희망문화회관</figcaption></figure>
+      <figure class="map-fig">
+        <svg class="map-svg" viewBox="0 0 400 400" role="img" aria-labelledby="mapTitle mapDesc">
+          <title id="mapTitle">한국SGI 서제주희망문화회관 약도</title>
+          <desc id="mapDesc">회관은 백록초등학교와 중흥S클래스 아파트 서쪽 큰길가에 있습니다. 동쪽으로 방송통신대학교 제주지역대학, 노형초등학교, CGV가 있고 남동쪽에 노형중학교가 있습니다.</desc>
+          <rect width="400" height="400" fill="#F3EBDD"/>
+          <g fill="#EADFCB"><path d="M0 0H170L0 170Z"/><path d="M215 0H400V70L330 60Z"/><path d="M0 230L120 345L60 400H0Z"/><path d="M260 300L400 210V400H330Z"/></g>
+          <g stroke-linecap="round" fill="none">
+            <g stroke="#E2D5BF" stroke-width="7"><path d="M60 45L290 200"/><path d="M135 205L300 85L405 12"/><path d="M228 -5L330 60L405 86"/><path d="M300 195L405 320"/><path d="M245 282L405 392"/><path d="M-5 330Q45 318 68 405"/></g>
+            <g stroke="#FFFCF6" stroke-width="4.5"><path d="M60 45L290 200"/><path d="M135 205L300 85L405 12"/><path d="M228 -5L330 60L405 86"/><path d="M300 195L405 320"/><path d="M245 282L405 392"/><path d="M-5 330Q45 318 68 405"/></g>
+            <g stroke="#E2D5BF" stroke-width="21"><path d="M-5 195L200 -10"/><path d="M-5 92L335 405"/></g>
+            <g stroke="#FFFCF6" stroke-width="16"><path d="M-5 195L200 -10"/><path d="M-5 92L335 405"/></g>
+            <path d="M88 405L405 132" stroke="#F7C531" stroke-width="9" opacity=".85"/>
+          </g>
+          <g font-family="Gothic A1, Noto Sans KR, sans-serif" font-weight="700" font-size="11.5" fill="#4A4F4C" text-anchor="middle" paint-order="stroke" stroke="#F3EBDD" stroke-width="4" stroke-linejoin="round">
+            <circle cx="205" cy="60" r="3" fill="#8A7F70" stroke="none"/><text x="205" y="77">노형뜨란채</text><text x="205" y="91">아파트</text>
+            <circle cx="162" cy="87" r="3" fill="#8A7F70" stroke="none"/><text x="164" y="104">백록초등학교</text>
+            <circle cx="132" cy="150" r="3" fill="#8A7F70" stroke="none"/><text x="134" y="167">중흥S클래스</text><text x="134" y="181">아파트</text>
+            <circle cx="259" cy="121" r="3" fill="#8A7F70" stroke="none"/><text x="259" y="138">방송통신대학교</text><text x="259" y="152">제주지역대학</text>
+            <circle cx="368" cy="118" r="3" fill="#8A7F70" stroke="none"/><text x="368" y="135">CGV</text>
+            <circle cx="318" cy="158" r="3" fill="#8A7F70" stroke="none"/><text x="318" y="175">노형초등학교</text>
+            <circle cx="313" cy="330" r="3" fill="#8A7F70" stroke="none"/><text x="313" y="347">노형중학교</text>
+          </g>
+          <g transform="translate(48 82)">
+            <circle r="22" fill="#E2671F" opacity=".16"/>
+            <path d="M0 0C-9-11-13-16-13-23A13 13 0 0 1 13-23C13-16 9-11 0 0Z" fill="#E2671F"/>
+            <circle cy="-23" r="5" fill="#fff"/>
+          </g>
+          <g font-family="Gothic A1, Noto Sans KR, sans-serif" font-weight="900" text-anchor="start">
+            <rect x="6" y="94" width="118" height="38" rx="9" fill="#E2671F"/>
+            <text x="14" y="110" font-size="10.5" fill="#FFE9A8">한국SGI</text>
+            <text x="14" y="125" font-size="11.5" fill="#fff">서제주희망문화회관</text>
+          </g>
+        </svg>
+        <figcaption>약도 · 실제 축척과 다를 수 있습니다</figcaption>
+      </figure>
       <div class="map-info">
         <h3>한국SGI 서제주희망문화회관</h3>
         <p class="addr">제주특별자치도 제주시 월광로 59<br><span>3층 전시실</span></p>

@@ -227,9 +227,9 @@ footer.site-foot{margin-top:72px;padding:0;border:0;font-size:13px;color:var(--m
 .mini-h{margin:34px 0 0;font-family:var(--display);font-weight:900;font-size:21px;letter-spacing:-.01em;padding-top:22px;border-top:1px solid var(--line)}
 .map-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center}
 @media (max-width:860px){.map-wrap{grid-template-columns:minmax(0,1fr)}}
-.map-fig{margin:0;background:#fff;border:1.5px solid var(--line);border-radius:18px;overflow:hidden}
-.map-fig img{display:block;width:100%;height:auto}
-.map-fig figcaption{font-size:12.5px;color:#66706B;padding:10px 14px;border-top:1px solid #eee}
+.map-fig{margin:0;background:#F3EBDD;border:1.5px solid var(--line);border-radius:18px;overflow:hidden}
+.map-fig img,.map-svg{display:block;width:100%;height:auto}
+.map-fig figcaption{font-size:12.5px;color:var(--muted);padding:10px 14px;border-top:1px solid var(--line);background:var(--surface)}
 .map-info h3{margin:0;font-family:var(--display);font-weight:900;font-size:22px}
 .map-info .addr{margin:10px 0 0;font-size:16px;line-height:1.7}
 .map-info .addr span{color:var(--brand);font-weight:700}
@@ -246,3 +246,10 @@ footer.site-foot{margin-top:72px;padding:0;border:0;font-size:13px;color:var(--m
 .host a{display:inline-block;margin-top:10px;font-size:13px;font-weight:700;color:var(--brand)}
 .stat.stat-cta{background:var(--brand)}
 .stat.stat-cta b{color:#fff}
+
+/* admin-only areas (진행상황 공유) */
+body:not(.is-admin) .admin-only{display:none!important}
+.sheet-body.edit label.check.remember{margin-top:16px}
+.remember-note{margin:6px 0 0 26px;font-size:12.5px;color:var(--muted);line-height:1.6}
+.sheet-body.edit input[type=checkbox]{width:18px!important;height:18px;padding:0!important;margin:0;flex:none;accent-color:var(--brand);border-radius:4px}
+.sheet-body.edit label.check{display:flex!important;align-items:center;gap:8px;font-size:14.5px;font-weight:700;color:var(--ink);cursor:pointer}

@@ -70,7 +70,7 @@ drop policy if exists "posts read" on public.posts;
 drop policy if exists "posts insert" on public.posts;
 drop policy if exists "posts update" on public.posts;
 drop policy if exists "posts delete" on public.posts;
-create policy "posts read"   on public.posts for select to anon, authenticated using (true);
+create policy "posts read"   on public.posts for select to authenticated using ((select public.is_editor()));   -- 관리자만 보기
 create policy "posts insert" on public.posts for insert to authenticated with check ((select public.is_editor()));
 create policy "posts update" on public.posts for update to authenticated using ((select public.is_editor())) with check ((select public.is_editor()));
 create policy "posts delete" on public.posts for delete to authenticated using ((select public.is_editor()));

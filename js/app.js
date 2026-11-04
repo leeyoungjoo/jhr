@@ -1,6 +1,14 @@
 // ===== 인권교육 특별展 사이트: 라우터 · 관리자 로그인 · 진행상황 공유 =====
-const SB=(window.supabase&&window.SUPABASE_URL)?window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY):null;
-let USER=null, POSTS=[], postsLoaded=false;
+// 로그인 기억: 체크하면 로그인 상태를 브라우저에 남기고(localStorage), 아니면 창을 닫을 때 로그아웃(sessionStorage)
+const REM_KEY='jhr-remember', ID_KEY='jhr-saved-id';
+const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+const authStore={
+  getItem:k=>{try{return localStorage.getItem(k)??sessionStorage.getItem(k)}catch(e){return null}},
+  setItem:(k,v)=>{try{if(ls.get(REM_KEY)==='1'){localStorage.setItem(k,v);sessionStorage.removeItem(k)}else{sessionStorage.setItem(k,v);localStorage.removeItem(k)}}catch(e){}},
+  removeItem:k=>{try{localStorage.removeItem(k);sessionStorage.removeItem(k)}catch(e){}}
+};
+const SB=(window.supabase&&window.SUPABASE_URL)?window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY,{auth:{storage:authStore,persistSession:true,autoRefreshToken:true}}):null;
+let USER=null, POSTS=[], postsLoaded=false, authReady=!SB;
 
 // ---------- router ----------
 const PAGES=['home','about','facility','news'];
@@ -8,6 +16,7 @@ function route(){
   let h=location.hash.replace(/^#\/?/,'');
   if(/^f[123]$/.test(h)){current=h;h='facility'}          // 예전 시설안내 링크(#f1 등) 호환
   if(!PAGES.includes(h))h='home';
+  if(h==='news'&&!EDIT.can){h='home';if(authReady&&location.hash.startsWith('#/news'))history.replaceState(null,'','#/')}   // 진행상황 공유는 관리자 전용
   document.querySelectorAll('.page').forEach(p=>p.hidden=p.id!=='page-'+h);
   document.querySelectorAll('.nav-links a').forEach(a=>a.setAttribute('aria-current',a.dataset.page===h?'page':'false'));
   document.body.classList.remove('nav-open');
@@ -55,7 +64,9 @@ function authUI(){
 async function refreshAuth(session){
   USER=session?session.user:null; EDIT.can=false;
   if(USER){const {data}=await SB.rpc('is_editor');EDIT.can=data===true;}
-  authUI(); rerender();
+  authReady=true;
+  if(EDIT.can)loadPosts();else{POSTS=[];postsLoaded=false}
+  authUI(); rerender(); route();
 }
 function openModal(html,mode){
   editing=true; sheetN=-1; sheetMode=mode;
@@ -69,18 +80,24 @@ function openLogin(){
     <div class="title-row"><div><div class="eyebrow">관리자 전용</div><h3 id="sheetTitle">관리자 로그인</h3></div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
     <label for="l-email">아이디</label><input id="l-email" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" required>
     <label for="l-pw">비밀번호</label><input id="l-pw" type="password" autocomplete="current-password" required>
+    <label class="check remember"><input type="checkbox" id="l-remember"> 아이디·비밀번호 기억하기</label>
+    <p class="remember-note">체크하면 이 기기에서 로그인 상태가 유지되어 다음에 다시 입력하지 않아도 됩니다. 공용 컴퓨터에서는 체크하지 마세요.</p>
     <div class="e-status" id="l-status" role="status"></div>
     <div class="e-actions"><button type="button" class="ghost" id="l-cancel">취소</button><button type="submit" class="primary" id="l-go">로그인</button></div></form>`,'login');
   sh.querySelector('.sheet-close').onclick=closeModal; document.getElementById('l-cancel').onclick=closeModal;
+  const savedId=ls.get(ID_KEY); if(savedId)document.getElementById('l-email').value=savedId;
+  document.getElementById('l-remember').checked=ls.get(REM_KEY)==='1';
   document.getElementById('loginForm').addEventListener('submit',async e=>{
     e.preventDefault(); const go=document.getElementById('l-go'), st=document.getElementById('l-status');
     go.disabled=true; st.textContent='확인하는 중…';
     const id=document.getElementById('l-email').value.trim().toLowerCase();
+    const remember=document.getElementById('l-remember').checked;
+    if(remember){ls.set(REM_KEY,'1');ls.set(ID_KEY,id)}else{ls.del(REM_KEY);ls.del(ID_KEY)}
     const {error}=await SB.auth.signInWithPassword({email:id.includes('@')?id:id+'@example.com',password:document.getElementById('l-pw').value});
     if(error){go.disabled=false;st.textContent='아이디 또는 비밀번호가 맞지 않습니다.';return}
     closeModal();
   });
-  document.getElementById('l-email').focus();
+  (savedId?document.getElementById('l-pw'):document.getElementById('l-email')).focus();
 }
 
 // ---------- photo upload (shared by facility editor and news editor) ----------
@@ -104,7 +121,7 @@ async function uploadPhoto(key,file){
 const fmtDate=iso=>{const d=new Date(iso);return `${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}.`};
 const fmtBody=t=>esc(t).replace(/\n/g,'<br>');
 async function loadPosts(){
-  if(!SB)return;
+  if(!SB||!EDIT.can)return;
   const {data,error}=await SB.from('posts').select('*').order('pinned',{ascending:false}).order('created_at',{ascending:false}).limit(200);
   if(error)return; POSTS=data; postsLoaded=true; renderPosts();
 }
@@ -197,7 +214,7 @@ function openPostEditor(post){
 // ---------- boot ----------
 route();
 if(SB){
-  loadOverrides(); loadPosts();
+  loadOverrides();
   SB.channel('site-live')
     .on('postgres_changes',{event:'*',schema:'public',table:'rooms'},loadOverrides)
     .on('postgres_changes',{event:'*',schema:'public',table:'posts'},loadPosts)
