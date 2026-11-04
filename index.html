@@ -14,18 +14,18 @@ html,body{margin:0}
   --bg:#FBF7EF; --surface:#FFFFFF; --ink:#24302D; --muted:#66706B; --line:#E3DCCD;
   --orange:#E16824; --teal:#1A998E; --yellow:#F2B935; --green:#6FAF7E; --slate:#9AA39E;
   --c-exhibit:#F3A577; --c-video:#7FC7BE; --c-activity:#F7D77B; --c-rest:#B9DDB8; --c-staff:#E4E1D9; --c-core:#CFD8E3; --c-hall:#FFF1DE;
-  --plan-wall:#3B4743; --plan-bg:#FFFFFF; --label:#24302D;
+  --plan-wall:#3B4743; --plan-bg:#FFFFFF; --label:#24302D; --door:#1F6F67;
   --display:"Gothic A1","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#151B19; --surface:#1E2623; --ink:#ECEFEA; --muted:#A3ADA7; --line:#33403B;
   --c-exhibit:#B8653C; --c-video:#2E7F76; --c-activity:#A88A34; --c-rest:#4E7F59; --c-staff:#3A423E; --c-core:#3B4757; --c-hall:#3A3226;
-  --plan-wall:#C9D3CE; --plan-bg:#1B2220; --label:#F4F6F2; color-scheme:dark}}
+  --plan-wall:#C9D3CE; --plan-bg:#1B2220; --label:#F4F6F2; --door:#5BC2B6; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#151B19; --surface:#1E2623; --ink:#ECEFEA; --muted:#A3ADA7; --line:#33403B;
   --c-exhibit:#B8653C; --c-video:#2E7F76; --c-activity:#A88A34; --c-rest:#4E7F59; --c-staff:#3A423E; --c-core:#3B4757; --c-hall:#3A3226;
-  --plan-wall:#C9D3CE; --plan-bg:#1B2220; --label:#F4F6F2; color-scheme:dark}
+  --plan-wall:#C9D3CE; --plan-bg:#1B2220; --label:#F4F6F2; --door:#5BC2B6; color-scheme:dark}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6}
 .wrap{max-width:1180px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;padding-bottom:22px;border-bottom:2px solid var(--ink)}
@@ -182,6 +182,8 @@ svg text{font-family:var(--display);fill:var(--label);pointer-events:none}
 .lb-nav[hidden]{display:none}
 .lb-close:focus-visible,.lb-nav:focus-visible{outline:3px solid var(--orange)}
 .lb-count{position:absolute;bottom:max(18px,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+
+.legend i.lg-door{width:16px;height:6px;border-radius:2px;background:var(--door);border:0}
 </style>
 </head>
 <body>
@@ -233,13 +235,15 @@ const FLOORS = {
     rooms:[
       {n:1,name:'전시관',orig:'303 대강당',renamed:true,cat:'exhibit',r:[3.1,25.8,0,16.6],
        desc:'인권교육 특별展의 메인 전시장입니다. 주제별 전시 패널과 체험 코너, 포토존을 차례로 둘러볼 수 있습니다.'},
-      {n:2,name:'홀',orig:'301 홀',cat:'hall',r:[25.8,35,0,8.6],desc:'엘리베이터와 계단에서 내리면 바로 만나는 로비입니다. 전시관 입장 전 잠시 기다리는 공간으로 씁니다.'},
-      {n:3,name:'유아실',orig:'302 유아실',cat:'rest',r:[25.8,29.6,12.6,16.6],desc:'영유아와 함께 온 관람객이 쉬거나 아이를 돌볼 수 있는 공간입니다.'},
-      {n:4,name:'무궁화실',orig:'304 무궁화실',cat:'staff',r:[29.6,32.6,12.6,18.6],desc:'운영 지원 공간입니다.'},
-      {n:5,name:'방송실',orig:'303A 방송실',cat:'staff',r:[25.8,29.6,8.6,12.6],desc:'전시관 음향·영상을 운영하는 관계자 공간입니다.'},
-      {n:6,name:'창고',orig:'306 창고',cat:'staff',r:[29.6,32.6,8.6,12.6],desc:'전시 물품 보관 공간입니다.'},
-      {n:7,name:'공조실',orig:'305 공조실',cat:'staff',r:[0,3.1,5.4,16.6],desc:'공조 설비 공간입니다. 관계자 외 출입을 제한합니다.',v:true},
+      {n:2,name:'홀',orig:'301 홀',cat:'hall',r:[25.8,35,0,8.6],lr:[30,35,0,8.6],desc:'엘리베이터와 계단에서 내리면 바로 만나는 로비입니다. 전시관 입장 전 잠시 기다리는 공간으로 씁니다.'},
+      {n:3,name:'유아실',orig:'302 유아실',cat:'rest',r:[25.8,29.2,12.6,16.6],d:[{s:'r',at:14.6}],desc:'영유아와 함께 온 관람객이 쉬거나 아이를 돌볼 수 있는 공간입니다.'},
+      {n:4,name:'무궁화실',orig:'304 무궁화실',cat:'staff',r:[30.4,32.6,12.6,18.6],d:[{s:'l',at:14.4}],desc:'운영 지원 공간입니다.'},
+      {n:5,name:'방송실',orig:'303A 방송실',cat:'staff',r:[25.8,29.2,8.6,12.6],d:[{s:'r',at:10.6}],desc:'전시관 음향·영상을 운영하는 관계자 공간입니다.'},
+      {n:6,name:'창고',orig:'306 창고',cat:'staff',r:[30.4,32.6,8.6,12.6],d:[{s:'l',at:10.6}],desc:'전시 물품 보관 공간입니다.'},
+      {n:7,name:'공조실',orig:'305 공조실',cat:'staff',r:[0,3.1,5.4,16.6],d:[{s:'b',at:1.6}],desc:'공조 설비 공간입니다. 관계자 외 출입을 제한합니다.',v:true},
     ],
+    corridor:{t:'',r:[29.2,30.4,8.6,16.6]},
+    gates:[{t:'입구 ①',x:25.8,y:1.6,w:1.3,kind:'in'},{t:'입구 ②',x:25.8,y:4.2,w:2.2,kind:'in'},{t:'출구 ③',x:25.8,y:7,w:1.3,kind:'out'}],
     core:[
       {t:'계단',r:[0,3.1,0,5.4]},{t:'계단',r:[35,39.3,0,6.3]},{t:'EV',r:[35.6,38.6,6.3,9.4]},
       {t:'화장실(남)',r:[32.6,39.3,9.4,14]},{t:'화장실(여)',r:[32.6,39.3,14,18.6]}],
@@ -247,15 +251,15 @@ const FLOORS = {
   f2:{fl:'2F',title:'2층 · 영상관 · 활동실',sub:'인권 영상을 보고, 체험 활동에 참여하는 층입니다.',summary:'영상관1·2 · 활동실1·2',
     outline:[[0,0],[39.3,0],[39.3,18.6],[0,18.6]],
     rooms:[
-      {n:1,name:'영상관1',orig:'205 중강당',renamed:true,cat:'video',r:[3.1,16.2,9,18.6],desc:'좌석이 있는 큰 상영관입니다. 인권 관련 영상을 정해진 시간에 상영합니다.'},
-      {n:2,name:'영상관2',orig:'204 소강당',renamed:true,cat:'video',r:[16.2,24.6,9,18.6],desc:'작은 상영관입니다. 짧은 영상 상영과 해설 프로그램에 씁니다.'},
-      {n:3,name:'활동실1',orig:'203 다목적실',renamed:true,cat:'activity',r:[24.6,32,12,18.6],desc:'체험 워크숍과 생각을 나누는 활동을 하는 공간입니다.'},
-      {n:4,name:'활동실2',orig:'209 행복실',renamed:true,cat:'activity',r:[19.6,24.6,0,5.4],desc:'보드게임 등 놀이로 인권을 배우는 활동 공간입니다.'},
+      {n:1,name:'영상관1',orig:'205 중강당',renamed:true,cat:'video',r:[3.1,16.2,9,18.6],d:[{s:'b',at:5.2},{s:'b',at:14.6}],desc:'좌석이 있는 큰 상영관입니다. 인권 관련 영상을 정해진 시간에 상영합니다.'},
+      {n:2,name:'영상관2',orig:'204 소강당',renamed:true,cat:'video',r:[16.2,24.6,9,18.6],d:[{s:'b',at:20.4}],desc:'작은 상영관입니다. 짧은 영상 상영과 해설 프로그램에 씁니다.'},
+      {n:3,name:'활동실1',orig:'203 다목적실',renamed:true,cat:'activity',r:[24.6,32,12,18.6],d:[{s:'b',at:28.3}],desc:'체험 워크숍과 생각을 나누는 활동을 하는 공간입니다.'},
+      {n:4,name:'활동실2',orig:'209 행복실',renamed:true,cat:'activity',r:[19.6,24.6,0,5.4],d:[{s:'t',at:22.1}],desc:'보드게임 등 놀이로 인권을 배우는 활동 공간입니다.'},
       {n:5,name:'홀',orig:'201 홀',cat:'hall',r:[24.6,35,0,12],desc:'계단과 엘리베이터 앞 로비입니다. 테이블 좌석이 있어 잠시 쉬어 갈 수 있습니다.'},
-      {n:6,name:'사자후실',orig:'206 사자후실',cat:'staff',r:[3.1,9,0,5.4],desc:'소모임실입니다.'},
-      {n:7,name:'희망실',orig:'207 희망실',cat:'staff',r:[9,14.4,0,5.4],desc:'소모임실입니다.'},
-      {n:8,name:'지용실',orig:'208 지용실',cat:'staff',r:[14.4,19.6,0,5.4],desc:'소모임실입니다.'},
-      {n:9,name:'준비실',orig:'205A·205B 준비실',cat:'staff',r:[0,3.1,5.4,18.6],desc:'영상관1 운영을 위한 관계자 공간입니다.',v:true},
+      {n:6,name:'사자후실',orig:'206 사자후실',cat:'staff',r:[3.1,9,0,5.4],d:[{s:'t',at:6}],desc:'소모임실입니다.'},
+      {n:7,name:'희망실',orig:'207 희망실',cat:'staff',r:[9,14.4,0,5.4],d:[{s:'t',at:11.7}],desc:'소모임실입니다.'},
+      {n:8,name:'지용실',orig:'208 지용실',cat:'staff',r:[14.4,19.6,0,5.4],d:[{s:'t',at:17}],desc:'소모임실입니다.'},
+      {n:9,name:'준비실',orig:'205A·205B 준비실',cat:'staff',r:[0,3.1,5.4,18.6],d:[{s:'r',at:7.2}],desc:'영상관1 운영을 위한 관계자 공간입니다.',v:true},
     ],
     corridor:{t:'복도',r:[3.1,24.6,5.4,9]},
     core:[
@@ -266,17 +270,17 @@ const FLOORS = {
     outline:[[-0.8,0],[39.3,0],[39.3,18.5],[25.6,18.5],[25.6,16],[-0.8,16]],
     rooms:[
       {n:1,name:'홀',orig:'104 홀',cat:'hall',r:[26.1,35.8,0,12],desc:'주출입구로 들어오면 만나는 로비입니다. 관람 안내를 받고 엘리베이터나 계단으로 3층 전시관에 올라갑니다.'},
-      {n:2,name:'휴게실',orig:'106 휴게공간',cat:'rest',r:[25.6,29.3,12.5,18.5],desc:'관람 전후에 앉아 쉴 수 있는 공간입니다.'},
-      {n:3,name:'대회의실',orig:'108 회의실',cat:'activity',r:[20.9,25.6,7.9,16],desc:'긴 회의 테이블이 있는 회의실입니다. 단체 관람 안내와 운영 회의에 씁니다.'},
-      {n:4,name:'응접실',orig:'111 응접실',cat:'activity',r:[14.8,19.7,0,6],desc:'방문객과 손님을 맞이하는 공간입니다.'},
-      {n:5,name:'사무실',orig:'107 사무실',cat:'staff',r:[19.7,26.1,0,6],desc:'전시 운영진이 일하는 사무 공간입니다.'},
-      {n:6,name:'보성회실',orig:'107 보성회실',cat:'staff',r:[29.3,32.9,12,16.2],desc:'관계자 공간입니다.'},
-      {n:7,name:'화광회실',orig:'110A 화광회실',cat:'staff',r:[8.9,14.8,0,6],desc:'관계자 공간입니다.'},
-      {n:8,name:'칸나실',orig:'110 칸나실',cat:'staff',r:[2.6,8.9,0,6],desc:'관계자 공간입니다.'},
-      {n:9,name:'화락실',orig:'117 화락실',cat:'staff',r:[18,20.9,7.9,16],desc:'관계자 공간입니다.',v:true},
-      {n:10,name:'설비실',orig:'112 전기실 · 113 발전기실 · 114 보일러실',cat:'staff',r:[-0.8,18,8.2,16],desc:'전기·발전기·보일러 설비 공간입니다. 관계자 외 출입을 제한합니다.'},
-      {n:11,name:'창고',orig:'116 창고',cat:'staff',r:[35.8,39.3,0,3.5],desc:'물품 보관 공간입니다.'},
-      {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[34,39,-6.5,-1.5],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
+      {n:2,name:'휴게실',orig:'106 휴게공간',cat:'rest',r:[25.6,29.3,12.5,18.5],d:[{s:'b',at:27.6}],desc:'관람 전후에 앉아 쉴 수 있는 공간입니다.'},
+      {n:3,name:'대회의실',orig:'108 회의실',cat:'activity',r:[20.9,25.6,7.9,16],d:[{s:'b',at:23.2}],desc:'긴 회의 테이블이 있는 회의실입니다. 단체 관람 안내와 운영 회의에 씁니다.'},
+      {n:4,name:'응접실',orig:'111 응접실',cat:'activity',r:[14.8,19.7,0,6],d:[{s:'t',at:17.2}],desc:'방문객과 손님을 맞이하는 공간입니다.'},
+      {n:5,name:'사무실',orig:'107 사무실',cat:'staff',r:[19.7,26.1,0,6],d:[{s:'t',at:24.4}],desc:'전시 운영진이 일하는 사무 공간입니다.'},
+      {n:6,name:'보성회실',orig:'107 보성회실',cat:'staff',r:[29.3,32.9,12,16.2],d:[{s:'b',at:31.1}],desc:'관계자 공간입니다.'},
+      {n:7,name:'화광회실',orig:'110A 화광회실',cat:'staff',r:[8.9,14.8,0,6],d:[{s:'t',at:11.8}],desc:'관계자 공간입니다.'},
+      {n:8,name:'칸나실',orig:'110 칸나실',cat:'staff',r:[2.6,8.9,0,6],d:[{s:'t',at:5.8}],desc:'관계자 공간입니다.'},
+      {n:9,name:'화락실',orig:'117 화락실',cat:'staff',r:[18,20.9,7.9,16],d:[{s:'b',at:19.4}],desc:'관계자 공간입니다.',v:true},
+      {n:10,name:'설비실',orig:'112 전기실 · 113 발전기실 · 114 보일러실',cat:'staff',r:[-0.8,18,8.2,16],d:[{s:'b',at:6},{s:'b',at:12.5}],desc:'전기·발전기·보일러 설비 공간입니다. 관계자 외 출입을 제한합니다.'},
+      {n:11,name:'창고',orig:'116 창고',cat:'staff',r:[35.8,39.3,0,3.5],d:[{s:'l',at:1.8}],desc:'물품 보관 공간입니다.'},
+      {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[34,39,-6.5,-1.5],d:[{s:'l',at:-4},{s:'t',at:36.5}],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
     ],
     corridor:{t:'복도',r:[-0.8,26.1,6,8.2]},
     core:[
@@ -285,7 +289,7 @@ const FLOORS = {
     entrances:[
       {t:'주출입구',x:31,y:0,dir:'up',main:true},
       {t:'부출입구 1',x:-0.8,y:7.1,dir:'right'},
-      {t:'부출입구 2',x:24.6,y:16,dir:'down'}],
+      {t:'부출입구 2',x:23.9,y:16,dir:'down'}],
     amen:['실외 휴게공간(인권도서전)','주출입구 · 부출입구 2곳','화장실(남·여)','엘리베이터 1대','계단 2곳','주차장 · 장애인 주차구역']}
 };
 
@@ -354,8 +358,8 @@ function draw(id){
   const F=FLOORS[id], svg=document.getElementById('plan');
   svg.innerHTML='';
   const VH=H+8.4+(F.bottom||0);
-  svg.setAttribute('viewBox','-6.5 -3.8 52.3 '+VH);
-  el('rect',{x:-6.5,y:-3.8,width:52.3,height:VH,fill:'var(--plan-bg)'},svg);
+  svg.setAttribute('viewBox','-10 -3.8 56.8 '+VH);
+  el('rect',{x:-10,y:-3.8,width:56.8,height:VH,fill:'var(--plan-bg)'},svg);
   const defs=el('defs',{},svg);
   const pat=el('pattern',{id:'hatch',width:.9,height:.9,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs);
   el('line',{x1:0,y1:0,x2:0,y2:.9,stroke:'var(--plan-wall)','stroke-width':.22,opacity:.45},pat);
@@ -372,7 +376,7 @@ function draw(id){
     shape.addEventListener('click',()=>focusRoom(rm.n));
     shape.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();focusRoom(rm.n)}});
     const big=b.w>8&&b.h>5, size=Math.min(big?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/info(id,rm).name.length);
-    label(gR,rm.r,rm.renamed&&(big||b.w>4.5)?[info(id,rm).name,'('+rm.orig.replace(/^[0-9A-Z]+\s/,'')+')']:[info(id,rm).name],size,rm.v,(!big&&!rm.v&&b.h<7)?.55:0);
+    label(gR,rm.lr||rm.r,rm.renamed&&(big||b.w>4.5)?[info(id,rm).name,'('+rm.orig.replace(/^[0-9A-Z]+\s/,'')+')']:[info(id,rm).name],size,rm.v,(!big&&!rm.v&&b.h<7)?.55:0);
     // number badge
     const bx=b.x+.95, by=b.y+.95;
     el('circle',{cx:bx,cy:by,r:.62,fill:'var(--surface)',stroke:'var(--plan-wall)','stroke-width':.08},gR);
@@ -382,14 +386,26 @@ function draw(id){
   F.core.forEach(c=>{const b=rectOf(c.r);el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.4,fill:'var(--c-core)',stroke:'var(--plan-wall)','stroke-width':.1},gC);
     label(gC,c.r,[c.t],c.t.length>4?.62:.85,c.v);
     if(c.t==='계단'){for(let i=1;i<6;i++){const yy=b.y+b.h*i/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35},gC)}}});
+  const gD=el('g',{'pointer-events':'none'},svg);
+  F.rooms.forEach(rm=>(rm.d||[]).forEach(d=>{const w=d.w||1.3,t=.42;let x,y,wd,ht;
+    if(d.s==='b'||d.s==='t'){y=Y(d.s==='b'?rm.r[2]:rm.r[3]);x=d.at-w/2;wd=w;ht=t;y-=t/2}else{x=(d.s==='l'?rm.r[0]:rm.r[1])-t/2;y=Y(d.at)-w/2;wd=t;ht=w}
+    el('rect',{x,y,width:wd,height:ht,rx:.12,fill:'var(--door)',stroke:'var(--plan-bg)','stroke-width':.08},gD)}));
+  (F.gates||[]).forEach(gt=>{const col=gt.kind==='in'?'var(--teal)':'var(--orange)',x=gt.x,y=Y(gt.y),w=gt.w,t=.6;
+    el('rect',{x:x-t/2,y:y-w/2,width:t,height:w,rx:.15,fill:col},gD);
+    const lx=x+.75, tw=gt.t.length*.62+.9;
+    el('rect',{x:lx,y:y-.62,width:tw,height:1.24,rx:.62,fill:col},gD);
+    const ar=gt.kind==='in'?`${lx+.55},${y} ${lx+1.05},${y-.36} ${lx+1.05},${y+.36}`:`${lx+1.05},${y} ${lx+.55},${y-.36} ${lx+.55},${y+.36}`;
+    el('polygon',{points:ar,fill:'#fff'},gD);
+    const tx=el('text',{x:lx+1.3,y:y+.04,'dominant-baseline':'middle','font-size':.66,'font-weight':900},gD);tx.textContent=gt.t;tx.style.fill='#fff';});
   (F.entrances||[]).forEach(en=>{
-    const g=el('g',{},svg), x=en.x, y=Y(en.y), col=en.main?'var(--orange)':'var(--teal)';
+    const g=el('g',{transform:`translate(${en.x} ${Y(en.y)}) scale(1.3) translate(${-en.x} ${-Y(en.y)})`},svg), x=en.x, y=Y(en.y), col=en.main?'var(--orange)':'var(--teal)';
     let pts, tx, ty, anchor='middle';
     if(en.dir==='up'){pts=`${x-1},${y+2.4} ${x+1},${y+2.4} ${x+1},${y+1.2} ${x+1.8},${y+1.2} ${x},${y} ${x-1.8},${y+1.2} ${x-1},${y+1.2}`;tx=x;ty=y+3.3}
-    if(en.dir==='right'){pts=`${x-2.4},${y-1} ${x-2.4},${y+1} ${x-1.2},${y+1} ${x-1.2},${y+1.8} ${x},${y} ${x-1.2},${y-1.8} ${x-1.2},${y-1}`;tx=x-1.3;ty=y+3;}
+    if(en.dir==='right'){pts=`${x-2.4},${y-1} ${x-2.4},${y+1} ${x-1.2},${y+1} ${x-1.2},${y+1.8} ${x},${y} ${x-1.2},${y-1.8} ${x-1.2},${y-1}`;tx=x-3.6;ty=y+2.6;}
     if(en.dir==='down'){pts=`${x-1},${y-2.4} ${x+1},${y-2.4} ${x+1},${y-1.2} ${x+1.8},${y-1.2} ${x},${y} ${x-1.8},${y-1.2} ${x-1},${y-1.2}`;tx=x;ty=y-3}
     el('polygon',{points:pts,fill:col},g);
-    const t=el('text',{x:tx,y:ty,'text-anchor':anchor,'dominant-baseline':'middle','font-size':.95,'font-weight':900},g);t.textContent=en.t;t.style.fill=col;
+    const tw=en.t.length*.9+1;el('rect',{x:tx-tw/2,y:ty-.72,width:tw,height:1.44,rx:.72,fill:col},g);
+    const t=el('text',{x:tx,y:ty+.04,'text-anchor':anchor,'dominant-baseline':'middle','font-size':.82,'font-weight':900},g);t.textContent=en.t;t.style.fill='#fff';
   });
   // north-ish marker: elevator call-out for upper floors
 }
@@ -433,7 +449,7 @@ function show(id){
   document.getElementById('floorSub').textContent=F.sub;
   draw(id); renderRooms(id);
   const used=new Set([...F.rooms.map(r=>r.cat),'core']);
-  document.getElementById('legend').innerHTML=Object.entries(CAT).filter(([k])=>used.has(k)).map(([k,v])=>`<span><i style="background:${v.color}"></i>${v.label}</span>`).join('');
+  document.getElementById('legend').innerHTML=Object.entries(CAT).filter(([k])=>used.has(k)).map(([k,v])=>`<span><i style="background:${v.color}"></i>${v.label}</span>`).join('')+`<span><i class="lg-door"></i>실 출입문</span>`+(F.entrances?`<span><i style="background:var(--orange);border-radius:50%"></i>건물 출입구</span>`:'')+(F.gates?`<span><i style="background:var(--teal);border-radius:50%"></i>전시관 입구</span><span><i style="background:var(--orange);border-radius:50%"></i>전시관 출구</span>`:'');
 }
 
 let lastFocus=null, sheetN=null, editing=false;
