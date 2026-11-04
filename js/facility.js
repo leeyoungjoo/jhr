@@ -228,7 +228,7 @@ function info(fid,rm){
   const D=DETAIL[key]||{where:F.fl+' '+origOf(rm)+' 위치',use:CAT[rm.cat].label,more:rm.desc+(rm.cat==='staff'?' 전시 기간에는 관계자만 이용합니다.':''),tips:[]};
   const pick=(k,def)=>(typeof o[k]==='string'&&o[k].trim()!=='')?o[k]:def;
   return {name:pick('name',rm.name),desc:pick('desc',rm.desc),more:pick('more',D.more),where:pick('where',D.where),use:pick('use',D.use),
-    tips:Array.isArray(o.tips)?o.tips:(D.tips||[]),photos:Array.isArray(o.photos)?o.photos:(D.photos||[])};
+    tips:Array.isArray(o.tips)?o.tips:(D.tips||[]),photos:Array.isArray(o.photos)?o.photos:(D.photos||[]),cover:typeof o.cover==='string'&&o.cover?o.cover:''};
 }
 const photoUrl=p=>p;
 function renderRooms(id){
@@ -237,7 +237,7 @@ function renderRooms(id){
   liveRooms(F).forEach(rm=>{
     const I=info(id,rm);
     const d=document.createElement('article');d.className='room';d.id='room-'+rm.n;
-    const cover=I.photos[0];
+    const cover=I.cover||I.photos[0];
     d.innerHTML=`<div class="room-ph" style="background:${CAT[rm.cat].color}">${cover?`<img src="${esc(cover)}" alt="" loading="lazy">`:'<span>사진 준비 중</span>'}</div><div class="room-top"><span class="num" style="background:${CAT[rm.cat].color}">${dispN(F,rm)}</span><div><h3 class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3>${origOf(rm)&&origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}</div>`:''}</div></div><span class="chip">${CAT[rm.cat].label}</span><p>${esc(I.desc)}</p><button class="more-btn" type="button">자세히 보기 →</button>`;
     d.addEventListener('click',e=>{focusRoom(rm.n,true);lastFocus=d.querySelector('.more-btn');openSheet(rm.n)});
     box.appendChild(d);
@@ -273,7 +273,7 @@ function openSheet(n){
   const rooms=liveRooms(F), i=rooms.indexOf(rm), prev=rooms[(i-1+rooms.length)%rooms.length], next=rooms[(i+1)%rooms.length];
   const sh=document.getElementById('sheet');
   sh.innerHTML=`<div class="photo" id="galPhoto" style="background:${CAT[rm.cat].color}"><div id="galSlide" style="width:100%;height:100%;display:grid;place-items:center"></div>${photos.length>1?'<button class="gal-btn gal-prev" type="button" aria-label="이전 사진">‹</button><button class="gal-btn gal-next" type="button" aria-label="다음 사진">›</button><span class="gal-count" id="galCount"></span>':''}<span class="tag">${F.fl} · ${dispN(F,rm)}</span><button class="sheet-close" type="button" aria-label="닫기">×</button></div>
-  ${photos.length>1?`<div class="thumbs" id="galThumbs">${photos.map((p,k)=>`<button class="thumb" type="button" data-k="${k}" aria-label="사진 ${k+1}">${p?`<img src="${esc(p)}" alt="">`:k+1}</button>`).join('')}</div>`:''}
+  ${photos.length>1?`<div class="thumbs" id="galThumbs">${photos.slice(0,photos.length>12?11:12).map((p,k)=>`<button class="thumb" type="button" data-k="${k}" aria-label="사진 ${k+1}">${p?`<img src="${esc(p)}" alt="" loading="lazy">`:k+1}</button>`).join('')}${photos.length>12?`<button class="thumb more" type="button" data-more="11" aria-label="사진 ${photos.length-11}장 더 보기"><span>+${photos.length-11}</span></button>`:''}</div>`:''}
   <div class="sheet-body"><div class="title-row"><div><h3 id="sheetTitle" class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3>${origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}${rm.renamed?' · 전시 기간 명칭':''}</div>`:''}</div>${EDIT.can?'<button class="edit-btn" type="button" id="editBtn">정보 수정</button>':''}</div>
   <span class="chip">${CAT[rm.cat].label}</span>
   <p>${esc(I.more)}</p>
@@ -291,7 +291,8 @@ function openSheet(n){
   showPhoto(0);
   sh.querySelector('.gal-prev')?.addEventListener('click',()=>showPhoto(pi-1));
   sh.querySelector('.gal-next')?.addEventListener('click',()=>showPhoto(pi+1));
-  sh.querySelectorAll('.thumb').forEach(t=>t.addEventListener('click',()=>showPhoto(+t.dataset.k)));
+  sh.querySelectorAll('.thumb[data-k]').forEach(t=>t.addEventListener('click',()=>showPhoto(+t.dataset.k)));
+  sh.querySelector('.thumb.more')?.addEventListener('click',()=>{const list=photos.filter(Boolean);openLB(list,11,I.name)});
   gp.addEventListener('pointerdown',e=>{sx=e.clientX;swiped=false});
   gp.addEventListener('click',e=>{if(!e.target.closest('.gal-zoom'))return;if(swiped){swiped=false;return}const list=photos.filter(Boolean);openLB(list,list.indexOf(photos[pi]),I.name)});
   gp.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>40){swiped=true;if(photos.length>1)showPhoto(pi+(dx<0?1:-1))}});
@@ -307,7 +308,7 @@ function openSheet(n){
 function openEditor(rm){
   editing=true;
   const key=current+'-'+rm.n, I=info(current,rm);
-  let photos=[...I.photos];
+  let photos=[...I.photos], cover=I.cover;
   const sh=document.getElementById('sheet');
   sh.innerHTML=`<div class="sheet-body edit">
     <div class="title-row"><div><div class="eyebrow">시설 정보 수정</div><h3 id="sheetTitle">${esc(I.name)}</h3>${origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}</div>`:''}</div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
@@ -316,7 +317,9 @@ function openEditor(rm){
     <label for="e-more">자세한 설명</label><textarea id="e-more" rows="5" maxlength="2000">${esc(I.more)}</textarea>
     <div class="two"><div><label for="e-where">위치</label><input id="e-where" value="${esc(I.where)}" maxlength="120"></div><div><label for="e-use">용도</label><input id="e-use" value="${esc(I.use)}" maxlength="80"></div></div>
     <label for="e-tips">이용 안내 (한 줄에 하나씩)</label><textarea id="e-tips" rows="3" maxlength="1000">${esc(I.tips.join('\n'))}</textarea>
-    <div class="ph-label">사진 <span id="e-count"></span></div>
+    <div class="ph-label">대표 이미지 <span class="ph-sub">시설정보 카드 맨 위에 보이는 사진입니다</span></div>
+    <div class="e-cover" id="e-cover"></div>
+    <div class="ph-label">상세보기 사진 <span id="e-count"></span></div>
     <div class="e-photos" id="e-photos"></div>
     <label class="upload" for="e-file">사진 추가 (여러 장 선택 가능)<input id="e-file" type="file" accept="image/*" multiple></label>
     <div class="e-status" id="e-status" role="status"></div>
@@ -330,12 +333,22 @@ function openEditor(rm){
     document.querySelectorAll('[data-mv]').forEach(b=>b.addEventListener('click',()=>{const k=+b.dataset.mv;if(k>0){[photos[k-1],photos[k]]=[photos[k],photos[k-1]];drawPhotos()}}));
   };
   drawPhotos();
+  const drawCover=()=>{
+    const box=document.getElementById('e-cover');
+    box.innerHTML=`${cover?`<div class="e-cover-ph"><img src="${esc(cover)}" alt="대표 이미지"></div>`:'<div class="e-cover-ph empty">대표 이미지가 없습니다.<br><small>없으면 상세보기 첫 사진이 대신 보입니다.</small></div>'}
+      <div class="e-cover-tools"><label class="upload small" for="e-cover-file">${cover?'대표 이미지 바꾸기':'대표 이미지 올리기'}<input id="e-cover-file" type="file" accept="image/*"></label>${cover?'<button type="button" class="ghost-sm" id="e-cover-del">대표 이미지 지우기</button>':''}</div>`;
+    const cf=document.getElementById('e-cover-file');
+    cf.addEventListener('change',async()=>{const f=cf.files[0];if(!f)return;st.textContent='대표 이미지 올리는 중…';
+      try{cover=await uploadPhoto(key+'/cover',f);drawCover();st.textContent='대표 이미지를 바꿨습니다. 저장을 눌러야 반영됩니다.'}catch(e){st.textContent='대표 이미지를 올리지 못했습니다. 다시 시도해 주세요.'}});
+    document.getElementById('e-cover-del')?.addEventListener('click',()=>{cover='';drawCover()});
+  };
+  drawCover();
   const fileIn=document.getElementById('e-file');
   fileIn.addEventListener('change',async()=>{
     const files=[...fileIn.files]; if(!files.length)return;
     for(let k=0;k<files.length;k++){
       st.textContent=`사진 올리는 중… (${k+1}/${files.length})`;
-      try{photos.unshift(await uploadPhoto(key,files[k]));drawPhotos();}   // 최신 사진이 맨 앞(대표 사진)
+      try{photos.unshift(await uploadPhoto(key,files[k]));drawPhotos();}   // 최신 사진이 맨 앞
       catch(e){st.textContent=`${files[k].name}을(를) 올리지 못했습니다. ${'다시 시도해 주세요.'}`;fileIn.value='';return}
     }
     st.textContent='사진을 추가했습니다. 저장을 눌러야 반영됩니다.'; fileIn.value='';
@@ -347,7 +360,7 @@ function openEditor(rm){
     const btn=e.currentTarget; btn.disabled=true; st.textContent='저장하는 중…';
     const v=id=>document.getElementById(id).value.trim();
     const body={name:v('e-name'),desc:v('e-desc'),more:v('e-more'),where:v('e-where'),use:v('e-use'),
-      tips:v('e-tips').split('\n').map(t=>t.trim()).filter(Boolean),photos:photos.slice(0,30),floor:current,room:rm.n,updatedAt:new Date().toISOString()};
+      tips:v('e-tips').split('\n').map(t=>t.trim()).filter(Boolean),photos:photos.slice(0,30),cover,floor:current,room:rm.n,updatedAt:new Date().toISOString()};
     try{const {error}=await SB.from('rooms').upsert({key,data:body,updated_at:body.updatedAt});if(error)throw error;OV[key]=body;renderRooms(current);draw(current);focusRoom(rm.n,true);openSheet(rm.n);}
     catch(err){btn.disabled=false;st.textContent=err&&(err.code==='42501'||/row-level security/i.test(err.message||''))?'수정 권한이 없는 계정입니다. 관리자에게 편집자 등록을 요청해 주세요.':'저장하지 못했습니다. 잠시 후 다시 시도해 주세요.'}
   });

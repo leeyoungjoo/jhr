@@ -148,7 +148,7 @@ function renderPosts(){
   }
   if(list){
     const mine=POSTS.filter(p=>teamOf(p)===curTeam);
-    list.innerHTML=!SB?'<p class="empty">게시판을 불러올 수 없습니다.</p>':!postsLoaded?'<p class="empty">불러오는 중…</p>':mine.length?mine.map(p=>postCard(p,false)).join(''):`<p class="empty">${esc(curTeam)} 탭에 아직 올라온 소식이 없습니다.${EDIT.can?' ‘새 소식 쓰기’로 첫 소식을 올려 보세요.':''}</p>`;
+    list.innerHTML=!SB?'<p class="empty">게시판을 불러올 수 없습니다.</p>':!postsLoaded?'<p class="empty">불러오는 중…</p>':mine.length?mine.map(p=>postCard(p,false)).join(''):`<p class="empty">${esc(curTeam)} 탭에 아직 올라온 소식이 없습니다.${EDIT.can?' 아래 ‘글쓰기’로 첫 소식을 올려 보세요.':''}</p>`;
   }
   if(latest){
     const few=POSTS.slice(0,3);
@@ -176,7 +176,7 @@ async function deletePost(id){
 function openPostEditor(post){
   let photos=post?[...(post.photos||[])]:[];
   const sh=openModal(`<div class="sheet-body edit">
-    <div class="title-row"><div><div class="eyebrow">진행상황 공유</div><h3 id="sheetTitle">${post?'소식 수정':'새 소식 쓰기'}</h3></div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
+    <div class="title-row"><div><div class="eyebrow">진행상황 공유</div><h3 id="sheetTitle">${post?'글 수정':'글쓰기'}</h3></div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
     <label for="p-team">팀</label><select id="p-team">${TEAMS.map(t=>`<option${t===(post?teamOf(post):curTeam)?' selected':''}>${esc(t)}</option>`).join('')}</select>
     <label for="p-title">제목</label><input id="p-title" maxlength="120" value="${esc(post?.title||'')}" placeholder="예) 3층 전시관 패널 설치를 마쳤습니다">
     <label for="p-body">내용</label><textarea id="p-body" rows="7" maxlength="5000" placeholder="진행 상황을 자유롭게 적어 주세요">${esc(post?.body||'')}</textarea>
