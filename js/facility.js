@@ -24,8 +24,8 @@ const FLOORS = {
     corridor:{t:'',r:[29.2,30.4,8.6,16.6]},
     gates:[{t:'입구 ①',x:25.8,y:1.6,w:1.3,kind:'in'},{t:'입구 ②',x:25.8,y:4.2,w:2.2,kind:'in'},{t:'출구 ③',x:25.8,y:7,w:1.3,kind:'out'}],
     core:[
-      {t:'계단',r:[0,3.1,0,5.4]},{t:'계단',r:[35,39.3,0,6.3]},{t:'EV',r:[35.6,38.6,6.3,9.4]},
-      {t:'화장실(남)',r:[32.6,39.3,9.4,14]},{t:'화장실(여)',r:[32.6,39.3,14,18.6]}],
+      {t:'계단',r:[0,3.1,0,5.4]},{t:'계단',r:[35,39.3,0,8.6]},{t:'EV',r:[35.6,38.6,11,13.9]},
+      {t:'화장실(남)',r:[32.6,39.3,14,16.3]},{t:'화장실(여)',r:[32.6,39.3,16.3,18.6]}],
     amen:['화장실(남·여) · 장애인 화장실','엘리베이터 1대','계단 2곳','유아실']},
   f2:{fl:'2F',title:'2층 · 영상관 · 활동실',sub:'인권 영상을 보고, 체험 활동에 참여하는 층입니다.',summary:'영상관1·2 · 활동실1·2',
     outline:[[0,0],[39.3,0],[39.3,18.6],[0,18.6]],
@@ -38,12 +38,14 @@ const FLOORS = {
       {n:6,name:'사자후실',orig:'206 사자후실',cat:'staff',off:true,r:[3.1,9,0,5.4],d:[{s:'t',at:6}],desc:'소모임실입니다.'},
       {n:7,name:'희망실',orig:'207 희망실',cat:'staff',r:[9,14.4,0,5.4],d:[{s:'t',at:11.7}],desc:'소모임실입니다.'},
       {n:8,name:'지용실',orig:'208 지용실',cat:'staff',r:[14.4,19.6,0,5.4],d:[{s:'t',at:17}],desc:'소모임실입니다.'},
+      {n:10,name:'계단 1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,0,12],d:[{s:'l',at:6}],desc:'홀 옆 주계단입니다. 1층과 3층으로 오갈 수 있습니다.'},
+      {n:11,name:'계단 2',orig:'계단실-2',cat:'core',stair:true,r:[0,3.1,0,5.4],desc:'복도 끝 보조 계단입니다.'},
       {n:9,name:'준비실',orig:'205A·205B 준비실',cat:'staff',off:true,r:[0,3.1,5.4,18.6],d:[{s:'r',at:7.2}],desc:'영상관1 운영을 위한 관계자 공간입니다.',v:true},
     ],
     corridor:{t:'복도',r:[3.1,24.6,5.4,9]},
     core:[
-      {t:'계단',r:[0,3.1,0,5.4]},{t:'계단',r:[35,39.3,0,6.3]},{t:'EV',r:[35.6,38.6,6.3,9.4]},
-      {t:'화장실(남)',r:[35,39.3,9.4,14]},{t:'화장실(여)',r:[35,39.3,14,18.6]},{t:'장애인 화장실',r:[32,35,12,18.6],v:true}],
+      {t:'EV',r:[35.6,38.6,12.1,14]},
+      {t:'화장실(남)',r:[35,39.3,14,16.3]},{t:'화장실(여)',r:[35,39.3,16.3,18.6]},{t:'장애인 화장실',r:[32,35,12,18.6],v:true}],
     amen:['화장실(남·여) · 장애인 화장실','엘리베이터 1대','계단 2곳']},
   f1:{fl:'1F',title:'1층 · 입구 · 휴게',sub:'주출입구로 들어와 엘리베이터로 3층 전시관에 올라갑니다.',summary:'홀 · 휴게실 · 인권도서전',bottom:3.5,
     outline:[[-0.8,0],[39.3,0],[39.3,18.5],[25.6,18.5],[25.6,16],[-0.8,16]],
@@ -53,18 +55,20 @@ const FLOORS = {
       {n:3,name:'대회의실',orig:'108 회의실',cat:'activity',r:[20.9,25.6,7.9,16],d:[{s:'b',at:23.2}],desc:'긴 회의 테이블이 있는 회의실입니다. 단체 관람 안내와 운영 회의에 씁니다.'},
       {n:4,name:'응접실',orig:'111 응접실',cat:'activity',r:[14.8,19.7,0,6],d:[{s:'t',at:17.2}],desc:'방문객과 손님을 맞이하는 공간입니다.'},
       {n:5,name:'사무실',orig:'107 사무실',cat:'staff',r:[19.7,26.1,0,6],d:[{s:'t',at:24.4}],desc:'전시 운영진이 일하는 사무 공간입니다.'},
-      {n:6,name:'보성회실',orig:'107 보성회실',cat:'staff',r:[29.3,32.9,12,16.2],d:[{s:'b',at:31.1}],desc:'관계자 공간입니다.'},
+      {n:6,name:'보성회실',orig:'107 보성회실',cat:'staff',r:[29.3,32.9,12.5,18.5],d:[{s:'b',at:31.1}],desc:'관계자 공간입니다.'},
       {n:7,name:'화광회실',orig:'110A 화광회실',cat:'staff',r:[8.9,14.8,0,6],d:[{s:'t',at:11.8}],desc:'관계자 공간입니다.'},
       {n:8,name:'칸나실',orig:'110 칸나실',cat:'staff',off:true,r:[2.6,8.9,0,6],d:[{s:'t',at:5.8}],desc:'관계자 공간입니다.'},
       {n:9,name:'화락실',orig:'117 화락실',cat:'staff',off:true,r:[18,20.9,7.9,16],d:[{s:'b',at:19.4}],desc:'관계자 공간입니다.',v:true},
       {n:10,name:'설비실',orig:'112 전기실 · 113 발전기실 · 114 보일러실',cat:'staff',off:true,r:[-0.8,18,8.2,16],d:[{s:'b',at:6},{s:'b',at:12.5}],desc:'전기·발전기·보일러 설비 공간입니다. 관계자 외 출입을 제한합니다.'},
       {n:11,name:'창고',orig:'116 창고',cat:'staff',off:true,r:[35.8,39.3,0,3.5],d:[{s:'l',at:1.8}],desc:'물품 보관 공간입니다.'},
+      {n:13,name:'계단 1',orig:'계단실-1',cat:'core',stair:true,r:[35.8,39.3,3.5,12],d:[{s:'l',at:8}],desc:'홀 오른쪽 주계단입니다. 2층 영상관·활동실과 3층 전시관으로 올라갈 수 있습니다.'},
+      {n:14,name:'계단 2',orig:'계단실-2',cat:'core',stair:true,r:[-0.8,2.6,0,6],d:[{s:'t',at:.9}],desc:'부출입구 1 옆 보조 계단입니다.'},
       {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[34,39,-6.5,-1.5],d:[{s:'b',at:36.5}],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
     ],
     corridor:{t:'복도',r:[-0.8,26.1,6,8.2]},
     core:[
-      {t:'계단',r:[-0.8,2.6,0,6]},{t:'계단',r:[35.8,39.3,6.2,11.3]},{t:'EV',r:[33.5,35.9,12.6,15.4]},
-      {t:'화장실(남)',r:[36.4,39.3,11.3,15]},{t:'화장실(여)',r:[36.4,39.3,15,18.5]}],
+      {t:'EV',r:[33.5,35.9,12.6,15.4]},
+      {t:'화장실(남)',r:[36.4,39.3,13.5,16]},{t:'화장실(여)',r:[36.4,39.3,16,18.5]}],
     entrances:[
       {t:'주출입구',x:31,y:0,dir:'up',main:true},
       {t:'부출입구 1',x:-0.8,y:7.1,dir:'right',inside:true},
@@ -166,6 +170,7 @@ function draw(id){
     const open=()=>{focusRoom(rm.n,true);lastFocus=shape;openSheet(rm.n)};
     shape.addEventListener('click',open);
     shape.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
+    if(rm.stair){for(let k=1;k<6;k++){const yy=b.y+b.h*k/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35,'pointer-events':'none'},gR)}}
     const big=b.w>8&&b.h>5, size=Math.min(big?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/info(id,rm).name.length);
     label(gR,rm.lr||rm.r,rm.renamed&&(big||b.w>4.5)?[info(id,rm).name,'('+origOf(rm)+')']:[info(id,rm).name],size,rm.v,(!big&&!rm.v&&b.h<7)?.55:0);
     // number badge
@@ -348,16 +353,42 @@ function closeSheet(){
   if(lastFocus&&lastFocus.focus)lastFocus.focus(); lastFocus=null;
 }
 document.getElementById('sheetBg').addEventListener('click',e=>{if(e.target.id==='sheetBg'&&!editing)closeSheet()});
-document.addEventListener('keydown',e=>{if(LB.open){if(e.key==='Escape')closeLB();if(e.key==='ArrowRight')lbGo(1);if(e.key==='ArrowLeft')lbGo(-1);e.stopPropagation();return}if(e.key==='Escape'&&sheetN!==null&&!editing)closeSheet()},true);
+document.addEventListener('keydown',e=>{if(LB.open){if(e.key==='Escape')closeLB();if(e.key==='+'||e.key==='=')lbZoom(LB.z*1.5);if(e.key==='-')lbZoom(LB.z/1.5);if(LB.z===1&&e.key==='ArrowRight')lbGo(1);if(LB.z===1&&e.key==='ArrowLeft')lbGo(-1);e.stopPropagation();return}if(e.key==='Escape'&&sheetN!==null&&!editing)closeSheet()},true);
 // ---- full-size photo viewer ----
-const LB={open:false,list:[],i:0,name:'',back:null,el:null};
+const LB={open:false,list:[],i:0,name:'',back:null,el:null,z:1,tx:0,ty:0};
 (()=>{const d=document.createElement('div');d.className='lb';d.hidden=true;d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-label','사진 크게 보기');
-  d.innerHTML='<img class="lb-img" alt=""><button class="lb-close" type="button" aria-label="닫기">×</button><button class="lb-nav lb-prev" type="button" aria-label="이전 사진">‹</button><button class="lb-nav lb-next" type="button" aria-label="다음 사진">›</button><span class="lb-count"></span>';
+  d.innerHTML='<div class="lb-stage"><img class="lb-img" alt="" draggable="false"></div><button class="lb-close" type="button" aria-label="닫기">×</button><button class="lb-nav lb-prev" type="button" aria-label="이전 사진">‹</button><button class="lb-nav lb-next" type="button" aria-label="다음 사진">›</button><div class="lb-zoom"><button type="button" class="lb-zo" aria-label="축소">−</button><span class="lb-zl">100%</span><button type="button" class="lb-zi" aria-label="확대">＋</button></div><span class="lb-count"></span><span class="lb-hint">두 번 누르거나 두 손가락으로 확대 · 확대 후 끌어서 이동</span>';
   document.body.appendChild(d);LB.el=d;
+  const img=d.querySelector('.lb-img'), stage=d.querySelector('.lb-stage');
   d.querySelector('.lb-close').onclick=closeLB;d.querySelector('.lb-prev').onclick=()=>lbGo(-1);d.querySelector('.lb-next').onclick=()=>lbGo(1);
-  let x0=null;d.addEventListener('pointerdown',e=>{x0=e.clientX});
-  d.addEventListener('pointerup',e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>40)lbGo(dx<0?1:-1);else if(e.target===d)closeLB()});})();
-function lbShow(){const im=LB.el.querySelector('.lb-img');im.src=LB.list[LB.i];im.alt=`${LB.name} 사진 ${LB.i+1}`;
+  d.querySelector('.lb-zi').onclick=()=>lbZoom(LB.z*1.5);d.querySelector('.lb-zo').onclick=()=>lbZoom(LB.z/1.5);
+  // zoom around a screen point (cx,cy)
+  window.lbZoom=(nz,cx,cy)=>{nz=Math.min(5,Math.max(1,nz));const r=stage.getBoundingClientRect();
+    const px=(cx??r.left+r.width/2)-(r.left+r.width/2), py=(cy??r.top+r.height/2)-(r.top+r.height/2);
+    LB.tx=px-(px-LB.tx)*nz/LB.z; LB.ty=py-(py-LB.ty)*nz/LB.z; LB.z=nz; if(nz===1){LB.tx=0;LB.ty=0} lbApply()};
+  window.lbApply=()=>{const r=img.getBoundingClientRect(),w=r.width/LB.z,h=r.height/LB.z, mx=Math.max(0,(w*LB.z-w)/2), my=Math.max(0,(h*LB.z-h)/2);
+    LB.tx=Math.max(-mx,Math.min(mx,LB.tx)); LB.ty=Math.max(-my,Math.min(my,LB.ty));
+    img.style.transform=`translate(${LB.tx}px,${LB.ty}px) scale(${LB.z})`; d.classList.toggle('zoomed',LB.z>1);
+    d.querySelector('.lb-zl').textContent=Math.round(LB.z*100)+'%'};
+  img.addEventListener('dblclick',e=>{e.preventDefault();lbZoom(LB.z>1?1:2.5,e.clientX,e.clientY)});
+  d.addEventListener('wheel',e=>{if(!LB.open)return;e.preventDefault();lbZoom(LB.z*(e.deltaY<0?1.2:1/1.2),e.clientX,e.clientY)},{passive:false});
+  const pts=new Map(); let start=null, pinch=null, lastTap=0, moved=false, downT=null;
+  d.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;downT=e.target;
+    if(pts.size===1)start={x:e.clientX,y:e.clientY,tx:LB.tx,ty:LB.ty};
+    if(pts.size===2){const [a,b]=[...pts.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y),z:LB.z,cx:(a.x+b.x)/2,cy:(a.y+b.y)/2}}});
+  d.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pinch&&pts.size===2){const [a,b]=[...pts.values()];moved=true;lbZoom(pinch.z*Math.hypot(a.x-b.x,a.y-b.y)/pinch.d,pinch.cx,pinch.cy);return}
+    if(start&&LB.z>1){const dx=e.clientX-start.x,dy=e.clientY-start.y;if(Math.abs(dx)+Math.abs(dy)>4)moved=true;LB.tx=start.tx+dx;LB.ty=start.ty+dy;lbApply()}});
+  const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+    if(pinch){if(pts.size<2)pinch=null;start=null;return}
+    if(!start)return;const dx=e.clientX-start.x;start=null;
+    if(LB.z>1){return}
+    if(Math.abs(dx)>40){lbGo(dx<0?1:-1);return}
+    if(e.pointerType!=='mouse'&&downT===img){const now=Date.now();if(now-lastTap<300){lbZoom(2.5,e.clientX,e.clientY);lastTap=0;return}lastTap=now;return}
+    if(downT===d||downT===stage)closeLB()};
+  d.addEventListener('pointerup',end);d.addEventListener('pointercancel',e=>{pts.delete(e.pointerId);pinch=null;start=null});})();
+function lbShow(){const im=LB.el.querySelector('.lb-img');LB.z=1;LB.tx=0;LB.ty=0;im.style.transform='';LB.el.classList.remove('zoomed');LB.el.querySelector('.lb-zl').textContent='100%';
+  im.src=LB.list[LB.i];im.alt=`${LB.name} 사진 ${LB.i+1}`;
   const many=LB.list.length>1;LB.el.querySelector('.lb-count').textContent=many?`${LB.i+1} / ${LB.list.length}`:'';
   LB.el.querySelectorAll('.lb-nav').forEach(b=>b.hidden=!many);}
 function lbGo(k){if(LB.list.length<2)return;LB.i=(LB.i+k+LB.list.length)%LB.list.length;lbShow()}
