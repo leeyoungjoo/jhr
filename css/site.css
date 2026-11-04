@@ -117,7 +117,7 @@ a{color:inherit}
 .post.compact .post-photos .post-ph{aspect-ratio:16/9}
 .post-meta{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
 .post-meta .pin{font-weight:800;font-size:11px;letter-spacing:.06em;padding:2px 8px;border-radius:999px;background:var(--brand);color:#fff}
-.post h3{margin:0;font-family:var(--display);font-weight:900;font-size:19px;line-height:1.35;letter-spacing:-.01em}
+.post h3{margin:0;font-weight:900;font-size:19px;line-height:1.35;letter-spacing:-.01em}
 .post-ex{margin:0;font-size:14px;color:var(--muted)}
 .post-body{font-size:15px;line-height:1.8}
 .post-photos{display:grid;gap:6px;margin-top:6px}
@@ -319,7 +319,7 @@ body:not(.is-admin) .admin-only{display:none!important}
 .post-row.pinned{background:#FFF5CF;border-color:#EFC94C;box-shadow:inset 5px 0 0 var(--brand)}
 .post-row.pinned .post-meta .team{background:#fff}
 .post-row .row-main{display:flex;align-items:baseline;gap:12px;min-width:0}
-.post-row h3{margin:0;flex:1;min-width:0;font-family:var(--display);font-weight:900;font-size:18px;line-height:1.35;letter-spacing:-.01em;overflow-wrap:anywhere}
+.post-row h3{margin:0;flex:1;min-width:0;font-weight:900;font-size:18px;line-height:1.35;letter-spacing:-.01em;overflow-wrap:anywhere}
 .post-row .views{flex:none;font-size:12.5px;color:var(--muted);white-space:nowrap}
 .post-detail .views{font-size:12.5px;color:var(--muted);margin-top:-2px}
 .post-detail .views b{font-weight:700}
