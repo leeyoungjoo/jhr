@@ -253,3 +253,9 @@ body:not(.is-admin) .admin-only{display:none!important}
 .remember-note{margin:6px 0 0 26px;font-size:12.5px;color:var(--muted);line-height:1.6}
 .sheet-body.edit input[type=checkbox]{width:18px!important;height:18px;padding:0!important;margin:0;flex:none;accent-color:var(--brand);border-radius:4px}
 .sheet-body.edit label.check{display:flex!important;align-items:center;gap:8px;font-size:14.5px;font-weight:700;color:var(--ink);cursor:pointer}
+
+/* Noto Sans KR: 상단 메뉴 · 인용문 */
+.brand-txt b,.brand-txt span,.nav-links a,.nav-login,.nav-user,.quote p,.quote footer{font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+.brand-txt b{font-weight:900}
+.nav-links a{font-weight:700}
+.quote p{font-weight:700}
