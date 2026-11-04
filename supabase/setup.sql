@@ -53,3 +53,27 @@ create policy "photos editor delete" on storage.objects for delete to authentica
 insert into public.editors (email) values
   ('ksgi@example.com')
 on conflict do nothing;
+
+-- 5) 진행상황 공유 게시판 (누구나 보기, 편집자만 쓰기)
+create table if not exists public.posts (
+  id uuid primary key default gen_random_uuid(),
+  title text not null check (char_length(title) between 1 and 120),
+  body text not null default '' check (char_length(body) <= 5000),
+  photos jsonb not null default '[]'::jsonb,
+  pinned boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  author uuid default auth.uid()
+);
+alter table public.posts enable row level security;
+drop policy if exists "posts read" on public.posts;
+drop policy if exists "posts insert" on public.posts;
+drop policy if exists "posts update" on public.posts;
+drop policy if exists "posts delete" on public.posts;
+create policy "posts read"   on public.posts for select to anon, authenticated using (true);
+create policy "posts insert" on public.posts for insert to authenticated with check ((select public.is_editor()));
+create policy "posts update" on public.posts for update to authenticated using ((select public.is_editor())) with check ((select public.is_editor()));
+create policy "posts delete" on public.posts for delete to authenticated using ((select public.is_editor()));
+do $$ begin
+  alter publication supabase_realtime add table public.posts;
+exception when duplicate_object then null; end $$;
