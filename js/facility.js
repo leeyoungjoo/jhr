@@ -161,10 +161,13 @@ function draw(id){
   const rooms=[...F.rooms].sort((a,b)=>(a.cat==='hall'?-1:0)-(b.cat==='hall'?-1:0));
   rooms.forEach(rm=>{
     const b=rectOf(rm.r);
-    if(rm.off){   // 시설정보가 필요 없는 실: 흐리게만 표시
-      el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:'var(--c-off)',stroke:'var(--plan-wall)','stroke-width':.08,'stroke-opacity':.35,class:'room-off'},gR);
-      const sz=Math.min(b.w>4.5?1:.9,((rm.v?b.h:b.w)-0.8)/rm.name.length);
-      const t=label(gR,rm.lr||rm.r,[rm.name],sz,rm.v); t.style.fill='var(--off-label)'; t.setAttribute('font-weight',600);
+    if(rm.off){   // 시설정보가 필요 없는 실: 원래 색·패턴 그대로, 흐리게만 (클릭 없음)
+      const g=el('g',{class:'room-off',opacity:.55,'pointer-events':'none'},gR);
+      el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12},g);
+      if(rm.outdoor)g.lastChild.setAttribute('stroke-dasharray','.5 .35');
+      if(rm.stair){for(let k=1;k<6;k++){const yy=b.y+b.h*k/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35},g)}}
+      const sz=Math.min(b.w>8&&b.h>5?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/rm.name.length);
+      label(g,rm.lr||rm.r,[rm.name],sz,rm.v);
       return;
     }
     const shape=el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12,class:'room-shape','data-n':rm.n,tabindex:0,role:'button','aria-label':info(id,rm).name+' 상세보기 열기'},gR);
