@@ -61,6 +61,7 @@ create table if not exists public.posts (
   body text not null default '' check (char_length(body) <= 5000),
   photos jsonb not null default '[]'::jsonb,
   pinned boolean not null default false,
+  team text not null default '청년부 기획팀' check (team in ('청년부 기획팀','대외섭외','도슨트','환경미화','실내안내','주차안내','방송/기록/의료')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   author uuid default auth.uid()

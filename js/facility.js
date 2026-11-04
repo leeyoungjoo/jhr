@@ -237,7 +237,8 @@ function renderRooms(id){
   liveRooms(F).forEach(rm=>{
     const I=info(id,rm);
     const d=document.createElement('article');d.className='room';d.id='room-'+rm.n;
-    d.innerHTML=`<div class="room-top"><span class="num" style="background:${CAT[rm.cat].color}">${dispN(F,rm)}</span><div><h3 class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3>${origOf(rm)&&origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}</div>`:''}</div></div><span class="chip">${CAT[rm.cat].label}</span><p>${esc(I.desc)}</p><button class="more-btn" type="button">자세히 보기 →</button>`;
+    const cover=I.photos[0];
+    d.innerHTML=`<div class="room-ph" style="background:${CAT[rm.cat].color}">${cover?`<img src="${esc(cover)}" alt="" loading="lazy">`:'<span>사진 준비 중</span>'}</div><div class="room-top"><span class="num" style="background:${CAT[rm.cat].color}">${dispN(F,rm)}</span><div><h3 class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3>${origOf(rm)&&origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}</div>`:''}</div></div><span class="chip">${CAT[rm.cat].label}</span><p>${esc(I.desc)}</p><button class="more-btn" type="button">자세히 보기 →</button>`;
     d.addEventListener('click',e=>{focusRoom(rm.n,true);lastFocus=d.querySelector('.more-btn');openSheet(rm.n)});
     box.appendChild(d);
   });
@@ -334,7 +335,7 @@ function openEditor(rm){
     const files=[...fileIn.files]; if(!files.length)return;
     for(let k=0;k<files.length;k++){
       st.textContent=`사진 올리는 중… (${k+1}/${files.length})`;
-      try{photos.push(await uploadPhoto(key,files[k]));drawPhotos();}
+      try{photos.unshift(await uploadPhoto(key,files[k]));drawPhotos();}   // 최신 사진이 맨 앞(대표 사진)
       catch(e){st.textContent=`${files[k].name}을(를) 올리지 못했습니다. ${'다시 시도해 주세요.'}`;fileIn.value='';return}
     }
     st.textContent='사진을 추가했습니다. 저장을 눌러야 반영됩니다.'; fileIn.value='';

@@ -9,6 +9,9 @@ const authStore={
 };
 const SB=(window.supabase&&window.SUPABASE_URL)?window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY,{auth:{storage:authStore,persistSession:true,autoRefreshToken:true}}):null;
 let USER=null, POSTS=[], postsLoaded=false, authReady=!SB;
+const TEAMS=['청년부 기획팀','대외섭외','도슨트','환경미화','실내안내','주차안내','방송/기록/의료'];
+let curTeam=(()=>{const t=ls.get('jhr-team');return TEAMS.includes(t)?t:TEAMS[0]})();
+const teamOf=p=>TEAMS.includes(p.team)?p.team:TEAMS[0];
 
 // ---------- router ----------
 const PAGES=['home','about','facility','news'];
@@ -130,7 +133,7 @@ function postCard(p,compact){
   const gallery=ph.length?`<div class="post-photos n${Math.min(ph.length,4)}">${ph.slice(0,compact?1:4).map((u,k)=>`<button type="button" class="post-ph" data-post="${p.id}" data-k="${k}" aria-label="사진 ${k+1} 크게 보기"><img src="${esc(u)}" alt="" loading="lazy">${!compact&&k===3&&ph.length>4?`<span class="more">+${ph.length-4}</span>`:''}</button>`).join('')}</div>`:'';
   return `<article class="post${p.pinned?' pinned':''}${compact?' compact':''}">
     ${compact?gallery:''}
-    <div class="post-meta">${p.pinned?'<span class="pin">공지</span>':''}<time datetime="${esc(p.created_at)}">${fmtDate(p.created_at)}</time></div>
+    <div class="post-meta"><span class="team">${esc(teamOf(p))}</span>${p.pinned?'<span class="pin">공지</span>':''}<time datetime="${esc(p.created_at)}">${fmtDate(p.created_at)}</time></div>
     <h3>${esc(p.title)}</h3>
     ${compact?`<p class="post-ex">${esc((p.body||'').slice(0,90))}${(p.body||'').length>90?'…':''}</p>`:`<div class="post-body">${fmtBody(p.body||'')}</div>${gallery}`}
     ${!compact&&EDIT.can?`<div class="post-admin"><button type="button" class="link-btn" data-edit="${p.id}">수정</button><button type="button" class="link-btn danger" data-del="${p.id}">삭제</button></div>`:''}
@@ -139,8 +142,13 @@ function postCard(p,compact){
 function renderPosts(){
   const list=document.getElementById('postList'), latest=document.getElementById('latestPosts');
   const addBtn=document.getElementById('newPostBtn'); if(addBtn)addBtn.hidden=!EDIT.can;
+  const tabs=document.getElementById('teamTabs');
+  if(tabs){
+    tabs.innerHTML=TEAMS.map(t=>{const n=POSTS.filter(p=>teamOf(p)===t).length;return `<button type="button" role="tab" class="team-tab" data-team="${esc(t)}" aria-selected="${t===curTeam}">${esc(t)}${n?`<span class="cnt">${n}</span>`:''}</button>`}).join('');
+  }
   if(list){
-    list.innerHTML=!SB?'<p class="empty">게시판을 불러올 수 없습니다.</p>':!postsLoaded?'<p class="empty">불러오는 중…</p>':POSTS.length?POSTS.map(p=>postCard(p,false)).join(''):`<p class="empty">아직 올라온 소식이 없습니다.${EDIT.can?' ‘새 소식 쓰기’로 첫 소식을 올려 보세요.':''}</p>`;
+    const mine=POSTS.filter(p=>teamOf(p)===curTeam);
+    list.innerHTML=!SB?'<p class="empty">게시판을 불러올 수 없습니다.</p>':!postsLoaded?'<p class="empty">불러오는 중…</p>':mine.length?mine.map(p=>postCard(p,false)).join(''):`<p class="empty">${esc(curTeam)} 탭에 아직 올라온 소식이 없습니다.${EDIT.can?' ‘새 소식 쓰기’로 첫 소식을 올려 보세요.':''}</p>`;
   }
   if(latest){
     const few=POSTS.slice(0,3);
@@ -149,6 +157,7 @@ function renderPosts(){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheetMode&&!LB.open)closeModal()});
 document.addEventListener('click',e=>{
+  const tt=e.target.closest('.team-tab'); if(tt){curTeam=tt.dataset.team;ls.set('jhr-team',curTeam);renderPosts();return}
   const fc=e.target.closest('.floor-card[data-floor]');
   if(fc){current=fc.dataset.floor;if(document.getElementById('dir').dataset.ready)show(current)}
   const ph=e.target.closest('.post-ph');
@@ -168,6 +177,7 @@ function openPostEditor(post){
   let photos=post?[...(post.photos||[])]:[];
   const sh=openModal(`<div class="sheet-body edit">
     <div class="title-row"><div><div class="eyebrow">진행상황 공유</div><h3 id="sheetTitle">${post?'소식 수정':'새 소식 쓰기'}</h3></div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
+    <label for="p-team">팀</label><select id="p-team">${TEAMS.map(t=>`<option${t===(post?teamOf(post):curTeam)?' selected':''}>${esc(t)}</option>`).join('')}</select>
     <label for="p-title">제목</label><input id="p-title" maxlength="120" value="${esc(post?.title||'')}" placeholder="예) 3층 전시관 패널 설치를 마쳤습니다">
     <label for="p-body">내용</label><textarea id="p-body" rows="7" maxlength="5000" placeholder="진행 상황을 자유롭게 적어 주세요">${esc(post?.body||'')}</textarea>
     <label class="check"><input type="checkbox" id="p-pin" ${post?.pinned?'checked':''}> 맨 위에 고정 (공지)</label>
@@ -190,7 +200,7 @@ function openPostEditor(post){
     const files=[...fileIn.files]; if(!files.length)return;
     for(let k=0;k<files.length;k++){
       st.textContent=`사진 올리는 중… (${k+1}/${files.length})`;
-      try{photos.push(await uploadPhoto('posts',files[k]));draw();}
+      try{photos.unshift(await uploadPhoto('posts',files[k]));draw();}
       catch(err){st.textContent=`${files[k].name}을(를) 올리지 못했습니다. 다시 시도해 주세요.`;fileIn.value='';return}
     }
     st.textContent='사진을 추가했습니다.'; fileIn.value='';
@@ -200,12 +210,13 @@ function openPostEditor(post){
     const title=document.getElementById('p-title').value.trim();
     if(!title){st.textContent='제목을 입력해 주세요.';document.getElementById('p-title').focus();return}
     const btn=e.currentTarget; btn.disabled=true; st.textContent='저장하는 중…';
-    const row={title,body:document.getElementById('p-body').value.trim(),photos:photos.slice(0,30),pinned:document.getElementById('p-pin').checked,updated_at:new Date().toISOString()};
+    const row={team:document.getElementById('p-team').value,title,body:document.getElementById('p-body').value.trim(),photos:photos.slice(0,30),pinned:document.getElementById('p-pin').checked,updated_at:new Date().toISOString()};
     const q=post?SB.from('posts').update(row).eq('id',post.id).select().single():SB.from('posts').insert(row).select().single();
     const {data,error}=await q;
     if(error){btn.disabled=false;st.textContent=error.code==='42501'||/row-level security/i.test(error.message||'')?'관리자만 올릴 수 있습니다. 다시 로그인해 주세요.':'저장하지 못했습니다. 잠시 후 다시 시도해 주세요.';return}
     POSTS=post?POSTS.map(x=>x.id===data.id?data:x):[data,...POSTS];
     POSTS.sort((a,b)=>(b.pinned-a.pinned)||(new Date(b.created_at)-new Date(a.created_at)));
+    curTeam=row.team; ls.set('jhr-team',curTeam);
     closeModal(); renderPosts();
   };
   document.getElementById('p-title').focus();
