@@ -170,7 +170,7 @@ function postDetail(p){
   return `<article class="post post-detail${p.pinned?' pinned':''}">
     ${metaHTML(p)}
     <h3>${esc(p.title)}</h3>
-    <div class="views">조회 <b>${p.views||0}</b></div>
+    <div class="detail-sub"><span class="views">조회 <b>${p.views||0}</b></span><button type="button" class="copy-btn" data-copy="${p.id}">글 복사</button></div>
     <div class="post-body">${fmtBody(p.body||'')}</div>${gallery}
   </article>
   <div class="detail-nav"><a class="btn ghost" href="#/news">← 목록으로</a>${EDIT.can?`<div class="detail-act"><button type="button" class="btn ghost" data-edit="${p.id}">수정</button><button type="button" class="btn ghost danger" data-del="${p.id}">삭제</button><button type="button" class="btn brand" data-newpost>글쓰기</button></div>`:''}</div>`;
@@ -202,12 +202,23 @@ document.addEventListener('click',e=>{
   const tt=e.target.closest('.team-tab'); if(tt){curTeam=tt.dataset.team;ls.set('jhr-team',curTeam);renderPosts();return}
   const fc=e.target.closest('.floor-card[data-floor]');
   if(fc){current=fc.dataset.floor;if(document.getElementById('dir').dataset.ready)show(current)}
+  const cp=e.target.closest('[data-copy]'); if(cp){copyPost(cp);return}
   const ph=e.target.closest('.post-ph');
   if(ph){e.preventDefault();const p=POSTS.find(x=>x.id===ph.dataset.post);if(p)openLB(p.photos,+ph.dataset.k,p.title);return}
   const ed=e.target.closest('[data-edit]'); if(ed){lastFocus=ed;openPostEditor(POSTS.find(x=>x.id===ed.dataset.edit));return}
   const del=e.target.closest('[data-del]'); if(del){deletePost(del.dataset.del);return}
   const nb=e.target.closest('#newPostBtn,[data-newpost]'); if(nb){lastFocus=nb;openPostEditor(null)}
 });
+// 글 복사: 제목 + 내용을 클립보드로
+async function copyPost(btn){
+  const p=POSTS.find(x=>x.id===btn.dataset.copy); if(!p)return;
+  const text=p.title+'\n\n'+(p.body||'');
+  let ok=false;
+  try{await navigator.clipboard.writeText(text);ok=true}catch(e){}
+  if(!ok){const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,text.length);try{ok=document.execCommand('copy')}catch(e){}ta.remove()}
+  btn.textContent=ok?'복사했습니다 ✓':'복사하지 못했습니다'; btn.classList.toggle('done',ok);
+  clearTimeout(btn._t); btn._t=setTimeout(()=>{btn.textContent='글 복사';btn.classList.remove('done')},1800);
+}
 async function deletePost(id){
   const p=POSTS.find(x=>x.id===id); if(!p)return;
   if(!confirm(`‘${p.title}’ 소식을 삭제할까요? 되돌릴 수 없습니다.`))return;
