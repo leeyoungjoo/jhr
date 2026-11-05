@@ -143,8 +143,26 @@ const fmtDate=iso=>{const d=new Date(iso);return `${d.getFullYear()}. ${d.getMon
 const fmtBody=t=>esc(t).replace(/\n/g,'<br>');
 async function loadPosts(){
   if(!SB||!CAN_VIEW)return;
-  const {data,error}=await SB.from('posts').select('*').order('pinned',{ascending:false}).order('created_at',{ascending:false}).limit(200);
-  if(error)return; POSTS=data; postsLoaded=true; renderPosts();
+  const {data,error}=await SB.from('posts').select('*').order('pinned',{ascending:false}).order('pin_order',{ascending:true,nullsFirst:false}).order('created_at',{ascending:false}).limit(200);
+  if(error)return; POSTS=sortPosts(data); postsLoaded=true; renderPosts();
+}
+// 정렬: 공지(관리자가 정한 순서) → 일반 글(최신순)
+const pinKey=p=>p.pin_order==null?1e9:p.pin_order;
+const sortPosts=a=>a.sort((x,y)=>(y.pinned-x.pinned)||(x.pinned&&y.pinned?(pinKey(x)-pinKey(y)):0)||(new Date(y.created_at)-new Date(x.created_at)));
+// 공지 순서 바꾸기 (관리자 전용): 보이는 목록에서 바로 위/아래 공지와 자리를 바꾼 뒤 전체 공지 순서를 1,2,3…으로 다시 매김
+let pinBusy=false;
+async function movePin(id,dir){
+  if(!EDIT.can||pinBusy)return;
+  const vis=(curTeam===ALL?POSTS:POSTS.filter(p=>teamOf(p)===curTeam)).filter(p=>p.pinned);
+  const i=vis.findIndex(p=>p.id===id), j=i+dir; if(i<0||j<0||j>=vis.length)return;
+  const all=POSTS.filter(p=>p.pinned);
+  const a=all.indexOf(vis[i]), b=all.indexOf(vis[j]); [all[a],all[b]]=[all[b],all[a]];
+  const changes=[]; all.forEach((p,k)=>{if(p.pin_order!==k+1){p.pin_order=k+1;changes.push(p)}});
+  sortPosts(POSTS); renderPosts();
+  pinBusy=true;
+  const res=await Promise.all(changes.map(p=>SB.from('posts').update({pin_order:p.pin_order}).eq('id',p.id)));
+  pinBusy=false;
+  if(res.some(r=>r.error)){alert('순서를 저장하지 못했습니다. 다시 시도해 주세요.');loadPosts();}
 }
 function postCard(p,compact){
   const ph=(p.photos||[]);
@@ -162,6 +180,7 @@ function postRow(p){
   return `<a class="post-row${p.pinned?' pinned':''}" href="#/news/${p.id}">
     ${metaHTML(p)}
     <div class="row-main"><h3>${esc(p.title)}</h3><span class="views" aria-label="조회수 ${p.views||0}">조회 ${p.views||0}</span></div>
+    ${p.pinned&&EDIT.can?`<span class="pin-move"><button type="button" data-pinmv="-1" data-id="${p.id}" aria-label="공지 위로">▲</button><button type="button" data-pinmv="1" data-id="${p.id}" aria-label="공지 아래로">▼</button></span>`:''}
   </a>`;
 }
 function postDetail(p){
@@ -191,6 +210,8 @@ function renderPosts(){
   if(list){
     const mine=curTeam===ALL?POSTS:POSTS.filter(p=>teamOf(p)===curTeam);
     list.innerHTML=!SB?'<p class="empty">게시판을 불러올 수 없습니다.</p>':!postsLoaded?'<p class="empty">불러오는 중…</p>':mine.length?mine.map(postRow).join(''):`<p class="empty">${curTeam===ALL?'아직 올라온 소식이 없습니다.':esc(curTeam)+' 탭에 아직 올라온 소식이 없습니다.'}${EDIT.can?' 아래 ‘글쓰기’로 첫 소식을 올려 보세요.':''}</p>`;
+    const pr=list.querySelectorAll('.post-row.pinned');   // 맨 위 공지는 ▲, 맨 아래 공지는 ▼ 비활성
+    if(pr.length){pr[0].querySelector('[data-pinmv="-1"]')?.setAttribute('disabled','');pr[pr.length-1].querySelector('[data-pinmv="1"]')?.setAttribute('disabled','')}
   }
   if(latest){
     const few=POSTS.slice(0,3);
@@ -202,6 +223,7 @@ document.addEventListener('click',e=>{
   const tt=e.target.closest('.team-tab'); if(tt){curTeam=tt.dataset.team;ls.set('jhr-team',curTeam);if(POST_ID)location.hash='#/news';else renderPosts();return}
   const fc=e.target.closest('.floor-card[data-floor]');
   if(fc){current=fc.dataset.floor;if(document.getElementById('dir').dataset.ready)show(current)}
+  const pm=e.target.closest('[data-pinmv]'); if(pm){e.preventDefault();e.stopPropagation();movePin(pm.dataset.id,+pm.dataset.pinmv);return}
   const cp=e.target.closest('[data-copy]'); if(cp){copyPost(cp);return}
   const ph=e.target.closest('.post-ph');
   if(ph){e.preventDefault();const p=POSTS.find(x=>x.id===ph.dataset.post);if(p)openLB(p.photos,+ph.dataset.k,p.title);return}
@@ -265,11 +287,13 @@ function openPostEditor(post){
     if(!title){st.textContent='제목을 입력해 주세요.';document.getElementById('p-title').focus();return}
     const btn=e.currentTarget; btn.disabled=true; st.textContent='저장하는 중…';
     const row={team:document.getElementById('p-team').value,title,body:document.getElementById('p-body').value.trim(),photos:photos.slice(0,30),pinned:document.getElementById('p-pin').checked,updated_at:new Date().toISOString()};
+    if(row.pinned&&!post?.pinned){const ps=POSTS.filter(x=>x.pinned&&x.id!==post?.id).map(pinKey).filter(v=>v<1e9);row.pin_order=(ps.length?Math.min(...ps):1)-1;}   // 새 공지는 맨 위로
+    if(!row.pinned)row.pin_order=null;
     const q=post?SB.from('posts').update(row).eq('id',post.id).select().single():SB.from('posts').insert(row).select().single();
     const {data,error}=await q;
     if(error){btn.disabled=false;st.textContent=error.code==='42501'||/row-level security/i.test(error.message||'')?'관리자만 올릴 수 있습니다. 다시 로그인해 주세요.':'저장하지 못했습니다. 잠시 후 다시 시도해 주세요.';return}
     POSTS=post?POSTS.map(x=>x.id===data.id?data:x):[data,...POSTS];
-    POSTS.sort((a,b)=>(b.pinned-a.pinned)||(new Date(b.created_at)-new Date(a.created_at)));
+    sortPosts(POSTS);
     if(curTeam!==ALL){curTeam=row.team; ls.set('jhr-team',curTeam);}
     closeModal(); renderPosts();
   };

@@ -110,3 +110,6 @@ begin
 end $$;
 revoke all on function public.bump_view(uuid) from public, anon;
 grant execute on function public.bump_view(uuid) to authenticated;
+
+-- 공지(상단 고정) 순서
+alter table public.posts add column if not exists pin_order integer;

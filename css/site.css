@@ -352,3 +352,10 @@ body:not(.is-admin) .admin-only{display:none!important}
 .post.post-detail{padding:36px 30px 40px;gap:12px}
 .post-detail .post-body{padding-top:12px}
 @media (max-width:560px){.post.post-detail{padding:28px 20px 32px}}
+/* 공지 순서 바꾸기 (관리자) */
+.post-row{position:relative}
+.post-row.pinned .pin-move{position:absolute;top:12px;right:14px;display:flex;gap:4px}
+.pin-move button{all:unset;cursor:pointer;width:30px;height:28px;display:grid;place-items:center;border-radius:8px;border:1.5px solid #EFC94C;background:#fff;color:var(--brand);font-size:12px}
+.pin-move button:hover{background:var(--brand);border-color:var(--brand);color:#fff}
+.pin-move button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pin-move button[disabled]{opacity:.3;pointer-events:none}
