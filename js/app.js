@@ -179,14 +179,14 @@ function renderPosts(){
   const list=document.getElementById('postList'), latest=document.getElementById('latestPosts');
   const addBtn=document.getElementById('newPostBtn'); if(addBtn)addBtn.hidden=!EDIT.can||!!POST_ID;
   const tabs=document.getElementById('teamTabs');
-  if(tabs)tabs.hidden=!!POST_ID;
+  if(tabs){
+    tabs.hidden=false;
+    tabs.innerHTML=[ALL,...TEAMS].map(t=>{const n=t===ALL?POSTS.length:POSTS.filter(p=>teamOf(p)===t).length;return `<button type="button" role="tab" class="team-tab" data-team="${esc(t)}" aria-selected="${t===curTeam}">${esc(t)}${n?`<span class="cnt">${n}</span>`:''}</button>`}).join('');
+  }
   if(list&&POST_ID){
     const p=POSTS.find(x=>x.id===POST_ID);
     list.innerHTML=p?postDetail(p):!postsLoaded?'<p class="empty">불러오는 중…</p>':'<p class="empty">글을 찾을 수 없습니다. 삭제되었을 수 있습니다.</p><div class="detail-nav"><a class="btn ghost" href="#/news">← 목록으로</a></div>';
     return;
-  }
-  if(tabs){
-    tabs.innerHTML=[ALL,...TEAMS].map(t=>{const n=t===ALL?POSTS.length:POSTS.filter(p=>teamOf(p)===t).length;return `<button type="button" role="tab" class="team-tab" data-team="${esc(t)}" aria-selected="${t===curTeam}">${esc(t)}${n?`<span class="cnt">${n}</span>`:''}</button>`}).join('');
   }
   if(list){
     const mine=curTeam===ALL?POSTS:POSTS.filter(p=>teamOf(p)===curTeam);
@@ -199,7 +199,7 @@ function renderPosts(){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheetMode&&!LB.open)closeModal()});
 document.addEventListener('click',e=>{
-  const tt=e.target.closest('.team-tab'); if(tt){curTeam=tt.dataset.team;ls.set('jhr-team',curTeam);renderPosts();return}
+  const tt=e.target.closest('.team-tab'); if(tt){curTeam=tt.dataset.team;ls.set('jhr-team',curTeam);if(POST_ID)location.hash='#/news';else renderPosts();return}
   const fc=e.target.closest('.floor-card[data-floor]');
   if(fc){current=fc.dataset.floor;if(document.getElementById('dir').dataset.ready)show(current)}
   const cp=e.target.closest('[data-copy]'); if(cp){copyPost(cp);return}
