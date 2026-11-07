@@ -268,7 +268,9 @@ function openSheet(n){
   const F=FLOORS[current], rm=F.rooms.find(r=>r.n===n); if(!rm)return;
   sheetN=n; editing=false; lastFocus=lastFocus||document.activeElement;
   const I=info(current,rm);
-  const photos=I.photos.length?I.photos.map(photoUrl):[null,null,null];
+  // 대표 이미지(카드에 보이는 사진)를 상세보기 첫 장으로, 같은 사진이 사진 목록에도 있으면 한 번만
+  const all=I.cover?[I.cover,...I.photos.filter(p=>photoUrl(p)!==photoUrl(I.cover))]:I.photos;
+  const photos=all.length?all.map(photoUrl):[null,null,null];
   let pi=0;
   const rooms=liveRooms(F), i=rooms.indexOf(rm), prev=rooms[(i-1+rooms.length)%rooms.length], next=rooms[(i+1)%rooms.length];
   const sh=document.getElementById('sheet');
