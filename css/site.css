@@ -359,3 +359,5 @@ body:not(.is-admin) .admin-only{display:none!important}
 .pin-move button:hover{background:var(--brand);border-color:var(--brand);color:#fff}
 .pin-move button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .pin-move button[disabled]{opacity:.3;pointer-events:none}
+/* PC: 페이지 머리말 설명 한 줄로 */
+@media (min-width:900px){.page-head p{max-width:none}}
