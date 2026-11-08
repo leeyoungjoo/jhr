@@ -66,7 +66,7 @@ const FLOORS = {
       {n:11,name:'창고',orig:'116 창고',cat:'staff',off:true,r:[35,39.3,0,3.5],d:[{s:'l',at:1.8}],desc:'물품 보관 공간입니다.'},
       {n:13,name:'계단1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,3.5,10.5],d:[{s:'t',at:37.15}],desc:'홀 오른쪽 주계단입니다. 2층 영상관·활동실과 3층 전시관으로 올라갈 수 있습니다.'},
       {n:14,name:'계단2',orig:'계단실-2',cat:'core',stair:true,off:true,v:true,r:[-0.8,2.6,0,6],d:[{s:'t',at:.9}],desc:'복도 끝 보조 계단입니다.'},
-      {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[34,39,-6.5,-1.5],v:true,d:[{s:'b',at:36.5}],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
+      {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[36.5,41.5,-6.5,-1.5],v:true,d:[{s:'b',at:39}],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
     ],
     corridor:{t:'복도',r:[-0.8,26.1,6,8.2]},
     core:[
