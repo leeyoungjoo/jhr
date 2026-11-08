@@ -9,13 +9,12 @@ const CAT = {
 };
 // rooms: [x0,x1,y0,y1] in metres; x along the long side (39.3 m), y from the main-entrance side (0) to the back (18.6)
 const FLOORS = {
-  f3:{fl:'3F',title:'3층 · 전시관',sub:'인권교육 특별展 메인 전시가 열리는 층입니다.',summary:'전시관 · 홀 · 유아실',
+  f3:{fl:'3F',title:'3층 · 전시관',sub:'인권교육 특별展 메인 전시가 열리는 층입니다.',summary:'전시관 · 홀',
     outline:[[0,0],[39.3,0],[39.3,18.6],[25.8,18.6],[25.8,16.6],[0,16.6]],
     rooms:[
       {n:1,name:'전시관',orig:'303 대강당',renamed:true,cat:'exhibit',r:[3.1,25.8,0,16.6],
        desc:'인권교육 특별展의 메인 전시장입니다. 주제별 전시 패널과 체험 코너, 포토존을 차례로 둘러볼 수 있습니다.'},
       {n:2,name:'홀',orig:'301 홀',cat:'hall',r:[25.8,35,0,10.6],lr:[30,35,0,10.6],desc:'엘리베이터와 계단에서 내리면 바로 만나는 로비입니다. 전시관 입장 전 잠시 기다리는 공간으로 씁니다.'},
-      {n:3,name:'유아실',orig:'302 유아실',cat:'rest',off:true,r:[25.8,28.8,13.7,16.3],d:[{s:'r',at:15}],desc:'영유아와 함께 온 관람객이 쉬거나 아이를 돌볼 수 있는 공간입니다.'},
       {n:4,name:'무궁화실',orig:'304 무궁화실',cat:'staff',off:true,r:[30,31.8,13.7,17.4],d:[{s:'l',at:15.5}],desc:'운영 지원 공간입니다.'},
       {n:5,name:'방송실',orig:'303A 방송실',cat:'staff',off:true,r:[25.8,28.8,10.9,13.5],d:[{s:'r',at:12.2}],desc:'전시관 음향·영상을 운영하는 관계자 공간입니다.'},
       {n:6,name:'창고',orig:'306 창고',cat:'staff',off:true,r:[30,31.8,10.9,13.5],d:[{s:'l',at:12.2}],desc:'전시 물품 보관 공간입니다.'},
@@ -28,18 +27,18 @@ const FLOORS = {
     core:[
       {t:'EV',r:[35.6,38.6,11.4,13.6]},
       {t:'화장실(남)',r:[35,39.3,14,16.3]},{t:'화장실(여)',r:[35,39.3,16.3,18.6]}],
-    amen:['화장실(남·여) · 장애인 화장실','엘리베이터 1대','계단 2곳','유아실']},
+    amen:['화장실(남·여) · 장애인 화장실','엘리베이터 1대','계단 2곳']},
   f2:{fl:'2F',title:'2층 · 영상관 · 활동실',sub:'인권 영상을 보고, 체험 활동에 참여하는 층입니다.',summary:'영상관1·2 · 활동실1·2',
     outline:[[0,0],[39.3,0],[39.3,18.6],[0,18.6]],
     rooms:[
-      {n:1,name:'영상관1',orig:'205 중강당',renamed:true,cat:'video',r:[3.1,16.2,9,18.6],d:[{s:'b',at:5.2},{s:'b',at:14.6}],desc:'좌석이 있는 큰 상영관입니다. 인권 관련 영상을 정해진 시간에 상영합니다.'},
-      {n:2,name:'영상관2',orig:'204 소강당',renamed:true,cat:'video',r:[16.2,24.6,9,18.6],d:[{s:'b',at:20.4}],desc:'작은 상영관입니다. 짧은 영상 상영과 해설 프로그램에 씁니다.'},
+      {n:1,name:'영상관1',orig:'205 중강당',renamed:true,cat:'video',r:[3.1,17.9,9,18.6],d:[{s:'b',at:5.2},{s:'b',at:14.6}],desc:'좌석이 있는 큰 상영관입니다. 인권 관련 영상을 정해진 시간에 상영합니다.'},
+      {n:2,name:'영상관2',orig:'204 소강당',renamed:true,cat:'video',r:[17.9,24.6,9,18.6],d:[{s:'b',at:21.25}],desc:'작은 상영관입니다. 짧은 영상 상영과 해설 프로그램에 씁니다.'},
       {n:3,name:'활동실1',orig:'203 다목적실',renamed:true,cat:'activity',r:[24.6,32,12,18.6],d:[{s:'b',at:28.3}],desc:'체험 워크숍과 생각을 나누는 활동을 하는 공간입니다.'},
-      {n:4,name:'활동실2',orig:'209 행복실',renamed:true,cat:'activity',r:[19.6,24.6,0,5.4],d:[{s:'t',at:22.1}],desc:'보드게임 등 놀이로 인권을 배우는 활동 공간입니다.'},
+      {n:4,name:'활동실2',orig:'209 행복실',renamed:true,cat:'activity',r:[17.9,24.6,0,5.4],d:[{s:'t',at:21.25}],desc:'보드게임 등 놀이로 인권을 배우는 활동 공간입니다.'},
       {n:5,name:'홀',orig:'201 홀',cat:'hall',r:[24.6,35,0,12],desc:'계단과 엘리베이터 앞 로비입니다. 테이블 좌석이 있어 잠시 쉬어 갈 수 있습니다.'},
-      {n:6,name:'사자후실',orig:'206 사자후실',cat:'staff',off:true,r:[3.1,9,0,5.4],d:[{s:'t',at:6}],desc:'소모임실입니다.'},
-      {n:7,name:'대화1실',orig:'207 희망실',renamed:true,cat:'activity',r:[9,14.4,0,5.4],d:[{s:'t',at:11.7}],desc:'소모임실입니다.'},
-      {n:8,name:'대화2실',orig:'208 지용실',renamed:true,cat:'activity',r:[14.4,19.6,0,5.4],d:[{s:'t',at:17}],desc:'소모임실입니다.'},
+      {n:6,name:'사자후실',orig:'206 사자후실',cat:'staff',off:true,r:[3.1,7.8,0,5.4],d:[{s:'t',at:5.45}],desc:'소모임실입니다.'},
+      {n:7,name:'대화1실',orig:'207 희망실',renamed:true,cat:'activity',r:[7.8,12.85,0,5.4],d:[{s:'t',at:10.3}],desc:'소모임실입니다.'},
+      {n:8,name:'대화2실',orig:'208 지용실',renamed:true,cat:'activity',r:[12.85,17.9,0,5.4],d:[{s:'t',at:15.4}],desc:'소모임실입니다.'},
       {n:10,name:'계단 1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,0,10.6],d:[{s:'t',at:37.15}],desc:'홀 옆 주계단입니다. 1층과 3층으로 오갈 수 있습니다.'},
       {n:11,name:'계단 2',orig:'계단실-2',cat:'core',stair:true,off:true,r:[0,3.1,0,5.4],d:[{s:'t',at:1.55}],desc:'복도 끝 보조 계단입니다.'},
       {n:9,name:'준비실',orig:'205A·205B 준비실',cat:'staff',off:true,r:[0,3.1,5.4,18.6],d:[{s:'r',at:7.2}],desc:'영상관1 운영을 위한 관계자 공간입니다.',v:true},
@@ -64,7 +63,7 @@ const FLOORS = {
       {n:10,name:'설비실',orig:'112 전기실 · 113 발전기실 · 114 보일러실',cat:'staff',off:true,r:[-0.8,18,8.2,16],d:[{s:'b',at:6},{s:'b',at:12.5}],desc:'전기·발전기·보일러 설비 공간입니다. 관계자 외 출입을 제한합니다.'},
       {n:11,name:'창고',orig:'116 창고',cat:'staff',off:true,r:[35,39.3,0,3.5],d:[{s:'l',at:1.8}],desc:'물품 보관 공간입니다.'},
       {n:13,name:'계단 1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,3.5,10.5],d:[{s:'t',at:37.15}],desc:'홀 오른쪽 주계단입니다. 2층 영상관·활동실과 3층 전시관으로 올라갈 수 있습니다.'},
-      {n:14,name:'계단 2',orig:'계단실-2',cat:'core',stair:true,off:true,r:[-0.8,2.6,0,6],d:[{s:'t',at:.9}],desc:'부출입구 1 옆 보조 계단입니다.'},
+      {n:14,name:'계단 2',orig:'계단실-2',cat:'core',stair:true,off:true,r:[-0.8,2.6,0,6],d:[{s:'t',at:.9}],desc:'복도 끝 보조 계단입니다.'},
       {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[34,39,-6.5,-1.5],d:[{s:'b',at:36.5}],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
     ],
     corridor:{t:'복도',r:[-0.8,26.1,6,8.2]},
@@ -72,10 +71,8 @@ const FLOORS = {
       {t:'EV',r:[35.6,38.6,11.3,13.5]},
       {t:'화장실(남)',r:[35,39.3,13.9,16.2]},{t:'화장실(여)',r:[35,39.3,16.2,18.5]}],
     entrances:[
-      {t:'주출입구',x:31,y:0,dir:'up',main:true},
-      {t:'부출입구 1',x:-0.8,y:7.1,dir:'right',inside:true},
-      {t:'부출입구 2',x:25.6,y:17.25,dir:'right',len:1.9}],
-    amen:['실외 휴게공간(인권도서전)','주출입구 · 부출입구 2곳','화장실(남·여)','엘리베이터 1대','계단 2곳','주차장 · 장애인 주차구역']}
+      {t:'주출입구',x:31,y:0,dir:'up',main:true}],
+    amen:['실외 휴게공간(인권도서전)','주출입구','화장실(남·여)','엘리베이터 1대','계단 2곳','주차장 · 장애인 주차구역']}
 };
 
 
@@ -87,19 +84,16 @@ const DETAIL = {
   'f3-2':{where:'3층 엘리베이터·계단 앞',use:'입장 대기 · 집결',
     more:'3층에 도착하면 처음 만나는 로비입니다. 단체 관람객이 모여 안내를 받거나, 전시관 입장 전 잠시 기다리는 장소로 씁니다.',
     tips:['화장실과 엘리베이터가 바로 옆에 있습니다']},
-  'f3-3':{where:'3층 홀 안쪽, 방송실 옆',use:'영유아 동반 관람객 휴식',
-    more:'아이와 함께 온 관람객이 잠시 쉬어 갈 수 있는 공간입니다. 관람 중 아이를 돌보거나 쉬어야 할 때 이용해 주세요.',
-    tips:['필요하면 스태프에게 문의해 주세요']},
   'f2-1':{where:'2층 복도 왼쪽, 가장 큰 상영관',use:'인권 영상 상영',
     more:'좌석이 줄지어 놓인 큰 상영관입니다. 인권을 주제로 한 영상을 정해진 시간에 상영하며, 단체 관람객이 함께 보기 좋습니다.',
     tips:['상영 시간표는 현장 안내를 확인해 주세요','상영 중에는 휴대전화를 무음으로 해 주세요']},
   'f2-2':{where:'2층 복도 가운데, 영상관1 옆',use:'짧은 영상 · 해설 프로그램',
     more:'영상관1보다 작은 상영관입니다. 짧은 영상을 보거나 해설이 함께하는 소규모 프로그램을 진행합니다.',
     tips:['소규모 단체가 이용하기 좋습니다']},
-  'f2-3':{where:'2층 홀 위쪽, 다목적실',use:'체험 워크숍 · 생각 나누기',
+  'f2-3':{where:'2층 홀 위쪽',use:'체험 워크숍 · 생각 나누기',
     more:'체험 활동과 워크숍이 열리는 공간입니다. 전시를 보고 느낀 점을 이야기하고, 서로의 생각을 나누는 활동을 합니다.',
     tips:['프로그램 시간은 현장 안내를 확인해 주세요']},
-  'f2-4':{where:'2층 복도 끝, 홀 옆 (행복실)',use:'놀이로 배우는 인권',
+  'f2-4':{where:'2층 복도 끝, 홀 옆',use:'놀이로 배우는 인권',
     more:'보드게임 같은 놀이 활동으로 인권을 쉽고 재미있게 배우는 공간입니다. 어린이와 가족 관람객에게 추천합니다.',
     tips:['놀이 도구는 사용 후 제자리에 정리해 주세요']},
   'f2-5':{where:'2층 엘리베이터·계단 앞',use:'로비 · 휴식',
@@ -111,10 +105,10 @@ const DETAIL = {
   'f1-1':{where:'1층, 주출입구 바로 안쪽',use:'관람 안내 · 이동',
     more:'주출입구로 들어오면 만나는 로비입니다. 이곳에서 관람 안내를 받은 뒤 엘리베이터나 계단으로 3층 전시관에 올라갑니다.',
     tips:['엘리베이터는 홀 오른쪽 안쪽에 있습니다','2층 영상관·활동실도 같은 엘리베이터로 갈 수 있습니다']},
-  'f1-2':{where:'1층 홀 위쪽, 부출입구 2 옆',use:'관람 전후 휴식',
+  'f1-2':{where:'1층 홀 위쪽, 대회의실 옆',use:'관람 전후 휴식',
     more:'관람 전후에 앉아 쉴 수 있는 공간입니다. 일행을 기다리거나 잠시 쉬어 갈 때 이용해 주세요.',
     tips:[]},
-  'f1-3':{where:'1층 복도 안쪽, 부출입구 2 가까이',use:'단체 안내 · 운영 회의',
+  'f1-3':{where:'1층 복도 안쪽, 휴게실 옆',use:'단체 안내 · 운영 회의',
     more:'긴 회의 테이블이 놓인 회의실입니다. 단체 관람객 사전 안내나 운영 회의에 씁니다.',
     tips:['사전 예약된 단체·관계자가 이용합니다']},
   'f1-4':{where:'1층 복도 앞쪽',use:'손님 맞이',
@@ -166,8 +160,7 @@ function draw(id){
       el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12},g);
       if(rm.outdoor)g.lastChild.setAttribute('stroke-dasharray','.5 .35');
       if(rm.stair){for(let k=1;k<6;k++){const yy=b.y+b.h*k/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35},g)}}
-      const sz=Math.min(b.w>8&&b.h>5?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/rm.name.length);
-      label(g,rm.lr||rm.r,[rm.name],sz,rm.v);
+      if(rm.stair){const sz=Math.min(b.w>4.5?1.05:.95,((rm.v?b.h:b.w)-0.8)/rm.name.length);label(g,rm.lr||rm.r,[rm.name],sz,rm.v);}   // 사용하지 않는 실은 이름 표시 안 함 (계단만 표시)
       return;
     }
     const shape=el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12,class:'room-shape','data-n':rm.n,tabindex:0,role:'button','aria-label':info(id,rm).name+' 상세보기 열기'},gR);
@@ -177,7 +170,7 @@ function draw(id){
     shape.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
     if(rm.stair){for(let k=1;k<6;k++){const yy=b.y+b.h*k/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35,'pointer-events':'none'},gR)}}
     const big=b.w>8&&b.h>5, size=Math.min(big?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/info(id,rm).name.length);
-    label(gR,rm.lr||rm.r,rm.renamed&&(big||b.w>4.5)?[info(id,rm).name,'('+origOf(rm)+')']:[info(id,rm).name],size,rm.v,(!big&&!rm.v&&b.h<7)?.55:0);
+    label(gR,rm.lr||rm.r,[info(id,rm).name],size,rm.v,(!big&&!rm.v&&b.h<7)?.55:0);
     // number badge
     const bx=b.x+.95, by=b.y+.95;
     el('circle',{cx:bx,cy:by,r:.62,fill:'var(--surface)',stroke:'var(--plan-wall)','stroke-width':.08},gR);
@@ -225,7 +218,7 @@ const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 let OV={}, EDIT={db:null,assets:null,can:false};
 function info(fid,rm){
   const F=FLOORS[fid], key=fid+'-'+rm.n, o=OV[key]||{};
-  const D=DETAIL[key]||{where:F.fl+' '+origOf(rm)+' 위치',use:CAT[rm.cat].label,more:rm.desc+(rm.cat==='staff'?' 전시 기간에는 관계자만 이용합니다.':''),tips:[]};
+  const D=DETAIL[key]||{where:F.fl+' '+rm.name+' 위치',use:CAT[rm.cat].label,more:rm.desc+(rm.cat==='staff'?' 전시 기간에는 관계자만 이용합니다.':''),tips:[]};
   const pick=(k,def)=>(typeof o[k]==='string'&&o[k].trim()!=='')?o[k]:def;
   return {name:pick('name',rm.name),desc:pick('desc',rm.desc),more:pick('more',D.more),where:pick('where',D.where),use:pick('use',D.use),
     tips:Array.isArray(o.tips)?o.tips:(D.tips||[]),photos:Array.isArray(o.photos)?o.photos:(D.photos||[]),cover:typeof o.cover==='string'&&o.cover?o.cover:''};
@@ -238,7 +231,7 @@ function renderRooms(id){
     const I=info(id,rm);
     const d=document.createElement('article');d.className='room';d.id='room-'+rm.n;
     const cover=I.cover||I.photos[0];
-    d.innerHTML=`<div class="room-ph" style="background:${CAT[rm.cat].color}">${cover?`<img src="${esc(cover)}" alt="" loading="lazy">`:'<span>사진 준비 중</span>'}</div><div class="room-top"><span class="num" style="background:${CAT[rm.cat].color}">${dispN(F,rm)}</span><div><h3 class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3>${origOf(rm)&&origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}</div>`:''}</div></div><span class="chip">${CAT[rm.cat].label}</span><p>${esc(I.desc)}</p><button class="more-btn" type="button">자세히 보기 →</button>`;
+    d.innerHTML=`<div class="room-ph" style="background:${CAT[rm.cat].color}">${cover?`<img src="${esc(cover)}" alt="" loading="lazy">`:'<span>사진 준비 중</span>'}</div><div class="room-top"><span class="num" style="background:${CAT[rm.cat].color}">${dispN(F,rm)}</span><div><h3 class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3></div></div><span class="chip">${CAT[rm.cat].label}</span><p>${esc(I.desc)}</p><button class="more-btn" type="button">자세히 보기 →</button>`;
     d.addEventListener('click',e=>{focusRoom(rm.n,true);lastFocus=d.querySelector('.more-btn');openSheet(rm.n)});
     box.appendChild(d);
   });
@@ -276,7 +269,7 @@ function openSheet(n){
   const sh=document.getElementById('sheet');
   sh.innerHTML=`<div class="photo" id="galPhoto" style="background:${CAT[rm.cat].color}"><div id="galSlide" style="width:100%;height:100%;display:grid;place-items:center"></div>${photos.length>1?'<button class="gal-btn gal-prev" type="button" aria-label="이전 사진">‹</button><button class="gal-btn gal-next" type="button" aria-label="다음 사진">›</button><span class="gal-count" id="galCount"></span>':''}<span class="tag">${F.fl} · ${dispN(F,rm)}</span><button class="sheet-close" type="button" aria-label="닫기">×</button></div>
   ${photos.length>1?`<div class="tcar" id="galThumbs"><button class="tcar-btn prev" type="button" aria-label="이전 사진들">‹</button><div class="tcar-vp"><div class="tcar-track">${photos.map((p,k)=>`<button class="thumb" type="button" data-k="${k}" aria-label="사진 ${k+1}">${p?`<img src="${esc(p)}" alt="" loading="lazy">`:k+1}</button>`).join('')}</div></div><button class="tcar-btn next" type="button" aria-label="다음 사진들">›</button></div>`:''}
-  <div class="sheet-body"><div class="title-row"><div><h3 id="sheetTitle" class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3>${origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}${rm.renamed?' · 전시 기간 명칭':''}</div>`:''}</div>${EDIT.can?'<button class="edit-btn" type="button" id="editBtn">정보 수정</button>':''}</div>
+  <div class="sheet-body"><div class="title-row"><div><h3 id="sheetTitle" class="${rm.renamed?'renamed':''}">${esc(I.name)}</h3></div>${EDIT.can?'<button class="edit-btn" type="button" id="editBtn">정보 수정</button>':''}</div>
   <span class="chip">${CAT[rm.cat].label}</span>
   <p>${esc(I.more)}</p>
   <dl class="facts"><dt>위치</dt><dd>${esc(I.where)}</dd><dt>용도</dt><dd>${esc(I.use)}</dd></dl>
@@ -330,7 +323,7 @@ function openEditor(rm){
   let photos=[...I.photos], cover=I.cover;
   const sh=document.getElementById('sheet');
   sh.innerHTML=`<div class="sheet-body edit">
-    <div class="title-row"><div><div class="eyebrow">시설 정보 수정</div><h3 id="sheetTitle">${esc(I.name)}</h3>${origOf(rm)!==I.name?`<div class="orig">${esc(origOf(rm))}</div>`:''}</div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
+    <div class="title-row"><div><div class="eyebrow">시설 정보 수정</div><h3 id="sheetTitle">${esc(I.name)}</h3></div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
     <label for="e-name">이름</label><input id="e-name" value="${esc(I.name)}" maxlength="40">
     <label for="e-desc">카드 설명 (짧게)</label><textarea id="e-desc" rows="2" maxlength="200">${esc(I.desc)}</textarea>
     <label for="e-more">자세한 설명</label><textarea id="e-more" rows="5" maxlength="2000">${esc(I.more)}</textarea>
