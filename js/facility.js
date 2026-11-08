@@ -19,8 +19,8 @@ const FLOORS = {
       {n:5,name:'방송실',orig:'303A 방송실',cat:'staff',off:true,r:[25.8,28.8,10.9,13.5],d:[{s:'r',at:12.2}],desc:'전시관 음향·영상을 운영하는 관계자 공간입니다.'},
       {n:6,name:'창고',orig:'306 창고',cat:'staff',off:true,r:[30,31.8,10.9,13.5],d:[{s:'l',at:12.2}],desc:'전시 물품 보관 공간입니다.'},
       {n:7,name:'공조실',orig:'305 공조실',cat:'staff',off:true,r:[0,3.1,5.4,16.6],d:[{s:'b',at:1.6}],desc:'공조 설비 공간입니다. 관계자 외 출입을 제한합니다.',v:true},
-      {n:8,name:'계단 1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,0,10.6],d:[{s:'t',at:37.15}],desc:'홀 오른쪽 주계단입니다. 1층과 2층으로 오갈 수 있습니다.'},
-      {n:9,name:'계단 2',orig:'계단실-2',cat:'core',stair:true,off:true,r:[0,3.1,0,5.4],d:[{s:'t',at:1.55}],desc:''},
+      {n:8,name:'계단1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,0,10.6],d:[{s:'t',at:37.15}],desc:'홀 오른쪽 주계단입니다. 1층과 2층으로 오갈 수 있습니다.'},
+      {n:9,name:'계단2',orig:'계단실-2',cat:'core',stair:true,off:true,r:[0,3.1,0,5.4],d:[{s:'t',at:1.55}],desc:''},
     ],
     corridor:{t:'',r:[28.8,30,10.6,17.4]},
     gates:[{t:'입구 ①',x:25.8,y:2,w:1.3,kind:'in'},{t:'입구 ②',x:25.8,y:5,w:2.2,kind:'in'},{t:'출구 ③',x:25.8,y:8.4,w:1.3,kind:'out'}],
@@ -41,8 +41,8 @@ const FLOORS = {
       {n:8,name:'대화실1',orig:'208 지용실',renamed:true,cat:'activity',r:[12.85,17.9,0,5.4],v:true,d:[{s:'t',at:15.4}],desc:'소모임실입니다.'},
       {n:12,name:'휴게실',orig:'201 홀',cat:'rest',r:[24.6,32,0,5.4],desc:'관람 중 잠시 앉아 쉬어 갈 수 있는 공간입니다.'},
       {n:13,name:'서브포토존',orig:'201 홀',cat:'exhibit',r:[32,35,0,5.4],v:true,lr:[32,35,0,4],ls:.72,desc:'기념 사진을 남길 수 있는 작은 포토존입니다.'},
-      {n:10,name:'계단 1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,0,10.6],d:[{s:'t',at:37.15}],desc:'홀 옆 주계단입니다. 1층과 3층으로 오갈 수 있습니다.'},
-      {n:11,name:'계단 2',orig:'계단실-2',cat:'core',stair:true,off:true,r:[0,3.1,0,5.4],d:[{s:'t',at:1.55}],desc:'복도 끝 보조 계단입니다.'},
+      {n:10,name:'계단1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,0,10.6],d:[{s:'t',at:37.15}],desc:'홀 옆 주계단입니다. 1층과 3층으로 오갈 수 있습니다.'},
+      {n:11,name:'계단2',orig:'계단실-2',cat:'core',stair:true,off:true,r:[0,3.1,0,5.4],d:[{s:'t',at:1.55}],desc:'복도 끝 보조 계단입니다.'},
       {n:9,name:'준비실',orig:'205A·205B 준비실',cat:'staff',off:true,r:[0,3.1,5.4,18.6],d:[{s:'r',at:7.2}],desc:'영상관1 운영을 위한 관계자 공간입니다.',v:true},
     ],
     corridor:{t:'복도',r:[3.1,17.9,5.4,9]},
@@ -64,8 +64,8 @@ const FLOORS = {
       {n:9,name:'화락실',orig:'117 화락실',cat:'staff',off:true,r:[18,20.9,7.9,16],d:[{s:'b',at:19.4}],desc:'관계자 공간입니다.',v:true},
       {n:10,name:'설비실',orig:'112 전기실 · 113 발전기실 · 114 보일러실',cat:'staff',off:true,r:[-0.8,18,8.2,16],d:[{s:'b',at:6},{s:'b',at:12.5}],desc:'전기·발전기·보일러 설비 공간입니다. 관계자 외 출입을 제한합니다.'},
       {n:11,name:'창고',orig:'116 창고',cat:'staff',off:true,r:[35,39.3,0,3.5],d:[{s:'l',at:1.8}],desc:'물품 보관 공간입니다.'},
-      {n:13,name:'계단 1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,3.5,10.5],d:[{s:'t',at:37.15}],desc:'홀 오른쪽 주계단입니다. 2층 영상관·활동실과 3층 전시관으로 올라갈 수 있습니다.'},
-      {n:14,name:'계단 2',orig:'계단실-2',cat:'core',stair:true,off:true,v:true,r:[-0.8,2.6,0,6],d:[{s:'t',at:.9}],desc:'복도 끝 보조 계단입니다.'},
+      {n:13,name:'계단1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,3.5,10.5],d:[{s:'t',at:37.15}],desc:'홀 오른쪽 주계단입니다. 2층 영상관·활동실과 3층 전시관으로 올라갈 수 있습니다.'},
+      {n:14,name:'계단2',orig:'계단실-2',cat:'core',stair:true,off:true,v:true,r:[-0.8,2.6,0,6],d:[{s:'t',at:.9}],desc:'복도 끝 보조 계단입니다.'},
       {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[34,39,-6.5,-1.5],v:true,d:[{s:'b',at:36.5}],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
     ],
     corridor:{t:'복도',r:[-0.8,26.1,6,8.2]},
@@ -109,7 +109,7 @@ const DETAIL = {
     tips:['화장실과 엘리베이터가 바로 옆에 있습니다']},
   'f2-12':{where:'2층 홀 안쪽, 활동실2 옆',use:'휴식',
     more:'관람 중 잠시 앉아 쉬어 갈 수 있는 공간입니다. 영상 상영이나 활동을 기다릴 때 이용해 주세요.',tips:[]},
-  'f2-13':{where:'2층 홀, 계단 1 옆',use:'기념 사진',
+  'f2-13':{where:'2층 홀, 계단1 옆',use:'기념 사진',
     more:'전시를 기념하는 사진을 남길 수 있는 작은 포토존입니다.',tips:[]},
   'f1-12':{where:'1층 주출입구 밖 오른쪽, 건물 바깥',use:'인권도서전 · 야외 휴식',
     more:'건물 밖 주출입구 오른쪽에 있는 실외 휴게공간을 비닐로 감싸 꾸민 인권도서전 ‘한 사람을 소중히 도서전’입니다. 인권을 주제로 한 책을 자유롭게 펼쳐 보고, 잠시 앉아 쉬어 갈 수 있습니다.',
@@ -142,26 +142,15 @@ const dispN=(F,rm)=>liveRooms(F).indexOf(rm)+1;
 function rectOf(r){return {x:r[0],y:Y(r[3]),w:r[1]-r[0],h:r[3]-r[2]}}
 // 이름 글자 크기: 영역의 가로·세로 안에 여백을 두고 들어가는 가장 큰 크기 (한글 1em, 숫자·영문 0.6em 기준)
 function fitSize(r,text,vertical,cap=1.6){
-  const b=rectOf(r);
-  if(vertical){   // 세로쓰기: 글자를 한 자씩 위에서 아래로 (글자는 바로 선 채)
-    const n=[...String(text)].reduce((a,c)=>a+(c===' '?.5:1),0)||1;
-    const padW=Math.max(.45,b.w*.18), padH=Math.max(.5,b.h*.12);
-    return Math.max(.3,Math.min(Math.min(cap,1.3),(b.w-padW*2)/1.0,(b.h-padH*2)/(n*1.12)));
-  }
+  const b=rectOf(r), w=vertical?b.h:b.w, h=vertical?b.w:b.h;   // 세로: 글자를 왼쪽으로 90° 돌려 씀
   const em=[...String(text)].reduce((a,c)=>a+(/[\u3131-\uD7A3]/.test(c)?1:c===' '?.35:.62),0)||1;
-  const padW=Math.max(.5,b.w*.14), padH=Math.max(.45,b.h*.18);
-  return Math.max(.3,Math.min(cap,(b.w-padW*2)/em,(b.h-padH*2)/1.15));
+  const padW=Math.max(.5,w*.14), padH=Math.max(.45,h*.18);
+  return Math.max(.3,Math.min(cap,(w-padW*2)/em,(h-padH*2)/1.15));
 }
 function label(g,r,lines,size,vertical,dy=0){
   const b=rectOf(r), cx=b.x+b.w/2, cy=b.y+b.h/2+dy;
   const t=el('text',{x:cx,y:cy,'text-anchor':'middle','dominant-baseline':'middle','font-size':size,'font-weight':800},g);
-  if(vertical){
-    const ch=[...String(lines[0])], step=size*1.12, gap=size*.56;
-    const total=ch.reduce((a,c)=>a+(c===' '?gap:step),0)-step;
-    let y=cy-total/2;
-    ch.forEach(c=>{if(c===' '){y+=gap;return}const ts=el('tspan',{x:cx,y:+y.toFixed(3)},t);ts.textContent=c;y+=step});
-    return t;
-  }
+  if(vertical)t.setAttribute('transform',`rotate(-90 ${cx} ${cy})`);
   lines.forEach((s,i)=>{const ts=el('tspan',{x:cx,dy:i===0?-(lines.length-1)*size*0.6:size*1.2},t);ts.textContent=s;
     if(i>0){ts.setAttribute('font-size',size*0.62);ts.setAttribute('font-weight',500)}});
   return t;
