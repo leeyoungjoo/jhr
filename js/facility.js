@@ -218,8 +218,6 @@ function draw(id){
   // fit the drawing to the box: tight viewBox around everything drawn
   const bg=svg.firstElementChild; bg.remove();
   try{const bb=svg.getBBox(); if(bb.width>0&&bb.height>0){const p=.7,vb=[bb.x-p,bb.y-p,bb.width+p*2,bb.height+p*2];
-    const A=2.03;   // 모든 층 안내도 박스 비율(세로 크기) 통일
-    if(vb[2]/vb[3]<A){const w=vb[3]*A;vb[0]-=(w-vb[2])/2;vb[2]=w}else{const h=vb[2]/A;vb[1]-=(h-vb[3])/2;vb[3]=h}
     svg.setAttribute('viewBox',vb.map(v=>+v.toFixed(2)).join(' '));bg.setAttribute('x',vb[0]);bg.setAttribute('y',vb[1]);bg.setAttribute('width',vb[2]);bg.setAttribute('height',vb[3])}}catch(e){}
   svg.insertBefore(bg,svg.firstChild);
   // north-ish marker: elevator call-out for upper floors
