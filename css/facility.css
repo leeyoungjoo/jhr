@@ -80,7 +80,8 @@ svg text{font-family:var(--display);fill:var(--label);pointer-events:none}
 .sheet-body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:12px}
 .sheet-body h3{margin:0;font-family:var(--display);font-weight:900;font-size:28px;letter-spacing:-.02em;line-height:1.2}
 .sheet-body .orig{font-size:13.5px}
-.sheet-body p{margin:0;font-size:15px;line-height:1.75}
+.sheet-body p{margin:0;font-size:15px;line-height:1.75;white-space:pre-line;word-break:keep-all;overflow-wrap:anywhere}
+.sheet-body dd,.sheet-body .tips li,.room p{white-space:pre-line}
 .facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:14px;padding:12px 14px;border-radius:12px;background:var(--bg)}
 .facts dt{color:var(--muted);font-weight:700}
 .facts dd{margin:0}

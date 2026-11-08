@@ -37,8 +37,8 @@ const FLOORS = {
       {n:4,name:'활동실2',orig:'209 행복실',renamed:true,cat:'activity',r:[17.9,24.6,0,5.4],d:[{s:'t',at:21.25}],desc:'보드게임 등 놀이로 인권을 배우는 활동 공간입니다.'},
       {n:5,name:'홀',orig:'201 홀',cat:'hall',r:[17.9,35,5.4,12],desc:'계단과 엘리베이터 앞 로비입니다. 테이블 좌석이 있어 잠시 쉬어 갈 수 있습니다.'},
       {n:6,name:'사자후실',orig:'206 사자후실',cat:'staff',off:true,r:[3.1,7.8,0,5.4],d:[{s:'t',at:5.45}],desc:'소모임실입니다.'},
-      {n:7,name:'대화실2',orig:'207 희망실',renamed:true,cat:'activity',r:[7.8,12.85,0,5.4],d:[{s:'t',at:10.3}],desc:'소모임실입니다.'},
-      {n:8,name:'대화실1',orig:'208 지용실',renamed:true,cat:'activity',r:[12.85,17.9,0,5.4],d:[{s:'t',at:15.4}],desc:'소모임실입니다.'},
+      {n:7,name:'대화실2',orig:'207 희망실',renamed:true,cat:'activity',r:[7.8,12.85,0,5.4],v:true,d:[{s:'t',at:10.3}],desc:'소모임실입니다.'},
+      {n:8,name:'대화실1',orig:'208 지용실',renamed:true,cat:'activity',r:[12.85,17.9,0,5.4],v:true,d:[{s:'t',at:15.4}],desc:'소모임실입니다.'},
       {n:12,name:'휴게실',orig:'201 홀',cat:'rest',r:[24.6,32,0,5.4],desc:'관람 중 잠시 앉아 쉬어 갈 수 있는 공간입니다.'},
       {n:13,name:'서브포토존',orig:'201 홀',cat:'exhibit',r:[32,35,0,5.4],v:true,lr:[32,35,0,4],ls:.72,desc:'기념 사진을 남길 수 있는 작은 포토존입니다.'},
       {n:10,name:'계단 1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,0,10.6],d:[{s:'t',at:37.15}],desc:'홀 옆 주계단입니다. 1층과 3층으로 오갈 수 있습니다.'},
@@ -54,11 +54,11 @@ const FLOORS = {
     outline:[[-0.8,0],[39.3,0],[39.3,18.5],[25.6,18.5],[25.6,16],[-0.8,16]],
     rooms:[
       {n:1,name:'홀',orig:'104 홀',cat:'hall',r:[26.1,35,0,12],desc:'주출입구로 들어오면 만나는 로비입니다. 관람 안내를 받고 엘리베이터나 계단으로 3층 전시관에 올라갑니다.'},
-      {n:2,name:'휴게실',orig:'106 휴게공간',cat:'rest',r:[25.6,29.3,12.5,18.5],d:[{s:'b',at:27.6}],desc:'관람 전후에 앉아 쉴 수 있는 공간입니다.'},
-      {n:3,name:'대회의실',orig:'108 회의실',cat:'activity',r:[20.9,25.6,7.9,16],d:[{s:'b',at:23.2}],desc:'긴 회의 테이블이 있는 회의실입니다. 단체 관람 안내와 운영 회의에 씁니다.'},
-      {n:4,name:'응접실',orig:'111 응접실',cat:'activity',r:[14.8,19.7,0,6],d:[{s:'t',at:17.2}],desc:'방문객과 손님을 맞이하는 공간입니다.'},
+      {n:2,name:'휴게실',orig:'106 휴게공간',cat:'rest',r:[25.6,29.3,12.5,18.5],v:true,d:[{s:'b',at:27.6}],desc:'관람 전후에 앉아 쉴 수 있는 공간입니다.'},
+      {n:3,name:'대회의실',orig:'108 회의실',cat:'activity',r:[20.9,25.6,7.9,16],v:true,d:[{s:'b',at:23.2}],desc:'긴 회의 테이블이 있는 회의실입니다. 단체 관람 안내와 운영 회의에 씁니다.'},
+      {n:4,name:'응접실',orig:'111 응접실',cat:'activity',r:[14.8,19.7,0,6],v:true,d:[{s:'t',at:17.2}],desc:'방문객과 손님을 맞이하는 공간입니다.'},
       {n:5,name:'사무실',orig:'107 사무실',cat:'staff',off:true,r:[19.7,26.1,0,6],d:[{s:'t',at:24.4}],desc:'전시 운영진이 일하는 사무 공간입니다.'},
-      {n:6,name:'보성회실',orig:'107 보성회실',cat:'staff',r:[29.3,32.9,12.5,18.5],d:[{s:'b',at:31.1}],desc:'관계자 공간입니다.'},
+      {n:6,name:'보성회실',orig:'107 보성회실',cat:'staff',r:[29.3,32.9,12.5,18.5],v:true,d:[{s:'b',at:31.1}],desc:'관계자 공간입니다.'},
       {n:7,name:'화광회실',orig:'110A 화광회실',cat:'staff',off:true,r:[8.9,14.8,0,6],d:[{s:'t',at:11.8}],desc:'관계자 공간입니다.'},
       {n:8,name:'칸나실',orig:'110 칸나실',cat:'staff',off:true,r:[2.6,8.9,0,6],d:[{s:'t',at:5.8}],desc:'관계자 공간입니다.'},
       {n:9,name:'화락실',orig:'117 화락실',cat:'staff',off:true,r:[18,20.9,7.9,16],d:[{s:'b',at:19.4}],desc:'관계자 공간입니다.',v:true},
@@ -66,7 +66,7 @@ const FLOORS = {
       {n:11,name:'창고',orig:'116 창고',cat:'staff',off:true,r:[35,39.3,0,3.5],d:[{s:'l',at:1.8}],desc:'물품 보관 공간입니다.'},
       {n:13,name:'계단 1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,3.5,10.5],d:[{s:'t',at:37.15}],desc:'홀 오른쪽 주계단입니다. 2층 영상관·활동실과 3층 전시관으로 올라갈 수 있습니다.'},
       {n:14,name:'계단 2',orig:'계단실-2',cat:'core',stair:true,off:true,v:true,r:[-0.8,2.6,0,6],d:[{s:'t',at:.9}],desc:'복도 끝 보조 계단입니다.'},
-      {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[34,39,-6.5,-1.5],d:[{s:'b',at:36.5}],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
+      {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[34,39,-6.5,-1.5],v:true,d:[{s:'b',at:36.5}],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
     ],
     corridor:{t:'복도',r:[-0.8,26.1,6,8.2]},
     core:[
@@ -142,15 +142,26 @@ const dispN=(F,rm)=>liveRooms(F).indexOf(rm)+1;
 function rectOf(r){return {x:r[0],y:Y(r[3]),w:r[1]-r[0],h:r[3]-r[2]}}
 // 이름 글자 크기: 영역의 가로·세로 안에 여백을 두고 들어가는 가장 큰 크기 (한글 1em, 숫자·영문 0.6em 기준)
 function fitSize(r,text,vertical,cap=1.6){
-  const b=rectOf(r), w=vertical?b.h:b.w, h=vertical?b.w:b.h;
+  const b=rectOf(r);
+  if(vertical){   // 세로쓰기: 글자를 한 자씩 위에서 아래로 (글자는 바로 선 채)
+    const n=[...String(text)].reduce((a,c)=>a+(c===' '?.5:1),0)||1;
+    const padW=Math.max(.45,b.w*.18), padH=Math.max(.5,b.h*.12);
+    return Math.max(.3,Math.min(Math.min(cap,1.3),(b.w-padW*2)/1.0,(b.h-padH*2)/(n*1.12)));
+  }
   const em=[...String(text)].reduce((a,c)=>a+(/[\u3131-\uD7A3]/.test(c)?1:c===' '?.35:.62),0)||1;
-  const padW=Math.max(.5,w*.14), padH=Math.max(.45,h*.18);
-  return Math.max(.3,Math.min(cap,(w-padW*2)/em,(h-padH*2)/1.15));
+  const padW=Math.max(.5,b.w*.14), padH=Math.max(.45,b.h*.18);
+  return Math.max(.3,Math.min(cap,(b.w-padW*2)/em,(b.h-padH*2)/1.15));
 }
 function label(g,r,lines,size,vertical,dy=0){
   const b=rectOf(r), cx=b.x+b.w/2, cy=b.y+b.h/2+dy;
   const t=el('text',{x:cx,y:cy,'text-anchor':'middle','dominant-baseline':'middle','font-size':size,'font-weight':800},g);
-  if(vertical)t.setAttribute('transform',`rotate(-90 ${cx} ${cy})`);
+  if(vertical){
+    const ch=[...String(lines[0])], step=size*1.12, gap=size*.56;
+    const total=ch.reduce((a,c)=>a+(c===' '?gap:step),0)-step;
+    let y=cy-total/2;
+    ch.forEach(c=>{if(c===' '){y+=gap;return}const ts=el('tspan',{x:cx,y:+y.toFixed(3)},t);ts.textContent=c;y+=step});
+    return t;
+  }
   lines.forEach((s,i)=>{const ts=el('tspan',{x:cx,dy:i===0?-(lines.length-1)*size*0.6:size*1.2},t);ts.textContent=s;
     if(i>0){ts.setAttribute('font-size',size*0.62);ts.setAttribute('font-weight',500)}});
   return t;
@@ -180,7 +191,7 @@ function draw(id){
       el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12},g);
       if(rm.outdoor)g.lastChild.setAttribute('stroke-dasharray','.5 .35');
       if(rm.stair){for(let k=1;k<6;k++){const yy=b.y+b.h*k/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35},g)}}
-      if(rm.stair){label(g,rm.r,[rm.name],fitSize(rm.r,rm.name,rm.v,1.05),rm.v);}   // 사용하지 않는 실은 이름 표시 안 함 (계단만 표시)
+      if(rm.stair){label(g,rm.r,[rm.name],fitSize(rm.r,rm.name,true,1.05),true);}   // 사용하지 않는 실은 이름 표시 안 함 (계단만 표시)
       return;
     }
     const shape=el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12,class:'room-shape','data-n':rm.n,tabindex:0,role:'button','aria-label':info(id,rm).name+' 상세보기 열기'},gR);
@@ -190,7 +201,7 @@ function draw(id){
     shape.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
     if(rm.stair){for(let k=1;k<6;k++){const yy=b.y+b.h*k/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35,'pointer-events':'none'},gR)}}
     const big=b.w>8&&b.h>5, size=Math.min(big?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/info(id,rm).name.length)*(rm.ls||1);
-    label(gR,rm.r,[info(id,rm).name],fitSize(rm.r,info(id,rm).name,rm.v),rm.v);
+    const vt=!!(rm.v||rm.stair);label(gR,rm.r,[info(id,rm).name],fitSize(rm.r,info(id,rm).name,vt),vt);
   });
   const gC=el('g',{},svg);
   F.core.forEach(c=>{const b=rectOf(c.r);el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.4,fill:'var(--c-core)',stroke:'var(--plan-wall)','stroke-width':.1},gC);
