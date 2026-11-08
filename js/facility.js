@@ -140,6 +140,13 @@ const origOf=rm=>rm.orig.replace(/\b\d{3}[A-Z]?(·\d{3}[A-Z]?)*\s*/g,'').replace
 const liveRooms=F=>F.rooms.filter(r=>!r.off);
 const dispN=(F,rm)=>liveRooms(F).indexOf(rm)+1;
 function rectOf(r){return {x:r[0],y:Y(r[3]),w:r[1]-r[0],h:r[3]-r[2]}}
+// 이름 글자 크기: 영역의 가로·세로 안에 여백을 두고 들어가는 가장 큰 크기 (한글 1em, 숫자·영문 0.6em 기준)
+function fitSize(r,text,vertical,cap=1.6){
+  const b=rectOf(r), w=vertical?b.h:b.w, h=vertical?b.w:b.h;
+  const em=[...String(text)].reduce((a,c)=>a+(/[\u3131-\uD7A3]/.test(c)?1:c===' '?.35:.62),0)||1;
+  const padW=Math.max(.5,w*.14), padH=Math.max(.45,h*.18);
+  return Math.max(.3,Math.min(cap,(w-padW*2)/em,(h-padH*2)/1.15));
+}
 function label(g,r,lines,size,vertical,dy=0){
   const b=rectOf(r), cx=b.x+b.w/2, cy=b.y+b.h/2+dy;
   const t=el('text',{x:cx,y:cy,'text-anchor':'middle','dominant-baseline':'middle','font-size':size,'font-weight':800},g);
@@ -173,7 +180,7 @@ function draw(id){
       el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12},g);
       if(rm.outdoor)g.lastChild.setAttribute('stroke-dasharray','.5 .35');
       if(rm.stair){for(let k=1;k<6;k++){const yy=b.y+b.h*k/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35},g)}}
-      if(rm.stair){const sz=Math.min(b.w>4.5?1.05:.95,((rm.v?b.h:b.w)-0.8)/rm.name.length);label(g,rm.lr||rm.r,[rm.name],sz,rm.v);}   // 사용하지 않는 실은 이름 표시 안 함 (계단만 표시)
+      if(rm.stair){label(g,rm.r,[rm.name],fitSize(rm.r,rm.name,rm.v,1.05),rm.v);}   // 사용하지 않는 실은 이름 표시 안 함 (계단만 표시)
       return;
     }
     const shape=el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12,class:'room-shape','data-n':rm.n,tabindex:0,role:'button','aria-label':info(id,rm).name+' 상세보기 열기'},gR);
@@ -183,11 +190,11 @@ function draw(id){
     shape.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
     if(rm.stair){for(let k=1;k<6;k++){const yy=b.y+b.h*k/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35,'pointer-events':'none'},gR)}}
     const big=b.w>8&&b.h>5, size=Math.min(big?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/info(id,rm).name.length)*(rm.ls||1);
-    label(gR,rm.lr||rm.r,[info(id,rm).name],size,rm.v,(!big&&!rm.v&&b.h<7)?.55:0);
+    label(gR,rm.r,[info(id,rm).name],fitSize(rm.r,info(id,rm).name,rm.v),rm.v);
   });
   const gC=el('g',{},svg);
   F.core.forEach(c=>{const b=rectOf(c.r);el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.4,fill:'var(--c-core)',stroke:'var(--plan-wall)','stroke-width':.1},gC);
-    label(gC,c.r,[c.t],Math.min(c.t.length>4?.62:.85,((c.v?b.h:b.w)-.5)/c.t.length*1.05),c.v);
+    label(gC,c.r,[c.t],fitSize(c.r,c.t,c.v,.9),c.v);
     if(c.t==='계단'){for(let i=1;i<6;i++){const yy=b.y+b.h*i/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35},gC)}}});
   const gD=el('g',{'pointer-events':'none'},svg);
   F.rooms.forEach(rm=>(rm.d||[]).forEach(d=>{const w=d.w||1.3,t=.42;let x,y,wd,ht;
