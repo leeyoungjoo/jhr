@@ -32,18 +32,20 @@ const FLOORS = {
     outline:[[0,0],[39.3,0],[39.3,18.6],[0,18.6]],
     rooms:[
       {n:1,name:'영상관1',orig:'205 중강당',renamed:true,cat:'video',r:[3.1,17.9,9,18.6],d:[{s:'b',at:5.2},{s:'b',at:14.6}],desc:'좌석이 있는 큰 상영관입니다. 인권 관련 영상을 정해진 시간에 상영합니다.'},
-      {n:2,name:'영상관2',orig:'204 소강당',renamed:true,cat:'video',r:[17.9,24.6,9,18.6],d:[{s:'b',at:21.25}],desc:'작은 상영관입니다. 짧은 영상 상영과 해설 프로그램에 씁니다.'},
+      {n:2,name:'영상관2',orig:'204 소강당',renamed:true,cat:'video',r:[17.9,24.6,12,18.6],d:[{s:'b',at:21.25}],desc:'작은 상영관입니다. 짧은 영상 상영과 해설 프로그램에 씁니다.'},
       {n:3,name:'활동실1',orig:'203 다목적실',renamed:true,cat:'activity',r:[24.6,32,12,18.6],d:[{s:'b',at:28.3}],desc:'체험 워크숍과 생각을 나누는 활동을 하는 공간입니다.'},
       {n:4,name:'활동실2',orig:'209 행복실',renamed:true,cat:'activity',r:[17.9,24.6,0,5.4],d:[{s:'t',at:21.25}],desc:'보드게임 등 놀이로 인권을 배우는 활동 공간입니다.'},
-      {n:5,name:'홀',orig:'201 홀',cat:'hall',r:[24.6,35,0,12],desc:'계단과 엘리베이터 앞 로비입니다. 테이블 좌석이 있어 잠시 쉬어 갈 수 있습니다.'},
+      {n:5,name:'홀',orig:'201 홀',cat:'hall',r:[24.6,35,5.4,12],desc:'계단과 엘리베이터 앞 로비입니다. 테이블 좌석이 있어 잠시 쉬어 갈 수 있습니다.'},
       {n:6,name:'사자후실',orig:'206 사자후실',cat:'staff',off:true,r:[3.1,7.8,0,5.4],d:[{s:'t',at:5.45}],desc:'소모임실입니다.'},
       {n:7,name:'대화1실',orig:'207 희망실',renamed:true,cat:'activity',r:[7.8,12.85,0,5.4],d:[{s:'t',at:10.3}],desc:'소모임실입니다.'},
       {n:8,name:'대화2실',orig:'208 지용실',renamed:true,cat:'activity',r:[12.85,17.9,0,5.4],d:[{s:'t',at:15.4}],desc:'소모임실입니다.'},
+      {n:12,name:'휴게실',orig:'201 홀',cat:'rest',r:[24.6,32,0,5.4],desc:'관람 중 잠시 앉아 쉬어 갈 수 있는 공간입니다.'},
+      {n:13,name:'서브포토존',orig:'201 홀',cat:'exhibit',r:[32,35,0,5.4],v:true,lr:[32,35,0,4],ls:.72,desc:'기념 사진을 남길 수 있는 작은 포토존입니다.'},
       {n:10,name:'계단 1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,0,10.6],d:[{s:'t',at:37.15}],desc:'홀 옆 주계단입니다. 1층과 3층으로 오갈 수 있습니다.'},
       {n:11,name:'계단 2',orig:'계단실-2',cat:'core',stair:true,off:true,r:[0,3.1,0,5.4],d:[{s:'t',at:1.55}],desc:'복도 끝 보조 계단입니다.'},
       {n:9,name:'준비실',orig:'205A·205B 준비실',cat:'staff',off:true,r:[0,3.1,5.4,18.6],d:[{s:'r',at:7.2}],desc:'영상관1 운영을 위한 관계자 공간입니다.',v:true},
     ],
-    corridor:{t:'복도',r:[3.1,24.6,5.4,9]},
+    corridor:{t:'복도',r:[3.1,24.6,5.4,9]},corridor2:{r:[17.9,24.6,9,12]},
     core:[
       {t:'EV',r:[35.6,38.6,11.4,13.6]},
       {t:'화장실(남)',r:[35,39.3,14,16.3]},{t:'화장실(여)',r:[35,39.3,16.3,18.6]},{t:'장애인 화장실',r:[32,35,12,18.6],v:true}],
@@ -99,6 +101,10 @@ const DETAIL = {
   'f2-5':{where:'2층 엘리베이터·계단 앞',use:'로비 · 휴식',
     more:'2층에 도착하면 만나는 로비입니다. 테이블 좌석이 있어 상영이나 활동을 기다리며 쉬어 갈 수 있습니다.',
     tips:['화장실과 엘리베이터가 바로 옆에 있습니다']},
+  'f2-12':{where:'2층 홀 안쪽, 활동실2 옆',use:'휴식',
+    more:'관람 중 잠시 앉아 쉬어 갈 수 있는 공간입니다. 영상 상영이나 활동을 기다릴 때 이용해 주세요.',tips:[]},
+  'f2-13':{where:'2층 홀, 계단 1 옆',use:'기념 사진',
+    more:'전시를 기념하는 사진을 남길 수 있는 작은 포토존입니다.',tips:[]},
   'f1-12':{where:'1층 주출입구 밖 오른쪽, 건물 바깥',use:'인권도서전 · 야외 휴식',
     more:'건물 밖 주출입구 오른쪽에 있는 실외 휴게공간을 비닐로 감싸 꾸민 인권도서전 ‘한 사람을 소중히 도서전’입니다. 인권을 주제로 한 책을 자유롭게 펼쳐 보고, 잠시 앉아 쉬어 갈 수 있습니다.',
     tips:['건물 밖에 있으니 주출입구로 나와 오른쪽으로 오세요','책은 읽은 뒤 제자리에 놓아 주세요']},
@@ -149,6 +155,7 @@ function draw(id){
   el('line',{x1:0,y1:0,x2:0,y2:.8,stroke:'var(--sel)','stroke-width':.26,opacity:.75},pat2);
   const gB=el('g',{},svg);
   el('polygon',{points:F.outline.map(p=>p[0]+','+Y(p[1])).join(' '),fill:'var(--plan-bg)',stroke:'var(--plan-wall)','stroke-width':.35,'stroke-linejoin':'round'},gB);
+  if(F.corridor2){const b=rectOf(F.corridor2.r);el('rect',{x:b.x,y:b.y-.01,width:b.w,height:b.h+.02,fill:'var(--bg)'},gB)}
   if(F.corridor){const b=rectOf(F.corridor.r);el('rect',{x:b.x,y:b.y,width:b.w,height:b.h,fill:'var(--bg)'},gB);label(gB,F.corridor.r,[F.corridor.t],.8)}
   const gR=el('g',{},svg);
   // hall first so smaller rooms sit on top
@@ -169,7 +176,7 @@ function draw(id){
     shape.addEventListener('click',open);
     shape.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
     if(rm.stair){for(let k=1;k<6;k++){const yy=b.y+b.h*k/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35,'pointer-events':'none'},gR)}}
-    const big=b.w>8&&b.h>5, size=Math.min(big?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/info(id,rm).name.length);
+    const big=b.w>8&&b.h>5, size=Math.min(big?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/info(id,rm).name.length)*(rm.ls||1);
     label(gR,rm.lr||rm.r,[info(id,rm).name],size,rm.v,(!big&&!rm.v&&b.h<7)?.55:0);
     // number badge
     const bx=b.x+.95, by=b.y+.95;
