@@ -225,6 +225,8 @@ function draw(id){
   // fit the drawing to the box: tight viewBox around everything drawn
   const bg=svg.firstElementChild; bg.remove();
   try{const bb=svg.getBBox(); if(bb.width>0&&bb.height>0){const p=.7,vb=[bb.x-p,bb.y-p,bb.width+p*2,bb.height+p*2];
+    const MINA=1.65;   // 박스가 너무 높아지지 않게: 가로÷세로 비율 최소값 (1층에 적용, 2·3층은 원래 비율)
+    if(vb[2]/vb[3]<MINA){const w=vb[3]*MINA;vb[0]-=(w-vb[2])/2;vb[2]=w}
     svg.setAttribute('viewBox',vb.map(v=>+v.toFixed(2)).join(' '));bg.setAttribute('x',vb[0]);bg.setAttribute('y',vb[1]);bg.setAttribute('width',vb[2]);bg.setAttribute('height',vb[3])}}catch(e){}
   svg.insertBefore(bg,svg.firstChild);
   // north-ish marker: elevator call-out for upper floors
