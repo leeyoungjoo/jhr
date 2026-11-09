@@ -138,6 +138,24 @@ async function uploadPhoto(key,file){
   return SB.storage.from('room-photos').getPublicUrl(path).data.publicUrl;
 }
 
+// ---------- 첨부파일 (진행상황 공유 · 비공개 버킷, 관리자만 받기) ----------
+const fmtSize=n=>n>=1048576?(n/1048576).toFixed(1)+'MB':Math.max(1,Math.round(n/1024))+'KB';
+const fileKind=n=>{const e=(n.split('.').pop()||'').toLowerCase();return ({pdf:'PDF',doc:'DOC',docx:'DOC',hwp:'HWP',hwpx:'HWP',xls:'XLS',xlsx:'XLS',csv:'XLS',ppt:'PPT',pptx:'PPT',zip:'ZIP',txt:'TXT',jpg:'IMG',jpeg:'IMG',png:'IMG',gif:'IMG',webp:'IMG'})[e]||'FILE'};
+async function uploadFile(file){
+  if(file.size>30*1048576)throw new Error('too big');
+  const ext=((file.name.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'')||'bin').slice(0,8);
+  const path=`posts/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+  const {error}=await SB.storage.from('post-files').upload(path,file,{contentType:file.type||'application/octet-stream',upsert:false});
+  if(error)throw error;
+  return {name:file.name,path,size:file.size,type:file.type||''};
+}
+async function downloadFile(f){
+  const {data,error}=await SB.storage.from('post-files').createSignedUrl(f.path,120,{download:f.name});
+  if(error||!data?.signedUrl){alert('파일을 받지 못했습니다. 다시 로그인한 뒤 시도해 주세요.');return}
+  const a=document.createElement('a');a.href=data.signedUrl;a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
+}
+const filesHTML=(p)=>{const fs=p.files||[];return fs.length?`<div class="post-files"><div class="pf-head">첨부파일 <b>${fs.length}</b></div>${fs.map((f,k)=>`<button type="button" class="pf-item" data-file="${p.id}" data-k="${k}"><span class="pf-kind k-${fileKind(f.name).toLowerCase()}">${fileKind(f.name)}</span><span class="pf-name">${esc(f.name)}</span><span class="pf-size">${fmtSize(f.size||0)}</span><span class="pf-dl" aria-hidden="true">↓</span></button>`).join('')}</div>`:''};
+
 // ---------- 진행상황 공유 ----------
 const fmtDate=iso=>{const d=new Date(iso);return `${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}.`};
 const fmtBody=t=>esc(t).replace(/\n/g,'<br>');
@@ -179,7 +197,7 @@ const metaHTML=p=>`<div class="post-meta"><span class="team">${esc(teamOf(p))}</
 function postRow(p){
   return `<a class="post-row${p.pinned?' pinned':''}" href="#/news/${p.id}">
     ${metaHTML(p)}
-    <div class="row-main"><h3>${esc(p.title)}</h3><span class="views" aria-label="조회수 ${p.views||0}">조회 ${p.views||0}</span></div>
+    <div class="row-main"><h3>${esc(p.title)}${(p.files||[]).length?`<span class="clip" aria-label="첨부파일 ${(p.files||[]).length}개">📎${(p.files||[]).length}</span>`:''}</h3><span class="views" aria-label="조회수 ${p.views||0}">조회 ${p.views||0}</span></div>
     ${p.pinned&&EDIT.can?`<span class="pin-move"><button type="button" data-pinmv="-1" data-id="${p.id}" aria-label="공지 위로">▲</button><button type="button" data-pinmv="1" data-id="${p.id}" aria-label="공지 아래로">▼</button></span>`:''}
   </a>`;
 }
@@ -190,7 +208,7 @@ function postDetail(p){
     ${metaHTML(p)}
     <h3>${esc(p.title)}</h3>
     <div class="detail-sub"><span class="views">조회 <b>${p.views||0}</b></span><button type="button" class="copy-btn" data-copy="${p.id}">글 복사</button></div>
-    <div class="post-body">${fmtBody(p.body||'')}</div>${gallery}
+    <div class="post-body">${fmtBody(p.body||'')}</div>${filesHTML(p)}${gallery}
   </article>
   <div class="detail-nav"><a class="btn ghost" href="#/news">← 목록으로</a>${EDIT.can?`<div class="detail-act"><button type="button" class="btn ghost" data-edit="${p.id}">수정</button><button type="button" class="btn ghost danger" data-del="${p.id}">삭제</button><button type="button" class="btn brand" data-newpost>글쓰기</button></div>`:''}</div>`;
 }
@@ -225,6 +243,7 @@ document.addEventListener('click',e=>{
   if(fc){current=fc.dataset.floor;if(document.getElementById('dir').dataset.ready)show(current)}
   const pm=e.target.closest('[data-pinmv]'); if(pm){e.preventDefault();e.stopPropagation();movePin(pm.dataset.id,+pm.dataset.pinmv);return}
   const cp=e.target.closest('[data-copy]'); if(cp){copyPost(cp);return}
+  const fb=e.target.closest('[data-file]'); if(fb){const p=POSTS.find(x=>x.id===fb.dataset.file);const f=p&&(p.files||[])[+fb.dataset.k];if(f)downloadFile(f);return}
   const ph=e.target.closest('.post-ph');
   if(ph){e.preventDefault();const p=POSTS.find(x=>x.id===ph.dataset.post);if(p)openLB(p.photos,+ph.dataset.k,p.title);return}
   const ed=e.target.closest('[data-edit]'); if(ed){lastFocus=ed;openPostEditor(POSTS.find(x=>x.id===ed.dataset.edit));return}
@@ -250,7 +269,7 @@ async function deletePost(id){
   if(POST_ID===id)location.hash='#/news';else renderPosts();
 }
 function openPostEditor(post){
-  let photos=post?[...(post.photos||[])]:[];
+  let photos=post?[...(post.photos||[])]:[]; let files=post?[...(post.files||[])]:[];
   const sh=openModal(`<div class="sheet-body edit">
     <div class="title-row"><div><div class="eyebrow">진행상황 공유</div><h3 id="sheetTitle">${post?'글 수정':'글쓰기'}</h3></div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
     <label for="p-team">팀</label><select id="p-team">${TEAMS.map(t=>`<option${t===(post?teamOf(post):(curTeam===ALL?TEAMS[0]:curTeam))?' selected':''}>${esc(t)}</option>`).join('')}</select>
@@ -260,6 +279,9 @@ function openPostEditor(post){
     <div class="ph-label">사진 <span id="p-count"></span></div>
     <div class="e-photos" id="p-photos"></div>
     <label class="upload" for="p-file">사진 추가 (여러 장 선택 가능)<input id="p-file" type="file" accept="image/*" multiple></label>
+    <div class="ph-label">첨부파일 <span id="p-fcount"></span> <span class="ph-sub">PDF · 워드 · 한글 · 엑셀 · PPT 등, 파일당 30MB까지</span></div>
+    <div class="e-files" id="p-files"></div>
+    <label class="upload" for="p-afile">파일 첨부 (여러 개 선택 가능)<input id="p-afile" type="file" accept=".pdf,.doc,.docx,.hwp,.hwpx,.xls,.xlsx,.csv,.ppt,.pptx,.txt,.zip,.jpg,.jpeg,.png" multiple></label>
     <div class="e-status" id="p-status" role="status"></div>
     <div class="e-actions"><button type="button" class="ghost" id="p-cancel">취소</button><button type="button" class="primary" id="p-save">${post?'저장':'올리기'}</button></div>
   </div>`,'post');
@@ -271,6 +293,22 @@ function openPostEditor(post){
     sh.querySelectorAll('[data-pmv]').forEach(b=>b.onclick=()=>{const k=+b.dataset.pmv;if(k>0){[photos[k-1],photos[k]]=[photos[k],photos[k-1]];draw()}});
   };
   draw();
+  const drawFiles=()=>{
+    document.getElementById('p-fcount').textContent=files.length?`${files.length}개`:'';
+    document.getElementById('p-files').innerHTML=files.map((f,k)=>`<div class="e-file"><span class="pf-kind k-${fileKind(f.name).toLowerCase()}">${fileKind(f.name)}</span><span class="pf-name">${esc(f.name)}</span><span class="pf-size">${fmtSize(f.size||0)}</span><button type="button" data-fdel="${k}">삭제</button></div>`).join('');
+    sh.querySelectorAll('[data-fdel]').forEach(b=>b.onclick=()=>{files.splice(+b.dataset.fdel,1);drawFiles()});
+  };
+  drawFiles();
+  const aIn=document.getElementById('p-afile');
+  aIn.addEventListener('change',async()=>{
+    const list=[...aIn.files]; if(!list.length)return;
+    for(let k=0;k<list.length;k++){
+      st.textContent=`파일 올리는 중… (${k+1}/${list.length}) ${list[k].name}`;
+      try{files.push(await uploadFile(list[k]));drawFiles();}
+      catch(err){st.textContent=list[k].size>30*1048576?`${list[k].name}은(는) 30MB를 넘어 올릴 수 없습니다.`:`${list[k].name}을(를) 올리지 못했습니다. 다시 시도해 주세요.`;aIn.value='';return}
+    }
+    st.textContent='파일을 첨부했습니다. 저장을 눌러야 반영됩니다.'; aIn.value='';
+  });
   const fileIn=document.getElementById('p-file');
   fileIn.addEventListener('change',async()=>{
     const files=[...fileIn.files]; if(!files.length)return;
@@ -286,7 +324,7 @@ function openPostEditor(post){
     const title=document.getElementById('p-title').value.trim();
     if(!title){st.textContent='제목을 입력해 주세요.';document.getElementById('p-title').focus();return}
     const btn=e.currentTarget; btn.disabled=true; st.textContent='저장하는 중…';
-    const row={team:document.getElementById('p-team').value,title,body:document.getElementById('p-body').value.trim(),photos:photos.slice(0,30),pinned:document.getElementById('p-pin').checked,updated_at:new Date().toISOString()};
+    const row={team:document.getElementById('p-team').value,title,body:document.getElementById('p-body').value.trim(),photos:photos.slice(0,30),files:files.slice(0,20),pinned:document.getElementById('p-pin').checked,updated_at:new Date().toISOString()};
     if(row.pinned&&!post?.pinned){const ps=POSTS.filter(x=>x.pinned&&x.id!==post?.id).map(pinKey).filter(v=>v<1e9);row.pin_order=(ps.length?Math.min(...ps):1)-1;}   // 새 공지는 맨 위로
     if(!row.pinned)row.pin_order=null;
     const q=post?SB.from('posts').update(row).eq('id',post.id).select().single():SB.from('posts').insert(row).select().single();

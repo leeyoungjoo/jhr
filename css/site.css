@@ -361,3 +361,20 @@ body:not(.is-admin) .admin-only{display:none!important}
 .pin-move button[disabled]{opacity:.3;pointer-events:none}
 /* PC: 페이지 머리말 설명 한 줄로 */
 @media (min-width:900px){.page-head p{max-width:none}}
+
+/* ---- 첨부파일 (진행상황 공유) ---- */
+.post-files{margin:22px 0 6px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+.pf-head{font-size:13.5px;font-weight:700;padding:10px 14px;border-bottom:1px solid var(--line);color:var(--ink)}
+.pf-head b{color:var(--brand)}
+.pf-item{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border-top:1px solid var(--line)}
+.pf-head+.pf-item{border-top:none}
+.pf-item:hover,.pf-item:focus-visible{background:var(--brand-soft)}
+.pf-kind{flex:none;min-width:40px;padding:3px 6px;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:.04em;text-align:center;color:#fff;background:#7A8090}
+.pf-kind.k-pdf{background:#D2453B}.pf-kind.k-doc{background:#2F6BD8}.pf-kind.k-hwp{background:#1A998E}.pf-kind.k-xls{background:#1F7A3F}.pf-kind.k-ppt{background:#E2671F}.pf-kind.k-img{background:#8A5BC2}
+.pf-name{flex:1;min-width:0;font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pf-size{flex:none;font-size:13px;opacity:.65}
+.pf-dl{flex:none;font-weight:900;color:var(--brand)}
+.e-files{display:flex;flex-direction:column;gap:6px;margin:6px 0 8px}
+.e-file{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.e-file button{flex:none;border:1px solid var(--line);background:transparent;border-radius:8px;padding:4px 10px;font-size:13px;cursor:pointer;color:inherit}
+.post-row .clip{margin-left:8px;font-size:13px;font-weight:600;opacity:.7;white-space:nowrap}

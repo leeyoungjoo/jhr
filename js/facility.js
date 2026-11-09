@@ -5,7 +5,8 @@ const CAT = {
   rest:{label:'휴게·편의',color:'var(--c-rest)'},
   hall:{label:'홀·로비',color:'var(--c-hall)'},
   staff:{label:'관계자·설비',color:'var(--c-staff)'},
-  core:{label:'화장실·계단·승강기',color:'var(--c-core)'}
+  core:{label:'화장실·계단·승강기',color:'var(--c-core)'},
+  info:{label:'안내·접수',color:'#A9DCD6'}
 };
 // rooms: [x0,x1,y0,y1] in metres; x along the long side (39.3 m), y from the main-entrance side (0) to the back (18.6)
 const FLOORS = {
@@ -55,15 +56,16 @@ const FLOORS = {
     rooms:[
       {n:1,name:'홀',orig:'104 홀',cat:'hall',r:[26.1,35,0,12],desc:'주출입구로 들어오면 만나는 로비입니다. 관람 안내를 받고 엘리베이터나 계단으로 3층 전시관에 올라갑니다.'},
       {n:2,name:'휴게실',orig:'106 휴게공간',cat:'rest',r:[25.6,29.3,12.5,18.5],v:true,d:[{s:'b',at:27.6}],desc:'관람 전후에 앉아 쉴 수 있는 공간입니다.'},
-      {n:3,name:'대회의실',orig:'108 회의실',cat:'activity',r:[20.9,25.6,7.9,16],v:true,d:[{s:'b',at:23.2}],desc:'긴 회의 테이블이 있는 회의실입니다. 단체 관람 안내와 운영 회의에 씁니다.'},
-      {n:4,name:'응접실',orig:'111 응접실',cat:'activity',r:[14.8,19.7,0,6],v:true,d:[{s:'t',at:17.2}],desc:'방문객과 손님을 맞이하는 공간입니다.'},
-      {n:5,name:'사무실',orig:'107 사무실',cat:'staff',off:true,r:[19.7,26.1,0,6],d:[{s:'t',at:24.4}],desc:'전시 운영진이 일하는 사무 공간입니다.'},
+      {n:3,name:'대회의실',orig:'108 회의실',cat:'activity',off:true,r:[20.9,25.6,7.9,16],v:true,d:[{s:'b',at:23.2}],desc:'긴 회의 테이블이 있는 회의실입니다. 단체 관람 안내와 운영 회의에 씁니다.'},
+      {n:4,name:'응접실',orig:'111 응접실',cat:'activity',off:true,r:[14.8,19.7,0,6],v:true,d:[{s:'t',at:17.2}],desc:'방문객과 손님을 맞이하는 공간입니다.'},
+      {n:5,name:'사무실',orig:'107 사무실',cat:'staff',v:true,r:[19.7,26.1,0,6],d:[{s:'t',at:24.4}],desc:'전시 운영진이 일하는 사무 공간입니다.'},
       {n:6,name:'보성회실',orig:'107 보성회실',cat:'staff',r:[29.3,32.9,12.5,18.5],v:true,d:[{s:'b',at:31.1}],desc:'관계자 공간입니다.'},
       {n:7,name:'화광회실',orig:'110A 화광회실',cat:'staff',off:true,r:[8.9,14.8,0,6],d:[{s:'t',at:11.8}],desc:'관계자 공간입니다.'},
       {n:8,name:'칸나실',orig:'110 칸나실',cat:'staff',off:true,r:[2.6,8.9,0,6],d:[{s:'t',at:5.8}],desc:'관계자 공간입니다.'},
       {n:9,name:'화락실',orig:'117 화락실',cat:'staff',off:true,r:[18,20.9,7.9,16],d:[{s:'b',at:19.4}],desc:'관계자 공간입니다.',v:true},
       {n:10,name:'설비실',orig:'112 전기실 · 113 발전기실 · 114 보일러실',cat:'staff',off:true,r:[-0.8,18,8.2,16],d:[{s:'b',at:6},{s:'b',at:12.5}],desc:'전기·발전기·보일러 설비 공간입니다. 관계자 외 출입을 제한합니다.'},
       {n:11,name:'창고',orig:'116 창고',cat:'staff',off:true,r:[35,39.3,0,3.5],d:[{s:'l',at:1.8}],desc:'물품 보관 공간입니다.'},
+      {n:15,name:'접수대',orig:'104 홀',cat:'info',v:true,r:[26.3,28.6,0.4,4.6],desc:'주출입구로 들어오면 바로 왼쪽에 있는 접수·안내 데스크입니다.'},
       {n:13,name:'계단1',orig:'계단실-1',cat:'core',stair:true,r:[35,39.3,3.5,10.5],d:[{s:'t',at:37.15}],desc:'홀 오른쪽 주계단입니다. 2층 영상관·활동실과 3층 전시관으로 올라갈 수 있습니다.'},
       {n:14,name:'계단2',orig:'계단실-2',cat:'core',stair:true,off:true,v:true,r:[-0.8,2.6,0,6],d:[{s:'t',at:.9}],desc:'복도 끝 보조 계단입니다.'},
       {n:12,name:'인권도서전',orig:'실외 휴게공간',renamed:true,cat:'exhibit',outdoor:true,r:[36.5,41.5,-6.5,-1.5],v:true,d:[{s:'b',at:39}],desc:'주출입구 밖 오른쪽 실외 휴게공간에서 열리는 인권도서전입니다. 인권 관련 책을 둘러보며 쉬어 갈 수 있습니다.'},
@@ -77,11 +79,11 @@ const FLOORS = {
     amen:['실외 휴게공간(인권도서전)','주출입구','화장실(남·여)','엘리베이터 1대','계단 2곳','주차장 · 장애인 주차구역']}
 };
 
-// 1층 왼쪽(사용하지 않는 실) 가로를 줄여 오른쪽 공간이 크게 보이게: x<14.8 구간을 0.45배로
-(()=>{const F=FLOORS.f1, X=14.8, k=.45, cx=x=>x>=X?x:+(X-(X-x)*k).toFixed(3);
+// 1층: 왼쪽(사용하지 않는 실) 가로는 0.45배로 줄이고, 홀·휴게실·화장실 쪽(x≥25.6)은 1.4배로 넓힘
+(()=>{const F=FLOORS.f1, X=14.8, k=.45, X2=25.6, k2=1.4, cx=x=>x>=X2?+(X2+(x-X2)*k2).toFixed(3):x>=X?x:+(X-(X-x)*k).toFixed(3);
   const rr=r=>{r[0]=cx(r[0]);r[1]=cx(r[1])};
   F.outline.forEach(p=>p[0]=cx(p[0]));
-  F.rooms.forEach(rm=>{rr(rm.r);if(rm.lr)rr(rm.lr);(rm.d||[]).forEach(d=>{if(d.s==='t'||d.s==='b')d.at=cx(d.at)})});
+  F.rooms.forEach(rm=>{if(rm.outdoor){const c=(rm.r[0]+rm.r[1])/2,dx=cx(c)-c;rm.r[0]+=dx;rm.r[1]+=dx;(rm.d||[]).forEach(d=>{if(d.s==='t'||d.s==='b')d.at+=dx});return}rr(rm.r);if(rm.lr)rr(rm.lr);(rm.d||[]).forEach(d=>{if(d.s==='t'||d.s==='b')d.at=cx(d.at)})});
   rr(F.corridor.r);F.core.forEach(c=>rr(c.r));(F.entrances||[]).forEach(e=>e.x=cx(e.x));})();
 
 // 자세한 설명 · 사진. photos 배열에 이미지 경로를 여러 개 넣으면 사진 넘겨보기로 표시됩니다. 예) photos:['photos/exhibit-1.jpg','photos/exhibit-2.jpg']
@@ -111,6 +113,8 @@ const DETAIL = {
     more:'관람 중 잠시 앉아 쉬어 갈 수 있는 공간입니다. 영상 상영이나 활동을 기다릴 때 이용해 주세요.',tips:[]},
   'f2-13':{where:'2층 홀, 계단1 옆',use:'기념 사진',
     more:'전시를 기념하는 사진을 남길 수 있는 작은 포토존입니다.',tips:[]},
+  'f1-15':{where:'1층 홀, 주출입구 들어와 바로 왼쪽',use:'관람 접수 · 안내',
+    more:'주출입구로 들어오면 바로 만나는 접수·안내 데스크입니다. 관람 순서를 안내받고 궁금한 점을 물어볼 수 있습니다.',tips:[]},
   'f1-12':{where:'1층 주출입구 밖 오른쪽, 건물 바깥',use:'인권도서전 · 야외 휴식',
     more:'건물 밖 주출입구 오른쪽에 있는 실외 휴게공간을 비닐로 감싸 꾸민 인권도서전 ‘한 사람을 소중히 도서전’입니다. 인권을 주제로 한 책을 자유롭게 펼쳐 보고, 잠시 앉아 쉬어 갈 수 있습니다.',
     tips:['건물 밖에 있으니 주출입구로 나와 오른쪽으로 오세요','책은 읽은 뒤 제자리에 놓아 주세요']},
