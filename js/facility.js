@@ -79,11 +79,13 @@ const FLOORS = {
     amen:['실외 휴게공간(인권도서전)','주출입구','화장실(남·여)','엘리베이터 1대','계단 2곳','주차장 · 장애인 주차구역']}
 };
 
-// 1층: 왼쪽(사용하지 않는 실) 가로는 0.45배로 줄이고, 홀·휴게실·화장실 쪽(x≥25.6)은 1.4배로 넓힘
-(()=>{const F=FLOORS.f1, X=14.8, k=.45, X2=25.6, k2=1.4, cx=x=>x>=X2?+(X2+(x-X2)*k2).toFixed(3):x>=X?x:+(X-(X-x)*k).toFixed(3);
+// 1층: 왼쪽(사용하지 않는 실) 가로는 0.45배로 줄이고, 홀 쪽을 넓혀 건물 가로 폭을 2·3층과 같게 맞춤.
+// 계단·엘리베이터·화장실 칸(x≥35)은 실제 폭 그대로 두고, 늘어난 폭은 홀 쪽이 가져감. 실외 인권도서전은 건물 오른쪽 끝 아래에 둠
+(()=>{const F=FLOORS.f1, X=14.8, k=.45, X2=25.6, X3=35, L=X-(X+.8)*k, E=39.3+L, k3=(E-(39.3-X3)-X2)/(X3-X2);
+  const cx=x=>+(x>=X3?E-(39.3-x):x>=X2?X2+(x-X2)*k3:x>=X?x:X-(X-x)*k).toFixed(3);
   const rr=r=>{r[0]=cx(r[0]);r[1]=cx(r[1])};
   F.outline.forEach(p=>p[0]=cx(p[0]));
-  F.rooms.forEach(rm=>{if(rm.outdoor){const c=(rm.r[0]+rm.r[1])/2,dx=cx(c)-c;rm.r[0]+=dx;rm.r[1]+=dx;(rm.d||[]).forEach(d=>{if(d.s==='t'||d.s==='b')d.at+=dx});return}rr(rm.r);if(rm.lr)rr(rm.lr);(rm.d||[]).forEach(d=>{if(d.s==='t'||d.s==='b')d.at=cx(d.at)})});
+  F.rooms.forEach(rm=>{if(rm.outdoor){const w=rm.r[1]-rm.r[0],dx=E-w-rm.r[0];rm.r[0]+=dx;rm.r[1]+=dx;(rm.d||[]).forEach(d=>{if(d.s==='t'||d.s==='b')d.at+=dx});return}rr(rm.r);if(rm.lr)rr(rm.lr);(rm.d||[]).forEach(d=>{if(d.s==='t'||d.s==='b')d.at=cx(d.at)})});
   rr(F.corridor.r);F.core.forEach(c=>rr(c.r));(F.entrances||[]).forEach(e=>e.x=cx(e.x));})();
 
 // 자세한 설명 · 사진. photos 배열에 이미지 경로를 여러 개 넣으면 사진 넘겨보기로 표시됩니다. 예) photos:['photos/exhibit-1.jpg','photos/exhibit-2.jpg']
@@ -151,14 +153,17 @@ function fitSize(r,text,vertical,cap=1.6){
   const padW=Math.max(.5,w*.14), padH=Math.max(.45,h*.18);
   return Math.max(.3,Math.min(cap,(w-padW*2)/em,(h-padH*2)/1.15));
 }
-function label(g,r,lines,size,vertical,dy=0){
+function label(g,r,lines,size,vertical,dy=0,col='var(--label)',fw=700){
   const b=rectOf(r), cx=b.x+b.w/2, cy=b.y+b.h/2+dy;
-  const t=el('text',{x:cx,y:cy,'text-anchor':'middle','dominant-baseline':'middle','font-size':size,'font-weight':800},g);
+  const t=el('text',{x:cx,y:cy,'text-anchor':'middle','dominant-baseline':'central','font-size':size,'font-weight':fw,fill:col,'pointer-events':'none'},g);
   if(vertical)t.setAttribute('transform',`rotate(-90 ${cx} ${cy})`);
   lines.forEach((s,i)=>{const ts=el('tspan',{x:cx,dy:i===0?-(lines.length-1)*size*0.6:size*1.2},t);ts.textContent=s;
     if(i>0){ts.setAttribute('font-size',size*0.62);ts.setAttribute('font-weight',500)}});
   return t;
 }
+// 도면 색: 인쇄용 실내 안내도와 같은 선 도면 (흰 바탕 · 검은 벽선)
+const PC={wall:'#2E2A28',room:'#FFFFFF',tint:'#E4F2EF',outdoor:'#FCEBE3',off:'#ECEAE5',ev:'#D9D6CF',teal:'#2E9C8C',orange:'#E9774A',muted:'#8A857F'};
+const TINT=new Set(['exhibit','video','info']);
 function draw(id){
   const F=FLOORS[id], svg=document.getElementById('plan');
   svg.innerHTML='';
@@ -166,74 +171,70 @@ function draw(id){
   svg.setAttribute('viewBox','-10 -3.8 56.8 '+VH);
   el('rect',{x:-10,y:-3.8,width:56.8,height:VH,fill:'var(--plan-bg)'},svg);
   const defs=el('defs',{},svg);
-  const pat=el('pattern',{id:'hatch',width:.9,height:.9,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs);
-  el('line',{x1:0,y1:0,x2:0,y2:.9,stroke:'var(--plan-wall)','stroke-width':.22,opacity:.45},pat);
   const pat2=el('pattern',{id:'hatchSel',width:.8,height:.8,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs);
   el('line',{x1:0,y1:0,x2:0,y2:.8,stroke:'var(--sel)','stroke-width':.26,opacity:.75},pat2);
+  const pts=F.outline.map(p=>p[0]+','+Y(p[1])).join(' ');
   const gB=el('g',{},svg);
-  el('polygon',{points:F.outline.map(p=>p[0]+','+Y(p[1])).join(' '),fill:'var(--plan-bg)',stroke:'var(--plan-wall)','stroke-width':.35,'stroke-linejoin':'round'},gB);
-  if(F.corridor2){const b=rectOf(F.corridor2.r);el('rect',{x:b.x,y:b.y-.01,width:b.w,height:b.h+.02,fill:'var(--bg)'},gB)}
-  if(F.corridor){const b=rectOf(F.corridor.r);el('rect',{x:b.x,y:b.y,width:b.w,height:b.h,fill:'var(--bg)'},gB);label(gB,F.corridor.r,[F.corridor.t],.8)}
+  el('polygon',{points:pts,fill:PC.room,stroke:'none'},gB);
+  if(F.corridor)label(gB,F.corridor.r,[F.corridor.t],.75,false,0,PC.muted,500);
   const gR=el('g',{},svg);
-  // hall first so smaller rooms sit on top
   const rooms=[...F.rooms].sort((a,b)=>(a.cat==='hall'?-1:0)-(b.cat==='hall'?-1:0));
   rooms.forEach(rm=>{
     const b=rectOf(rm.r);
-    if(rm.off){   // 시설정보가 필요 없는 실: 원래 색·패턴 그대로, 흐리게만 (클릭 없음)
-      const g=el('g',{class:'room-off',opacity:.55,'pointer-events':'none'},gR);
-      el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12},g);
-      if(rm.outdoor)g.lastChild.setAttribute('stroke-dasharray','.5 .35');
-      if(rm.stair){for(let k=1;k<6;k++){const yy=b.y+b.h*k/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35},g)}}
-      if(rm.stair){label(g,rm.r,[rm.name],fitSize(rm.r,rm.name,true,1.05),true);}   // 사용하지 않는 실은 이름 표시 안 함 (계단만 표시)
-      return;
+    const fill=rm.off?PC.off:rm.outdoor?PC.outdoor:(TINT.has(rm.cat)&&!(rm.cat==='exhibit'&&b.w<15))?PC.tint:PC.room;
+    const a={x:b.x,y:b.y,width:b.w,height:b.h,fill,stroke:PC.wall,'stroke-width':.09};
+    if(rm.outdoor)a['stroke-dasharray']='.45 .3';
+    if(rm.off){el('rect',{...a,'pointer-events':'none'},gR)}
+    else{
+      const shape=el('rect',{...a,class:'room-shape','data-n':rm.n,tabindex:0,role:'button','aria-label':info(id,rm).name+' 상세보기 열기'},gR);
+      const open=()=>{focusRoom(rm.n,true);lastFocus=shape;openSheet(rm.n)};
+      shape.addEventListener('click',open);
+      shape.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
     }
-    const shape=el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.5,fill:CAT[rm.cat].color,stroke:'var(--plan-wall)','stroke-width':.12,class:'room-shape','data-n':rm.n,tabindex:0,role:'button','aria-label':info(id,rm).name+' 상세보기 열기'},gR);
-    if(rm.outdoor){shape.setAttribute('stroke-dasharray','.5 .35');shape.setAttribute('stroke-width',.16);}
-    const open=()=>{focusRoom(rm.n,true);lastFocus=shape;openSheet(rm.n)};
-    shape.addEventListener('click',open);
-    shape.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
-    if(rm.stair){for(let k=1;k<6;k++){const yy=b.y+b.h*k/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35,'pointer-events':'none'},gR)}}
-    const big=b.w>8&&b.h>5, size=Math.min(big?1.7:(b.w>4.5?1.05:.95),((rm.v?b.h:b.w)-0.8)/info(id,rm).name.length)*(rm.ls||1);
-    const vt=!!(rm.v||rm.stair);label(gR,rm.r,[info(id,rm).name],fitSize(rm.r,info(id,rm).name,vt),vt);
+    if(rm.stair){for(let k=1;k<8;k++){const yy=b.y+b.h*k/8;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:PC.wall,'stroke-width':.05,opacity:.45,'pointer-events':'none'},gR)}}
   });
-  const gC=el('g',{},svg);
-  F.core.forEach(c=>{const b=rectOf(c.r);el('rect',{x:b.x+.12,y:b.y+.12,width:b.w-.24,height:b.h-.24,rx:.4,fill:'var(--c-core)',stroke:'var(--plan-wall)','stroke-width':.1},gC);
-    label(gC,c.r,[c.t],fitSize(c.r,c.t,c.v,.9),c.v);
-    if(c.t==='계단'){for(let i=1;i<6;i++){const yy=b.y+b.h*i/6;el('line',{x1:b.x+.5,x2:b.x+b.w-.5,y1:yy,y2:yy,stroke:'var(--plan-wall)','stroke-width':.05,opacity:.35},gC)}}});
+  const gC=el('g',{'pointer-events':'none'},svg);
+  F.core.forEach(c=>{const b=rectOf(c.r), toilet=/화장실/.test(c.t), women=/여/.test(c.t);
+    const fill=c.t==='EV'?PC.ev:toilet?(women?PC.orange:PC.teal):PC.ev;
+    el('rect',{x:b.x,y:b.y,width:b.w,height:b.h,fill,stroke:PC.wall,'stroke-width':.09},gC);
+    const t=c.t==='화장실(남)'?'남자화장실':c.t==='화장실(여)'?'여자화장실':c.t;
+    label(gC,c.r,[t],fitSize(c.r,t,c.v,.85),c.v,0,c.t==='EV'?PC.wall:'#FFFFFF',700);});
+  // 실 출입문: 벽선을 끊어 표시
   const gD=el('g',{'pointer-events':'none'},svg);
-  F.rooms.forEach(rm=>(rm.d||[]).forEach(d=>{const w=d.w||1.3,t=.42;let x,y,wd,ht;
-    if(d.s==='b'||d.s==='t'){y=Y(d.s==='b'?rm.r[2]:rm.r[3]);x=d.at-w/2;wd=w;ht=t;y-=t/2}else{x=(d.s==='l'?rm.r[0]:rm.r[1])-t/2;y=Y(d.at)-w/2;wd=t;ht=w}
-    el('rect',{x,y,width:wd,height:ht,rx:.12,fill:'var(--door)',stroke:'var(--plan-bg)','stroke-width':.08,opacity:rm.off?.3:1},gD)}));
-  (F.gates||[]).forEach(gt=>{const col=gt.kind==='in'?'var(--teal)':'var(--orange)',x=gt.x,y=Y(gt.y),w=gt.w,t=.6;
-    el('rect',{x:x-t/2,y:y-w/2,width:t,height:w,rx:.15,fill:col},gD);
-    const tw=gt.t.length*.62+.9, lx=x-.75-tw;
-    el('rect',{x:lx,y:y-.62,width:tw,height:1.24,rx:.62,fill:col},gD);
-    const ar=gt.kind==='in'?`${lx+.55},${y} ${lx+1.05},${y-.36} ${lx+1.05},${y+.36}`:`${lx+1.05},${y} ${lx+.55},${y-.36} ${lx+.55},${y+.36}`;
-    el('polygon',{points:ar,fill:'#fff'},gD);
-    const tx=el('text',{x:lx+1.3,y:y+.04,'dominant-baseline':'middle','font-size':.66,'font-weight':900},gD);tx.textContent=gt.t;tx.style.fill='#fff';});
-  (F.entrances||[]).forEach(en=>{
-    const g=el('g',{'pointer-events':'none'},svg), x=en.x, y=Y(en.y), col=en.main?'var(--orange)':'var(--teal)';
-    const fs=en.main?.86:.78, h=en.main?1.6:1.4, tw=en.t.length*fs*.98+1.7, gap=.85, horiz=en.dir!=='right';
-    const L=en.len||2.8;
-    if(horiz)el('rect',{x:x-L/2,y:y-.36,width:L,height:.72,rx:.2,fill:col},g);else el('rect',{x:x-.36,y:y-L/2,width:.72,height:L,rx:.2,fill:col},g);
-    let px,py;   // pill top-left, placed outside the building
-    if(en.dir==='up'){px=x-tw/2;py=y+gap}
-    else if(en.dir==='down'){px=en.align==='right'?x+1.4-tw:x-tw/2;py=y-gap-h}
-    else {px=en.inside?x+gap:x-gap-tw;py=y-h/2}
-    el('rect',{x:px,y:py,width:tw,height:h,rx:h/2,fill:col},g);
-    const ax=px+.75, ay=py+h/2, a=.36;
-    const tri=en.dir==='up'?`${ax},${ay-a} ${ax-a},${ay+a*.8} ${ax+a},${ay+a*.8}`:en.dir==='down'?`${ax},${ay+a} ${ax-a},${ay-a*.8} ${ax+a},${ay-a*.8}`:`${ax+a},${ay} ${ax-a*.8},${ay-a} ${ax-a*.8},${ay+a}`;
-    el('polygon',{points:tri,fill:'#fff'},g);
-    const t=el('text',{x:px+1.35,y:ay+.05,'dominant-baseline':'middle','font-size':fs,'font-weight':900},g);t.textContent=en.t;t.style.fill='#fff';
+  F.rooms.forEach(rm=>(rm.d||[]).forEach(d=>{const w=d.w||1.2;
+    if(d.s==='b'||d.s==='t'){const y=Y(d.s==='b'?rm.r[2]:rm.r[3]);el('rect',{x:d.at-w/2,y:y-.08,width:w,height:.16,fill:PC.room},gD)}
+    else{const x=d.s==='l'?rm.r[0]:rm.r[1];el('rect',{x:x-.08,y:Y(d.at)-w/2,width:.16,height:w,fill:PC.room},gD)}}));
+  el('polygon',{points:pts,fill:'none',stroke:PC.wall,'stroke-width':.24,'stroke-linejoin':'round','pointer-events':'none'},svg);
+  // 실 이름 (관계자·미사용 실은 이름 없음, 계단만 표시)
+  const gL=el('g',{'pointer-events':'none'},svg);
+  F.rooms.forEach(rm=>{
+    if(rm.off&&!rm.stair)return;
+    const r=rm.lr||rm.r, vt=!!((rm.v&&!rm.outdoor)||rm.stair), name=rm.stair?'계단':info(id,rm).name;
+    const cap=rm.stair?.8:rm.cat==='exhibit'&&!rm.outdoor&&rectOf(r).w>15?2.6:(vt?1.1:1.5);
+    const fs=fitSize(r,name,vt,cap);
+    if(rm.stair){const b=rectOf(r),cx=b.x+b.w/2,cy=b.y+b.h/2;el('rect',{x:cx-fs*.75,y:cy-fs*1.7,width:fs*1.5,height:fs*3.4,fill:PC.room},gL)}
+    label(gL,r,[name],fs,vt,0,rm.stair?PC.muted:PC.wall,rm.stair?500:700);
+    if(rm.outdoor){const b=rectOf(rm.r);const t=el('text',{x:b.x+b.w/2,y:b.y+b.h+.9,'text-anchor':'middle','dominant-baseline':'central','font-size':.6,'font-weight':500,fill:PC.muted},gL);t.textContent='실외'}
   });
-  // fit the drawing to the box: tight viewBox around everything drawn
+  // 3층 전시관 입구·출구
+  (F.gates||[]).forEach(gt=>{const col=gt.kind==='in'?PC.teal:PC.orange,x=gt.x,y=Y(gt.y);
+    el('rect',{x:x-.2,y:y-.65,width:.4,height:1.3,rx:.12,fill:col},gD);
+    const tw=[...gt.t].reduce((a,c)=>a+(/[ㄱ-힣]/.test(c)?1:.62),0)*.62+.8, lx=x+.45;
+    el('rect',{x:lx,y:y-.55,width:tw,height:1.1,rx:.55,fill:col},gD);
+    const tx=el('text',{x:lx+tw/2,y:y+.02,'text-anchor':'middle','dominant-baseline':'central','font-size':.62,'font-weight':700,fill:'#FFFFFF'},gD);tx.textContent=gt.t.replace(' ','');});
+  // 1층 건물 출입구
+  (F.entrances||[]).forEach(en=>{const g=el('g',{'pointer-events':'none'},svg), x=en.x, y=Y(en.y), col=PC.orange;
+    el('rect',{x:x-1.4,y:y-.2,width:2.8,height:.4,fill:col},g);
+    el('line',{x1:x,y1:y+3.3,x2:x,y2:y+.7,stroke:col,'stroke-width':.13,'stroke-dasharray':'.35 .22'},g);
+    el('polygon',{points:`${x},${y+.45} ${x-.45},${y+1.15} ${x+.45},${y+1.15}`,fill:col},g);
+    el('circle',{cx:x,cy:y+3.45,r:.28,fill:col},g);
+    el('rect',{x:x+.8,y:y+2.85,width:4.6,height:1.2,rx:.6,fill:col},g);
+    const t=el('text',{x:x+3.1,y:y+3.47,'text-anchor':'middle','dominant-baseline':'central','font-size':.7,'font-weight':700,fill:'#FFFFFF'},g);t.textContent=en.t;});
+  // 도면 크기에 맞춰 보기 영역 조정
   const bg=svg.firstElementChild; bg.remove();
   try{const bb=svg.getBBox(); if(bb.width>0&&bb.height>0){const p=.7,vb=[bb.x-p,bb.y-p,bb.width+p*2,bb.height+p*2];
-    const MINA=1.65;   // 박스가 너무 높아지지 않게: 가로÷세로 비율 최소값 (1층에 적용, 2·3층은 원래 비율)
-    if(vb[2]/vb[3]<MINA){const w=vb[3]*MINA;vb[0]-=(w-vb[2])/2;vb[2]=w}
     svg.setAttribute('viewBox',vb.map(v=>+v.toFixed(2)).join(' '));bg.setAttribute('x',vb[0]);bg.setAttribute('y',vb[1]);bg.setAttribute('width',vb[2]);bg.setAttribute('height',vb[3])}}catch(e){}
   svg.insertBefore(bg,svg.firstChild);
-  // north-ish marker: elevator call-out for upper floors
 }
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // ---- shared overrides (edited by people with edit access) ----
@@ -274,8 +275,9 @@ function show(id){
   document.getElementById('floorTitle').textContent=F.title;
   document.getElementById('floorSub').textContent=F.sub;
   draw(id); renderRooms(id);
-  const used=new Set([...F.rooms.map(r=>r.cat),'core']);
-  document.getElementById('legend').innerHTML=Object.entries(CAT).filter(([k])=>used.has(k)).map(([k,v])=>`<span><i style="background:${v.color}"></i>${v.label}</span>`).join('')+`<span><i class="lg-door"></i>실 출입문</span>`+(F.entrances?`<span><i style="background:var(--orange);border-radius:50%"></i>건물 출입구</span>`:'')+(F.gates?`<span><i style="background:var(--teal);border-radius:50%"></i>전시관 입구</span><span><i style="background:var(--orange);border-radius:50%"></i>전시관 출구</span>`:'');
+  const sw=(c,t,b)=>`<span><i style="background:${c}${b?';border:1.5px solid #2E2A28':''}"></i>${t}</span>`;
+  document.getElementById('legend').innerHTML=sw(PC.teal,'남자화장실')+sw(PC.orange,'여자화장실')+sw(PC.ev,'엘리베이터')+sw(PC.tint,'전시 · 영상',1)+sw(PC.off,'관계자 · 미사용 공간',1)
+    +(F.entrances?`<span><i style="background:${PC.orange};border-radius:50%;border:0"></i>건물 출입구</span>`:'')+(F.gates?`<span><i style="background:${PC.teal};border-radius:50%;border:0"></i>전시관 입구</span><span><i style="background:${PC.orange};border-radius:50%;border:0"></i>전시관 출구</span>`:'');
 }
 
 let lastFocus=null, sheetN=null, editing=false;

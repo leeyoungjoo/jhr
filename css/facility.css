@@ -5,7 +5,7 @@ html,body{margin:0}
   color-scheme:light;
   --orange:#E16824; --teal:#1A998E; --yellow:#F2B935; --green:#6FAF7E; --slate:#9AA39E;
   --c-exhibit:#F3A577; --c-video:#7FC7BE; --c-activity:#F7D77B; --c-rest:#B9DDB8; --c-staff:#E4E1D9; --c-core:#CFD8E3; --c-hall:#FFF1DE;
-  --plan-wall:#3B4743; --plan-bg:#FFFDF8; --label:#24302D; --door:#1F6F67;
+  --plan-wall:#3B4743; --plan-bg:#FFFFFF; --label:#24302D; --door:#1F6F67;
   --c-off:#EEE8DD; --off-label:#A79F92; --sel:#C4471A;
   --display:"Gothic A1","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
