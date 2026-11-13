@@ -16,9 +16,10 @@
     var h=location.hash.replace(/^#\/?/,'')||'home';
     h=h.replace(/^news\/[0-9a-f-]{36}$/i,'news/post');   // 게시글 ID는 묶어서 집계
     if(h===last)return; last=h;
-    var p={page_path:'/'+h,page_location:location.origin+'/'+h,page_title:document.title+' · '+h};
+    var p={page_path:'/'+h,page_location:location.origin+'/'+h,page_title:document.title};
     if(gtm)dataLayer.push(Object.assign({event:'virtual_page_view'},p));   // GTM 맞춤 이벤트 트리거 이름: virtual_page_view
     else gtag('event','page_view',p);
   }
-  window.addEventListener('hashchange',send); send();
+  // 화면 제목이 바뀐 뒤에 보내도록 한 박자 늦춤
+  window.addEventListener('hashchange',function(){setTimeout(send,0)}); window.addEventListener('load',function(){setTimeout(send,0)});
 })();
