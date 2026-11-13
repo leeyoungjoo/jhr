@@ -2,5 +2,6 @@
 window.SUPABASE_URL = 'https://pewippwnvduaseyckfkv.supabase.co';
 window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBld2lwcHdudmR1YXNleWNrZmt2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM3MjYyNTMsImV4cCI6MjEwOTMwMjI1M30.cN2Xg2g3B-taL7X8H5FwMC9Fn8vySkHHmTcezIaLyf0';
 
-// Google Analytics 측정 ID (예: 'G-ABCD1234EF'). 비워 두면 GA가 동작하지 않습니다.
-window.GA_ID = '';
+// Google 태그 관리자(GTM) 컨테이너 ID 또는 GA4 측정 ID. 비워 두면 동작하지 않습니다.
+// 예: 'GTM-WBBF3JSG' 또는 'G-ABCD1234EF'
+window.GA_ID = 'GTM-WBBF3JSG';
