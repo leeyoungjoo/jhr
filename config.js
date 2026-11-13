@@ -4,4 +4,4 @@ window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXB
 
 // Google 태그 관리자(GTM) 컨테이너 ID 또는 GA4 측정 ID. 비워 두면 동작하지 않습니다.
 // 예: 'GTM-WBBF3JSG' 또는 'G-ABCD1234EF'
-window.GA_ID = 'GTM-WBBF3JSG';
+window.GA_ID = 'G-W574423RXV';
