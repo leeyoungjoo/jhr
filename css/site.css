@@ -393,3 +393,7 @@ body:not(.is-admin) .admin-only{display:none!important}
 .post-photos.full{display:flex;flex-direction:column;gap:12px;margin:14px 0 6px}
 .post-photos.full .post-ph{aspect-ratio:auto;background:transparent;border-radius:12px;overflow:hidden}
 .post-photos.full .post-ph img{position:static;width:100%;height:auto;max-height:none;object-fit:contain;border-radius:12px}
+
+/* 게시글 안내문구 (값이 있을 때만 표시) */
+.post-notice{margin:22px 0 6px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:12.5px;line-height:1.7;color:var(--ink);opacity:.8;overflow-wrap:anywhere}
+.notice-in{font-size:13px}

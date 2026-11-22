@@ -176,6 +176,8 @@ const hasScheme=u=>/^[a-z][a-z0-9+.-]*:/i.test(u);
 const normUrl=u=>{u=(u||'').trim();if(!u)return '';return !hasScheme(u)||/^https?:\/\//i.test(u)?u:''};   // 입력한 그대로 저장 (http(s) 외 다른 형식은 막음)
 const linkHref=u=>hasScheme(u)?u:'https://'+u;   // 누를 때만 주소 앞에 https:// 를 붙여 열기
 const parseLinks=t=>[...new Set((t||'').split(/\n+/).map(normUrl).filter(Boolean))].slice(0,20);
+// 안내문구: 값이 있을 때만 게시글 맨 아래에 작은 글씨 박스로 표시
+const noticeHTML=p=>{const t=(p.notice||'').trim();return t?`<aside class="post-notice" aria-label="안내">${fmtBody(t)}</aside>`:''};
 const linksHTML=p=>{const ls=(p.links||[]).filter(u=>!hasScheme(u)||/^https?:\/\//i.test(u));return ls.length?`<div class="post-links"><div class="pl-head">링크 <b>${ls.length}</b></div>${ls.map(u=>`<a class="pl-item" href="${esc(linkHref(u))}" target="_blank" rel="noopener noreferrer"><span class="pl-ico" aria-hidden="true">🔗</span><span class="pl-url">${esc(u)}</span></a>`).join('')}</div>`:''};
 async function loadPosts(){
   if(!SB)return;
@@ -227,7 +229,7 @@ function postDetail(p){
     ${metaHTML(p)}
     <h3>${esc(p.title)}</h3>
     <div class="detail-sub"><span class="views">조회 <b>${p.views||0}</b></span><button type="button" class="copy-btn" data-copy="${p.id}">글 복사</button></div>
-    ${gallery}<div class="post-body">${fmtBody(p.body||'')}</div>${linksHTML(p)}${filesHTML(p)}
+    ${gallery}<div class="post-body">${fmtBody(p.body||'')}</div>${linksHTML(p)}${filesHTML(p)}${noticeHTML(p)}
   </article>
   <div class="detail-nav"><a class="btn ghost" href="#/news">← 목록으로</a>${EDIT.can?`<div class="detail-act"><button type="button" class="btn ghost" data-edit="${p.id}">수정</button><button type="button" class="btn ghost danger" data-del="${p.id}">삭제</button><button type="button" class="btn brand" data-newpost>글쓰기</button></div>`:''}</div>`;
 }
@@ -295,6 +297,7 @@ function openPostEditor(post){
     <label for="p-title">제목</label><input id="p-title" maxlength="120" value="${esc(post?.title||'')}" placeholder="예) 3층 전시관 패널 설치를 마쳤습니다">
     <label for="p-body">내용</label><textarea id="p-body" rows="7" maxlength="5000" placeholder="진행 상황을 자유롭게 적어 주세요">${esc(post?.body||'')}</textarea>
     <label for="p-links">링크 <span class="ph-sub">한 줄에 하나씩, 여러 개 입력 가능</span></label><textarea id="p-links" class="links-in" rows="2" maxlength="4000" placeholder="example.com">${esc((post?.links||[]).join('\n'))}</textarea>
+    <label for="p-notice">안내문구 <span class="ph-sub">입력하면 글 맨 아래에 작은 글씨 박스로 표시 (비워두면 안 보임)</span></label><textarea id="p-notice" class="notice-in" rows="2" maxlength="1000" placeholder="예) 사진 무단 사용을 금합니다. 문의: 064-000-0000">${esc(post?.notice||'')}</textarea>
     <label class="check"><input type="checkbox" id="p-pin" ${post?.pinned?'checked':''}> 맨 위에 고정 (공지)</label>
     <div class="ph-label">사진 <span id="p-count"></span></div>
     <div class="e-photos" id="p-photos"></div>
@@ -344,7 +347,7 @@ function openPostEditor(post){
     const title=document.getElementById('p-title').value.trim();
     if(!title){st.textContent='제목을 입력해 주세요.';document.getElementById('p-title').focus();return}
     const btn=e.currentTarget; btn.disabled=true; st.textContent='저장하는 중…';
-    const row={team:document.getElementById('p-team').value,title,body:document.getElementById('p-body').value.trim(),photos:photos.slice(0,30),files:files.slice(0,20),links:parseLinks(document.getElementById('p-links').value),pinned:document.getElementById('p-pin').checked,updated_at:new Date().toISOString()};
+    const row={team:document.getElementById('p-team').value,title,body:document.getElementById('p-body').value.trim(),photos:photos.slice(0,30),files:files.slice(0,20),links:parseLinks(document.getElementById('p-links').value),notice:document.getElementById('p-notice').value.trim()||null,pinned:document.getElementById('p-pin').checked,updated_at:new Date().toISOString()};
     if(row.pinned&&!post?.pinned){const ps=POSTS.filter(x=>x.pinned&&x.id!==post?.id).map(pinKey).filter(v=>v<1e9);row.pin_order=(ps.length?Math.min(...ps):1)-1;}   // 새 공지는 맨 위로
     if(!row.pinned)row.pin_order=null;
     const q=post?SB.from('posts').update(row).eq('id',post.id).select().single():SB.from('posts').insert(row).select().single();
