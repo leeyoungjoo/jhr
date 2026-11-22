@@ -159,9 +159,11 @@ const filesHTML=(p)=>{const fs=p.files||[];return fs.length?`<div class="post-fi
 // ---------- 진행상황 공유 ----------
 const fmtDate=iso=>{const d=new Date(iso);return `${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}.`};
 const fmtBody=t=>esc(t).replace(/\n/g,'<br>');
-const normUrl=u=>{u=(u||'').trim();if(!u)return '';if(!/^[a-z][a-z0-9+.-]*:/i.test(u))u='https://'+u;return /^https?:\/\//i.test(u)?u:''};   // http(s)만 허용
+const hasScheme=u=>/^[a-z][a-z0-9+.-]*:/i.test(u);
+const normUrl=u=>{u=(u||'').trim();if(!u)return '';return !hasScheme(u)||/^https?:\/\//i.test(u)?u:''};   // 입력한 그대로 저장 (http(s) 외 다른 형식은 막음)
+const linkHref=u=>hasScheme(u)?u:'https://'+u;   // 누를 때만 주소 앞에 https:// 를 붙여 열기
 const parseLinks=t=>[...new Set((t||'').split(/\n+/).map(normUrl).filter(Boolean))].slice(0,20);
-const linksHTML=p=>{const ls=(p.links||[]).filter(u=>/^https?:\/\//i.test(u));return ls.length?`<div class="post-links"><div class="pl-head">링크 <b>${ls.length}</b></div>${ls.map(u=>`<a class="pl-item" href="${esc(u)}" target="_blank" rel="noopener noreferrer"><span class="pl-ico" aria-hidden="true">🔗</span><span class="pl-url">${esc(u)}</span></a>`).join('')}</div>`:''};
+const linksHTML=p=>{const ls=(p.links||[]).filter(u=>!hasScheme(u)||/^https?:\/\//i.test(u));return ls.length?`<div class="post-links"><div class="pl-head">링크 <b>${ls.length}</b></div>${ls.map(u=>`<a class="pl-item" href="${esc(linkHref(u))}" target="_blank" rel="noopener noreferrer"><span class="pl-ico" aria-hidden="true">🔗</span><span class="pl-url">${esc(u)}</span></a>`).join('')}</div>`:''};
 async function loadPosts(){
   if(!SB||!CAN_VIEW)return;
   const {data,error}=await SB.from('posts').select('*').order('pinned',{ascending:false}).order('pin_order',{ascending:true,nullsFirst:false}).order('created_at',{ascending:false}).limit(200);
@@ -278,7 +280,7 @@ function openPostEditor(post){
     <label for="p-team">분류</label><select id="p-team">${TEAMS.map(t=>`<option${t===(post?teamOf(post):(curTeam===ALL?TEAMS[0]:curTeam))?' selected':''}>${esc(t)}</option>`).join('')}</select>
     <label for="p-title">제목</label><input id="p-title" maxlength="120" value="${esc(post?.title||'')}" placeholder="예) 3층 전시관 패널 설치를 마쳤습니다">
     <label for="p-body">내용</label><textarea id="p-body" rows="7" maxlength="5000" placeholder="진행 상황을 자유롭게 적어 주세요">${esc(post?.body||'')}</textarea>
-    <label for="p-links">링크 <span class="ph-sub">한 줄에 하나씩, 여러 개 입력 가능</span></label><textarea id="p-links" class="links-in" rows="2" maxlength="4000" placeholder="https://example.com">${esc((post?.links||[]).join('\n'))}</textarea>
+    <label for="p-links">링크 <span class="ph-sub">한 줄에 하나씩, 여러 개 입력 가능</span></label><textarea id="p-links" class="links-in" rows="2" maxlength="4000" placeholder="example.com">${esc((post?.links||[]).join('\n'))}</textarea>
     <label class="check"><input type="checkbox" id="p-pin" ${post?.pinned?'checked':''}> 맨 위에 고정 (공지)</label>
     <div class="ph-label">사진 <span id="p-count"></span></div>
     <div class="e-photos" id="p-photos"></div>
