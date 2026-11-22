@@ -118,3 +118,6 @@ alter table public.posts add column if not exists pin_order integer;
 alter table public.posts drop constraint if exists posts_team_check;
 alter table public.posts alter column team set default '전시회 소식';
 alter table public.posts add constraint posts_team_check check (team in ('전시회 소식','전시관련 뉴스','자주 묻는 질문'));
+
+-- 게시글 링크 (2026-11)
+alter table public.posts add column if not exists links jsonb not null default '[]'::jsonb;

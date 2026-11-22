@@ -159,6 +159,9 @@ const filesHTML=(p)=>{const fs=p.files||[];return fs.length?`<div class="post-fi
 // ---------- 진행상황 공유 ----------
 const fmtDate=iso=>{const d=new Date(iso);return `${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}.`};
 const fmtBody=t=>esc(t).replace(/\n/g,'<br>');
+const normUrl=u=>{u=(u||'').trim();if(!u)return '';if(!/^[a-z][a-z0-9+.-]*:/i.test(u))u='https://'+u;return /^https?:\/\//i.test(u)?u:''};   // http(s)만 허용
+const parseLinks=t=>[...new Set((t||'').split(/\n+/).map(normUrl).filter(Boolean))].slice(0,20);
+const linksHTML=p=>{const ls=(p.links||[]).filter(u=>/^https?:\/\//i.test(u));return ls.length?`<div class="post-links"><div class="pl-head">링크 <b>${ls.length}</b></div>${ls.map(u=>`<a class="pl-item" href="${esc(u)}" target="_blank" rel="noopener noreferrer"><span class="pl-ico" aria-hidden="true">🔗</span><span class="pl-url">${esc(u)}</span></a>`).join('')}</div>`:''};
 async function loadPosts(){
   if(!SB||!CAN_VIEW)return;
   const {data,error}=await SB.from('posts').select('*').order('pinned',{ascending:false}).order('pin_order',{ascending:true,nullsFirst:false}).order('created_at',{ascending:false}).limit(200);
@@ -208,7 +211,7 @@ function postDetail(p){
     ${metaHTML(p)}
     <h3>${esc(p.title)}</h3>
     <div class="detail-sub"><span class="views">조회 <b>${p.views||0}</b></span><button type="button" class="copy-btn" data-copy="${p.id}">글 복사</button></div>
-    <div class="post-body">${fmtBody(p.body||'')}</div>${filesHTML(p)}${gallery}
+    <div class="post-body">${fmtBody(p.body||'')}</div>${linksHTML(p)}${filesHTML(p)}${gallery}
   </article>
   <div class="detail-nav"><a class="btn ghost" href="#/news">← 목록으로</a>${EDIT.can?`<div class="detail-act"><button type="button" class="btn ghost" data-edit="${p.id}">수정</button><button type="button" class="btn ghost danger" data-del="${p.id}">삭제</button><button type="button" class="btn brand" data-newpost>글쓰기</button></div>`:''}</div>`;
 }
@@ -275,6 +278,7 @@ function openPostEditor(post){
     <label for="p-team">분류</label><select id="p-team">${TEAMS.map(t=>`<option${t===(post?teamOf(post):(curTeam===ALL?TEAMS[0]:curTeam))?' selected':''}>${esc(t)}</option>`).join('')}</select>
     <label for="p-title">제목</label><input id="p-title" maxlength="120" value="${esc(post?.title||'')}" placeholder="예) 3층 전시관 패널 설치를 마쳤습니다">
     <label for="p-body">내용</label><textarea id="p-body" rows="7" maxlength="5000" placeholder="진행 상황을 자유롭게 적어 주세요">${esc(post?.body||'')}</textarea>
+    <label for="p-links">링크 <span class="ph-sub">한 줄에 하나씩, 여러 개 입력 가능</span></label><textarea id="p-links" class="links-in" rows="2" maxlength="4000" placeholder="https://example.com">${esc((post?.links||[]).join('\n'))}</textarea>
     <label class="check"><input type="checkbox" id="p-pin" ${post?.pinned?'checked':''}> 맨 위에 고정 (공지)</label>
     <div class="ph-label">사진 <span id="p-count"></span></div>
     <div class="e-photos" id="p-photos"></div>
@@ -324,7 +328,7 @@ function openPostEditor(post){
     const title=document.getElementById('p-title').value.trim();
     if(!title){st.textContent='제목을 입력해 주세요.';document.getElementById('p-title').focus();return}
     const btn=e.currentTarget; btn.disabled=true; st.textContent='저장하는 중…';
-    const row={team:document.getElementById('p-team').value,title,body:document.getElementById('p-body').value.trim(),photos:photos.slice(0,30),files:files.slice(0,20),pinned:document.getElementById('p-pin').checked,updated_at:new Date().toISOString()};
+    const row={team:document.getElementById('p-team').value,title,body:document.getElementById('p-body').value.trim(),photos:photos.slice(0,30),files:files.slice(0,20),links:parseLinks(document.getElementById('p-links').value),pinned:document.getElementById('p-pin').checked,updated_at:new Date().toISOString()};
     if(row.pinned&&!post?.pinned){const ps=POSTS.filter(x=>x.pinned&&x.id!==post?.id).map(pinKey).filter(v=>v<1e9);row.pin_order=(ps.length?Math.min(...ps):1)-1;}   // 새 공지는 맨 위로
     if(!row.pinned)row.pin_order=null;
     const q=post?SB.from('posts').update(row).eq('id',post.id).select().single():SB.from('posts').insert(row).select().single();
