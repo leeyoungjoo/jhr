@@ -41,6 +41,20 @@ async function bumpView(id){
   if(error||data==null)return;
   const p=POSTS.find(x=>x.id===id); if(p){p.views=data;const v=document.querySelector('.post-detail .views b');if(v)v.textContent=data}
 }
+// 게시판 링크: https 보안 인증서가 잘못된 사이트(예: 일부 언론사)는 브라우저가 '비공개 연결 아님' 경고를 띄움.
+// 누를 때 https로 먼저 접속해 보고, 인증서 문제로 실패하면 같은 주소를 http:// 로 열어 경고 화면을 피함.
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a.pl-item'); if(!a)return;
+  const url=a.getAttribute('href')||''; if(!/^https:\/\//i.test(url))return;
+  e.preventDefault();
+  const w=window.open('about:blank','_blank');   // 아이폰 팝업 차단을 피하려고 창은 누르는 즉시 열어 둠
+  const go=u=>{if(w&&!w.closed){try{w.opener=null}catch(x){}w.location.replace(u)}else location.href=u};
+  const ctl=('AbortController' in window)?new AbortController():null, t=setTimeout(()=>ctl&&ctl.abort(),4000);
+  fetch(url,{mode:'no-cors',cache:'no-store',signal:ctl?.signal})
+    .then(()=>go(url))
+    .catch(err=>go(err&&err.name==='AbortError'?url:url.replace(/^https:/i,'http:')))   // 느린 사이트는 원래 주소로, 접속 실패는 http로
+    .finally(()=>clearTimeout(t));
+});
 document.addEventListener('click',e=>{const j=e.target.closest('[data-jump]');if(!j)return;JUMP=j.dataset.jump;if(location.hash===j.getAttribute('href')){e.preventDefault();route()}});
 window.addEventListener('hashchange',route);
 document.getElementById('navToggle').addEventListener('click',e=>{
