@@ -121,3 +121,6 @@ alter table public.posts add constraint posts_team_check check (team in ('전시
 
 -- 게시글 링크 (2026-11)
 alter table public.posts add column if not exists links jsonb not null default '[]'::jsonb;
+
+-- 게시글 안내문구 (2026-11): 글 하단 작은 글씨 박스, 비어 있으면 표시 안 함
+alter table public.posts add column if not exists notice text check (notice is null or char_length(notice) <= 1000);
