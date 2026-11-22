@@ -21,7 +21,6 @@ function route(){
   const dm=h.match(/^news\/([0-9a-f-]{36})$/i); POST_ID=dm?dm[1]:null; if(dm)h='news';   // 상세보기: #/news/<id>
   if(/^f[123]$/.test(h)){current=h;h='facility'}          // 예전 시설안내 링크(#f1 등) 호환
   if(!PAGES.includes(h))h='home';
-  if(h==='news'&&!CAN_VIEW){h='home';if(authReady&&location.hash.startsWith('#/news'))history.replaceState(null,'','#/')}   // 진행상황 공유는 관리자 전용
   document.querySelectorAll('.page').forEach(p=>p.hidden=p.id!=='page-'+h);
   document.querySelectorAll('.nav-links a').forEach(a=>a.setAttribute('aria-current',a.dataset.page===h?'page':'false'));
   document.body.classList.remove('nav-open');
@@ -36,7 +35,7 @@ function route(){
 let JUMP=null, POST_ID=null;
 const VIEWED=new Set();   // 한 번 연 글은 새로고침 전까지 조회수를 다시 올리지 않음
 async function bumpView(id){
-  if(!SB||!CAN_VIEW||VIEWED.has(id))return; VIEWED.add(id);
+  if(!SB||VIEWED.has(id))return; VIEWED.add(id);
   const {data,error}=await SB.rpc('bump_view',{pid:id});
   if(error||data==null)return;
   const p=POSTS.find(x=>x.id===id); if(p){p.views=data;const v=document.querySelector('.post-detail .views b');if(v)v.textContent=data}
@@ -101,7 +100,7 @@ async function refreshAuth(session){
   USER=session?session.user:null; EDIT.can=false; CAN_VIEW=false;
   if(USER){const {data}=await SB.rpc('my_role');EDIT.can=data==='editor';CAN_VIEW=data==='editor'||data==='viewer';}
   authReady=true;
-  if(CAN_VIEW)loadPosts();else{POSTS=[];postsLoaded=false}
+  loadPosts();   // 게시판은 로그인 없이 누구나 볼 수 있음
   authUI(); rerender(); route();
 }
 function openModal(html,mode){
@@ -179,7 +178,7 @@ const linkHref=u=>hasScheme(u)?u:'https://'+u;   // 누를 때만 주소 앞에 
 const parseLinks=t=>[...new Set((t||'').split(/\n+/).map(normUrl).filter(Boolean))].slice(0,20);
 const linksHTML=p=>{const ls=(p.links||[]).filter(u=>!hasScheme(u)||/^https?:\/\//i.test(u));return ls.length?`<div class="post-links"><div class="pl-head">링크 <b>${ls.length}</b></div>${ls.map(u=>`<a class="pl-item" href="${esc(linkHref(u))}" target="_blank" rel="noopener noreferrer"><span class="pl-ico" aria-hidden="true">🔗</span><span class="pl-url">${esc(u)}</span></a>`).join('')}</div>`:''};
 async function loadPosts(){
-  if(!SB||!CAN_VIEW)return;
+  if(!SB)return;
   const {data,error}=await SB.from('posts').select('*').order('pinned',{ascending:false}).order('pin_order',{ascending:true,nullsFirst:false}).order('created_at',{ascending:false}).limit(200);
   if(error)return; POSTS=sortPosts(data); postsLoaded=true; renderPosts();
 }
