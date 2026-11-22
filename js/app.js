@@ -9,9 +9,9 @@ const authStore={
 };
 const SB=(window.supabase&&window.SUPABASE_URL)?window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY,{auth:{storage:authStore,persistSession:true,autoRefreshToken:true}}):null;
 let USER=null, POSTS=[], postsLoaded=false, authReady=!SB, CAN_VIEW=false;   // CAN_VIEW: 관리자 또는 보기 전용
-const TEAMS=['청년부 기획팀','대외섭외','도슨트','환경미화','실내안내','주차안내','방송/기록/의료'];
+const TEAMS=['전시회 소식','전시관련 뉴스','자주 묻는 질문'];
 const ALL='전체';
-let curTeam=(()=>{const t=ls.get('jhr-team');return t===ALL||TEAMS.includes(t)?t:ALL})();
+let curTeam=(()=>{const t=ls.get('jhr-team');return TEAMS.includes(t)?t:TEAMS[0]})();   // 전체보기 탭 없음: 첫 분류가 기본
 const teamOf=p=>TEAMS.includes(p.team)?p.team:TEAMS[0];
 
 // ---------- router ----------
@@ -218,7 +218,7 @@ function renderPosts(){
   const tabs=document.getElementById('teamTabs');
   if(tabs){
     tabs.hidden=false;
-    tabs.innerHTML=[ALL,...TEAMS].map(t=>{const n=t===ALL?POSTS.length:POSTS.filter(p=>teamOf(p)===t).length;return `<button type="button" role="tab" class="team-tab" data-team="${esc(t)}" aria-selected="${t===curTeam}">${esc(t)}${n?`<span class="cnt">${n}</span>`:''}</button>`}).join('');
+    tabs.innerHTML=TEAMS.map(t=>{const n=POSTS.filter(p=>teamOf(p)===t).length;return `<button type="button" role="tab" class="team-tab" data-team="${esc(t)}" aria-selected="${t===curTeam}">${esc(t)}${n?`<span class="cnt">${n}</span>`:''}</button>`}).join('');
   }
   if(list&&POST_ID){
     const p=POSTS.find(x=>x.id===POST_ID);
@@ -272,7 +272,7 @@ function openPostEditor(post){
   let photos=post?[...(post.photos||[])]:[]; let files=post?[...(post.files||[])]:[];
   const sh=openModal(`<div class="sheet-body edit">
     <div class="title-row"><div><div class="eyebrow">진행상황 공유</div><h3 id="sheetTitle">${post?'글 수정':'글쓰기'}</h3></div><button class="sheet-close static" type="button" aria-label="닫기">×</button></div>
-    <label for="p-team">팀</label><select id="p-team">${TEAMS.map(t=>`<option${t===(post?teamOf(post):(curTeam===ALL?TEAMS[0]:curTeam))?' selected':''}>${esc(t)}</option>`).join('')}</select>
+    <label for="p-team">분류</label><select id="p-team">${TEAMS.map(t=>`<option${t===(post?teamOf(post):(curTeam===ALL?TEAMS[0]:curTeam))?' selected':''}>${esc(t)}</option>`).join('')}</select>
     <label for="p-title">제목</label><input id="p-title" maxlength="120" value="${esc(post?.title||'')}" placeholder="예) 3층 전시관 패널 설치를 마쳤습니다">
     <label for="p-body">내용</label><textarea id="p-body" rows="7" maxlength="5000" placeholder="진행 상황을 자유롭게 적어 주세요">${esc(post?.body||'')}</textarea>
     <label class="check"><input type="checkbox" id="p-pin" ${post?.pinned?'checked':''}> 맨 위에 고정 (공지)</label>

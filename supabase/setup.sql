@@ -61,7 +61,7 @@ create table if not exists public.posts (
   body text not null default '' check (char_length(body) <= 5000),
   photos jsonb not null default '[]'::jsonb,
   pinned boolean not null default false,
-  team text not null default '청년부 기획팀' check (team in ('청년부 기획팀','대외섭외','도슨트','환경미화','실내안내','주차안내','방송/기록/의료')),
+  team text not null default '전시회 소식' check (team in ('전시회 소식','전시관련 뉴스','자주 묻는 질문')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   author uuid default auth.uid()
@@ -113,3 +113,8 @@ grant execute on function public.bump_view(uuid) to authenticated;
 
 -- 공지(상단 고정) 순서
 alter table public.posts add column if not exists pin_order integer;
+
+-- 게시판 분류 변경 (2026-11): 팀별 → 전시회 소식 / 전시관련 뉴스 / 자주 묻는 질문
+alter table public.posts drop constraint if exists posts_team_check;
+alter table public.posts alter column team set default '전시회 소식';
+alter table public.posts add constraint posts_team_check check (team in ('전시회 소식','전시관련 뉴스','자주 묻는 질문'));
