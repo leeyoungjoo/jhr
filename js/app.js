@@ -177,7 +177,7 @@ const normUrl=u=>{u=(u||'').trim();if(!u)return '';return !hasScheme(u)||/^https
 const linkHref=u=>hasScheme(u)?u:'https://'+u;   // 누를 때만 주소 앞에 https:// 를 붙여 열기
 const parseLinks=t=>[...new Set((t||'').split(/\n+/).map(normUrl).filter(Boolean))].slice(0,20);
 // 안내문구: 값이 있을 때만 게시글 맨 아래에 작은 글씨 박스로 표시
-const noticeHTML=p=>{const t=(p.notice||'').trim();return t?`<aside class="post-notice" aria-label="안내">${fmtBody(t)}</aside>`:''};
+const noticeHTML=p=>{const ls=(p.notice||'').split('\n').map(x=>x.trim()).filter(Boolean);return ls.length?`<aside class="post-notice" aria-label="안내">${ls.map(l=>`<p class="pn-item">${esc(l)}</p>`).join('')}</aside>`:''};   // 줄마다 앞에 주황색 체크박스
 const linksHTML=p=>{const ls=(p.links||[]).filter(u=>!hasScheme(u)||/^https?:\/\//i.test(u));return ls.length?`<div class="post-links"><div class="pl-head">링크 <b>${ls.length}</b></div>${ls.map(u=>`<a class="pl-item" href="${esc(linkHref(u))}" target="_blank" rel="noopener noreferrer"><span class="pl-ico" aria-hidden="true">🔗</span><span class="pl-url">${esc(u)}</span></a>`).join('')}</div>`:''};
 async function loadPosts(){
   if(!SB)return;

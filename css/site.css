@@ -395,5 +395,8 @@ body:not(.is-admin) .admin-only{display:none!important}
 .post-photos.full .post-ph img{position:static;width:100%;height:auto;max-height:none;object-fit:contain;border-radius:12px}
 
 /* 게시글 안내문구 (값이 있을 때만 표시) */
-.post-notice{margin:22px 0 6px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:12.5px;line-height:1.7;color:var(--ink);opacity:.8;overflow-wrap:anywhere}
+.post-notice{margin:22px 0 6px;padding:12px 14px;border:1px solid #F6CDB0;border-radius:12px;background:#FFF4EC;font-size:12.5px;line-height:1.7;color:#4A4F4C;overflow-wrap:anywhere}
+.pn-item{margin:0;padding-left:24px;position:relative}
+.pn-item+.pn-item{margin-top:4px}
+.pn-item::before{content:"";position:absolute;left:0;top:.2em;width:16px;height:16px;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E2671F' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 12.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h11'/%3E%3Cpath d='M8 11.5l4 4L22 4.5'/%3E%3C/svg%3E")}
 .notice-in{font-size:13px}
