@@ -221,12 +221,13 @@ function postRow(p){
 }
 function postDetail(p){
   const ph=p.photos||[];
-  const gallery=ph.length?`<div class="post-photos all${ph.length===1?' n1':''}">${ph.map((u,k)=>`<button type="button" class="post-ph" data-post="${p.id}" data-k="${k}" aria-label="사진 ${k+1} 크게 보기"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('')}</div>`:'';
+  // 상세보기: 사진을 자르지 않고 원본 비율 그대로 글 상단에 세로로 배치 (누르면 확대/축소 뷰어)
+  const gallery=ph.length?`<div class="post-photos full">${ph.map((u,k)=>`<button type="button" class="post-ph" data-post="${p.id}" data-k="${k}" aria-label="사진 ${k+1} 크게 보기 (확대·축소 가능)"><img src="${esc(u)}" alt="사진 ${k+1}" loading="${k?'lazy':'eager'}"></button>`).join('')}</div>`:'';
   return `<article class="post post-detail${p.pinned?' pinned':''}">
     ${metaHTML(p)}
     <h3>${esc(p.title)}</h3>
     <div class="detail-sub"><span class="views">조회 <b>${p.views||0}</b></span><button type="button" class="copy-btn" data-copy="${p.id}">글 복사</button></div>
-    <div class="post-body">${fmtBody(p.body||'')}</div>${linksHTML(p)}${filesHTML(p)}${gallery}
+    ${gallery}<div class="post-body">${fmtBody(p.body||'')}</div>${linksHTML(p)}${filesHTML(p)}
   </article>
   <div class="detail-nav"><a class="btn ghost" href="#/news">← 목록으로</a>${EDIT.can?`<div class="detail-act"><button type="button" class="btn ghost" data-edit="${p.id}">수정</button><button type="button" class="btn ghost danger" data-del="${p.id}">삭제</button><button type="button" class="btn brand" data-newpost>글쓰기</button></div>`:''}</div>`;
 }

@@ -389,3 +389,7 @@ body:not(.is-admin) .admin-only{display:none!important}
 .pl-ico{flex:none;font-size:12px;line-height:1.6}
 .pl-url{flex:1;min-width:0;font-size:12.5px;line-height:1.6;overflow-wrap:anywhere;word-break:break-all;text-decoration:underline;text-underline-offset:2px}
 .links-in{font-size:13px}
+/* 상세보기 사진: 크롭 없이 원본 비율, 본문 위에 세로로 */
+.post-photos.full{display:flex;flex-direction:column;gap:12px;margin:14px 0 6px}
+.post-photos.full .post-ph{aspect-ratio:auto;background:transparent;border-radius:12px;overflow:hidden}
+.post-photos.full .post-ph img{position:static;width:100%;height:auto;max-height:none;object-fit:contain;border-radius:12px}
